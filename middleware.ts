@@ -1,5 +1,6 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
+import { getUserRole } from './src/lib/supabase/role'
 
 export async function middleware(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
@@ -39,8 +40,8 @@ export async function middleware(request: NextRequest) {
   const isAdminApiPath = pathname.startsWith('/api/admin')
   const isMemberApiPath = pathname.startsWith('/api/member')
 
-  // Extract user_role custom claim from app_metadata or user_metadata (fallback to undefined)
-  const userRole = user?.app_metadata?.user_role || user?.user_metadata?.user_role
+  // Decode JWT access token to get custom role claim
+  const userRole = await getUserRole(supabase)
 
   // /admin/* and /api/admin/* route protection
   if (isAdminPath || isAdminApiPath) {

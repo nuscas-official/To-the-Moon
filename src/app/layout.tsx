@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import Link from "next/link";
 import "./globals.css";
+import { createClient } from '@/lib/supabase/server'
+import AuthButton from '@/components/features/AuthButton'
+import { getUserRole } from '@/lib/supabase/role'
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -19,11 +22,16 @@ export const metadata: Metadata = {
   description: "The official website and member portal of NUSCAS.",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const supabase = createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  const role = await getUserRole(supabase)
+  const showAdminLink = user && (role === 'committee' || role === 'admin')
+
   return (
     <html lang="en" className="h-full">
       <body
@@ -44,18 +52,23 @@ export default function RootLayout({
               </nav>
             </div>
             <div className="flex items-center gap-4">
-              <Link
-                href="/member/test"
-                className="text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors"
-              >
-                Member Area
-              </Link>
-              <Link
-                href="/admin/test"
-                className="text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors"
-              >
-                Admin Area
-              </Link>
+              {user && (
+                <Link
+                  href="/member/test"
+                  className="text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors"
+                >
+                  Member Area
+                </Link>
+              )}
+              {showAdminLink && (
+                <Link
+                  href="/admin/test"
+                  className="text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors"
+                >
+                  Admin Area
+                </Link>
+              )}
+              <AuthButton user={user} />
             </div>
           </div>
         </header>
