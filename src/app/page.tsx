@@ -75,7 +75,7 @@ export default async function Home() {
                   </Link>
                   {(role === 'committee' || role === 'admin') && (
                     <Link
-                      href="/admin/dashboard"
+                      href="/admin/posts"
                       className="rounded-xl bg-neutral-900 hover:bg-neutral-800 text-white font-bold text-xs uppercase tracking-wider px-4 py-2.5 active:scale-95 transition-all"
                     >
                       Admin Area

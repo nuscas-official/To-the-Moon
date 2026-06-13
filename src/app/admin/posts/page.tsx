@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { getUserRole } from '@/lib/supabase/role'
 import { redirect } from 'next/navigation'
+import Link from 'next/link'
 import AdminPostTable from '@/components/features/AdminPostTable'
 
 interface Post {
@@ -53,6 +54,22 @@ export default async function AdminPostsDashboard() {
         <p className="text-sm text-text-muted mt-1">
           Moderate member submissions, edit any post, and direct-publish news or reviews.
         </p>
+      </div>
+
+      {/* Admin Sub-navigation Tabs */}
+      <div className="flex border-b border-border mb-6">
+        <Link
+          href="/admin/posts"
+          className="pb-3 px-4 text-xs uppercase tracking-wider font-extrabold border-b-2 transition-all border-accent text-accent"
+        >
+          Manage Posts
+        </Link>
+        <Link
+          href="/admin/events"
+          className="pb-3 px-4 text-xs uppercase tracking-wider font-extrabold border-b-2 transition-all border-transparent text-text-muted hover:text-neutral-700"
+        >
+          Manage Events
+        </Link>
       </div>
 
       {/* Admin Post Table client component */}
