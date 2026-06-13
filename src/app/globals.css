@@ -1,27 +1,118 @@
+@import "../styles/tokens.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@layer base {
+  body {
+    @apply bg-background text-foreground font-sans antialiased min-h-full flex flex-col;
+    transition: background-color var(--transition-normal) ease, color var(--transition-normal) ease;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-bold tracking-tight text-neutral-900;
+  }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  .chaos-mode h1, .chaos-mode h2, .chaos-mode h3, .chaos-mode h4, .chaos-mode h5, .chaos-mode h6 {
+    @apply text-white;
   }
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+/* Premium Visual Elements */
+.fanzine-dot-grid {
+  background-image: radial-gradient(var(--color-border) 1.5px, transparent 1.5px);
+  background-size: 24px 24px;
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
+.glass-panel {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.chaos-mode .glass-panel {
+  background: rgba(11, 15, 25, 0.8);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 0, 127, 0.15);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-background);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: var(--radius-full);
+  transition: background-color var(--transition-fast) ease;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-accent);
+}
+
+/* Chaos Mode Cursor Suppression */
+.chaos-mode,
+.chaos-mode * {
+  cursor: none !important;
+}
+
+/* Neon Cursor Trail Elements */
+.chaos-cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background-color: #ff007f;
+  box-shadow: 0 0 10px #ff007f, 0 0 20px rgba(255, 0, 127, 0.5), 0 0 30px rgba(255, 0, 127, 0.3);
+  pointer-events: none;
+  z-index: 999999;
+  transform: translate(-50%, -50%);
+  will-change: transform;
+}
+
+.chaos-cursor-trail {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #00f2fe;
+  box-shadow: 0 0 8px #00f2fe, 0 0 16px rgba(0, 242, 254, 0.5);
+  pointer-events: none;
+  z-index: 999998;
+  transform: translate(-50%, -50%);
+  opacity: 0.7;
+  will-change: transform;
+  transition: transform 0.05s ease-out;
+}
+
+/* Exaggerated Animations for Chaos Mode cards */
+.chaos-card-active {
+  transition: transform var(--transition-normal) cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow var(--transition-normal) ease;
+}
+
+.chaos-mode .chaos-card-active:hover {
+  @apply shadow-neon;
+  animation: chaosVibe 0.3s infinite linear;
+}
+
+/* Keyframe Animations */
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

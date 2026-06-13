@@ -5,6 +5,8 @@ import "./globals.css";
 import { createClient } from '@/lib/supabase/server'
 import AuthButton from '@/components/features/AuthButton'
 import { getUserRole } from '@/lib/supabase/role'
+import ChaosProvider from '@/components/providers/ChaosProvider'
+import Footer from '@/components/layout/Footer'
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -35,63 +37,54 @@ export default async function RootLayout({
   return (
     <html lang="en" className="h-full">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-full flex flex-col bg-slate-50 text-slate-900`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-full flex flex-col bg-background text-foreground transition-colors duration-300`}
       >
-        <header className="sticky top-0 z-50 w-full border-b border-slate-200 bg-white/80 backdrop-blur">
-          <div className="max-w-7xl mx-auto flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center gap-6">
-              <Link href="/" className="font-bold text-xl tracking-tight hover:opacity-80 transition-opacity">
-                NUSCAS
-              </Link>
-              <nav className="hidden md:flex items-center gap-6 text-sm font-medium text-slate-600">
-                <Link href="/blog" className="hover:text-slate-900 transition-colors">Blog</Link>
-                <Link href="/events" className="hover:text-slate-900 transition-colors">Events</Link>
-                <Link href="/gallery" className="hover:text-slate-900 transition-colors">Gallery</Link>
-                <Link href="/ratings" className="hover:text-slate-900 transition-colors">Ratings</Link>
-                <Link href="/vn" className="hover:text-slate-900 transition-colors">Visual Novels</Link>
-              </nav>
-            </div>
-            <div className="flex items-center gap-4">
-              {user && (
-                <Link
-                  href="/member/test"
-                  className="text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors"
-                >
-                  Member Area
+        <ChaosProvider>
+          {/* Header/Navbar */}
+          <header className="sticky top-0 z-50 w-full border-b border-border bg-surface/80 backdrop-blur transition-colors duration-300">
+            <div className="max-w-7xl mx-auto flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
+              <div className="flex items-center gap-6">
+                <Link href="/" className="font-bold text-xl tracking-tight hover:opacity-80 transition-opacity">
+                  NUSCAS
                 </Link>
-              )}
-              {showAdminLink && (
-                <Link
-                  href="/admin/test"
-                  className="text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors"
-                >
-                  Admin Area
-                </Link>
-              )}
-              <AuthButton user={user} />
+                <nav className="hidden md:flex items-center gap-6 text-sm font-medium text-text-muted">
+                  <Link href="/blog" className="hover:text-neutral-900 dark:hover:text-white transition-colors">Blog</Link>
+                  <Link href="/events" className="hover:text-neutral-900 dark:hover:text-white transition-colors">Events</Link>
+                  <Link href="/gallery" className="hover:text-neutral-900 dark:hover:text-white transition-colors">Gallery</Link>
+                  <Link href="/ratings" className="hover:text-neutral-900 dark:hover:text-white transition-colors">Ratings</Link>
+                  <Link href="/vn" className="hover:text-neutral-900 dark:hover:text-white transition-colors">Visual Novels</Link>
+                </nav>
+              </div>
+              <div className="flex items-center gap-4">
+                {user && (
+                  <Link
+                    href="/member/ratings"
+                    className="text-sm font-medium text-text-muted hover:text-neutral-900 dark:hover:text-white transition-colors"
+                  >
+                    Member Area
+                  </Link>
+                )}
+                {showAdminLink && (
+                  <Link
+                    href="/admin/dashboard"
+                    className="text-sm font-medium text-text-muted hover:text-neutral-900 dark:hover:text-white transition-colors"
+                  >
+                    Admin Area
+                  </Link>
+                )}
+                <AuthButton user={user} />
+              </div>
             </div>
-          </div>
-        </header>
+          </header>
 
-        <main className="flex-grow max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8">
-          {children}
-        </main>
+          {/* Main Content Area */}
+          <main className="flex-grow max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8">
+            {children}
+          </main>
 
-        <footer className="border-t border-slate-200 bg-white">
-          <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-slate-500">
-            <div>
-              &copy; {new Date().getFullYear()} NUSCAS. All rights reserved.
-            </div>
-            <div className="flex gap-6">
-              <a href="https://github.com" target="_blank" rel="noreferrer" className="hover:text-slate-900 transition-colors">
-                GitHub
-              </a>
-              <Link href="/about" className="hover:text-slate-900 transition-colors">
-                About Us
-              </Link>
-            </div>
-          </div>
-        </footer>
+          {/* Interactive Footer */}
+          <Footer />
+        </ChaosProvider>
       </body>
     </html>
   );
