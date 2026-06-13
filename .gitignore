@@ -34,3 +34,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# plans
+NUSCAS_Implementation_Plan.md
+NUSCAS_Website_Proposal.md
