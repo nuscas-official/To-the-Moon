@@ -69,6 +69,22 @@ export default async function MemberArticlesPage() {
         </Link>
       </div>
 
+      {/* Member Sub-navigation Tabs */}
+      <div className="flex border-b border-border mb-6">
+        <Link
+          href="/member/articles"
+          className="pb-3 px-4 text-xs uppercase tracking-wider font-extrabold border-b-2 transition-all border-accent text-accent"
+        >
+          My Articles
+        </Link>
+        <Link
+          href="/member/ratings"
+          className="pb-3 px-4 text-xs uppercase tracking-wider font-extrabold border-b-2 transition-all border-transparent text-text-muted hover:text-neutral-700"
+        >
+          My Ratings
+        </Link>
+      </div>
+
       <div className="space-y-10">
         
         {/* SECTION 1: Drafts */}
