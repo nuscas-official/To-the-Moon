@@ -116,3 +116,85 @@
     transform: translateY(0);
   }
 }
+
+/* Markdown Content Rendering Styles */
+.markdown-body {
+  @apply text-neutral-800 text-sm leading-relaxed;
+}
+
+.chaos-mode .markdown-body {
+  @apply text-neutral-200;
+}
+
+.markdown-body p {
+  @apply mb-4 leading-relaxed;
+}
+
+.markdown-body h1 {
+  @apply text-2xl font-black mt-8 mb-4 tracking-tight text-neutral-900 border-b border-border pb-2;
+}
+
+.chaos-mode .markdown-body h1 {
+  @apply text-white border-neutral-800;
+}
+
+.markdown-body h2 {
+  @apply text-xl font-bold mt-6 mb-3 tracking-tight text-neutral-900;
+}
+
+.chaos-mode .markdown-body h2 {
+  @apply text-white;
+}
+
+.markdown-body h3 {
+  @apply text-lg font-bold mt-4 mb-2 text-neutral-800;
+}
+
+.chaos-mode .markdown-body h3 {
+  @apply text-neutral-100;
+}
+
+.markdown-body ul {
+  @apply list-disc list-inside pl-2 mb-4 space-y-1;
+}
+
+.markdown-body ol {
+  @apply list-decimal list-inside pl-2 mb-4 space-y-1;
+}
+
+.markdown-body blockquote {
+  @apply border-l-4 border-accent pl-4 italic text-text-muted my-6;
+}
+
+.markdown-body code {
+  @apply bg-neutral-100 px-1.5 py-0.5 rounded text-xs font-mono text-neutral-900 border border-neutral-200;
+}
+
+.chaos-mode .markdown-body code {
+  @apply bg-neutral-900 text-neutral-100 border-neutral-800;
+}
+
+.markdown-body pre {
+  @apply bg-neutral-950 text-neutral-100 p-4 rounded-xl font-mono text-xs overflow-x-auto my-6 border border-neutral-800;
+}
+
+.markdown-body pre code {
+  @apply bg-transparent p-0 text-inherit border-0;
+}
+
+.markdown-body a {
+  @apply text-accent hover:underline font-bold;
+}
+
+.markdown-body hr {
+  @apply border-t border-border my-8;
+}
+
+.chaos-mode .markdown-body hr {
+  @apply border-neutral-800;
+}
+
+.markdown-body img {
+  @apply rounded-xl max-w-full h-auto my-6 border border-border;
+}
+

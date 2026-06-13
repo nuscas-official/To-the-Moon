@@ -58,7 +58,7 @@ export default async function RootLayout({
               <div className="flex items-center gap-4">
                 {user && (
                   <Link
-                    href="/member/ratings"
+                    href="/member/articles"
                     className="text-sm font-medium text-text-muted hover:text-neutral-900 dark:hover:text-white transition-colors"
                   >
                     Member Area
@@ -66,7 +66,7 @@ export default async function RootLayout({
                 )}
                 {showAdminLink && (
                   <Link
-                    href="/admin/dashboard"
+                    href="/admin/posts"
                     className="text-sm font-medium text-text-muted hover:text-neutral-900 dark:hover:text-white transition-colors"
                   >
                     Admin Area
