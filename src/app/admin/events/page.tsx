@@ -46,17 +46,6 @@ export default async function AdminEventsDashboard() {
 
   return (
     <div className="w-full max-w-7xl mx-auto py-6 animate-fade-in text-left">
-      
-      {/* Back Link */}
-      <Link 
-        href="/admin/posts" 
-        className="inline-flex items-center gap-1 text-xs uppercase tracking-wider font-extrabold text-accent hover:text-accent-hover mb-6 group"
-      >
-        <svg className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-        </svg>
-        <span>Go to Posts Dashboard</span>
-      </Link>
 
       {/* Header */}
       <div className="border-b border-border pb-6 mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">

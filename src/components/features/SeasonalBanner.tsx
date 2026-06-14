@@ -37,9 +37,9 @@ export default async function SeasonalBanner() {
         title: val.title || FALLBACK_PICK.title,
         accent_hex: val.accent_hex || FALLBACK_PICK.accent_hex,
         image_url: val.image_url || FALLBACK_PICK.image_url,
-        description: val.description || FALLBACK_PICK.description || "The featured recommendation of the season.",
-        link: val.link || FALLBACK_PICK.link,
-        type: val.type || FALLBACK_PICK.type || "Seasonal Pick"
+        description: val.description || (val.title ? undefined : FALLBACK_PICK.description),
+        link: val.link || (val.title ? undefined : FALLBACK_PICK.link),
+        type: val.type || "Seasonal Pick"
       }
     }
   } catch (err) {

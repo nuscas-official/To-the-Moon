@@ -87,13 +87,13 @@ export default async function AdminInvitesDashboard() {
       
       {/* Back Link */}
       <Link 
-        href="/admin/posts" 
+        href="/admin/members" 
         className="inline-flex items-center gap-1 text-xs uppercase tracking-wider font-extrabold text-accent hover:text-accent-hover mb-6 group"
       >
         <svg className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
         </svg>
-        <span>Go to Posts Dashboard</span>
+        <span>Go to Members Dashboard</span>
       </Link>
 
       {/* Header */}
