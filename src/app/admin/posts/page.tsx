@@ -70,6 +70,12 @@ export default async function AdminPostsDashboard() {
         >
           Manage Events
         </Link>
+        <Link
+          href="/admin/gallery"
+          className="pb-3 px-4 text-xs uppercase tracking-wider font-extrabold border-b-2 transition-all border-transparent text-text-muted hover:text-neutral-700"
+        >
+          Manage Gallery
+        </Link>
       </div>
 
       {/* Admin Post Table client component */}

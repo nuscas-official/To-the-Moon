@@ -39,14 +39,15 @@ export async function middleware(request: NextRequest) {
   const isMemberPath = pathname.startsWith('/member')
   const isAdminApiPath = pathname.startsWith('/api/admin')
   const isMemberApiPath = pathname.startsWith('/api/member')
+  const isUploadApiPath = pathname.startsWith('/api/uploads')
 
   // Decode JWT access token to get custom role claim
   const userRole = await getUserRole(supabase)
 
-  // /admin/* and /api/admin/* route protection
-  if (isAdminPath || isAdminApiPath) {
+  // /admin/*, /api/admin/*, and /api/uploads/* route protection
+  if (isAdminPath || isAdminApiPath || isUploadApiPath) {
     if (!user) {
-      if (isAdminApiPath) {
+      if (isAdminApiPath || isUploadApiPath) {
         return new NextResponse(
           JSON.stringify({ error: 'Forbidden' }),
           { status: 403, headers: { 'content-type': 'application/json' } }
@@ -58,7 +59,7 @@ export async function middleware(request: NextRequest) {
     }
 
     if (userRole !== 'committee' && userRole !== 'admin') {
-      if (isAdminApiPath) {
+      if (isAdminApiPath || isUploadApiPath) {
         return new NextResponse(
           JSON.stringify({ error: 'Forbidden' }),
           { status: 403, headers: { 'content-type': 'application/json' } }

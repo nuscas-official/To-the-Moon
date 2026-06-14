@@ -23,7 +23,7 @@ export default function EventPhotosManager({ eventId, initialPhotos }: EventPhot
   )
 
   // Add photo states
-  const [newPhotoUrl, setNewPhotoUrl] = useState('')
+  const [file, setFile] = useState<File | null>(null)
   const [newAltText, setNewAltText] = useState('')
   const [adding, setAdding] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -37,20 +37,37 @@ export default function EventPhotosManager({ eventId, initialPhotos }: EventPhot
     e.preventDefault()
     setError(null)
 
-    if (!newPhotoUrl.trim()) {
-      setError('Photo URL is required.')
+    if (!file) {
+      setError('Please select an image file.')
       return
     }
 
     setAdding(true)
     try {
-      // TODO: In Milestone 6, replace this with a real file upload via Cloudflare R2 presigned URLs.
-      const result = await addEventPhotoAction(eventId, newPhotoUrl, newAltText)
+      const formData = new FormData()
+      formData.append('file', file)
+      formData.append('folder', 'events')
+
+      const res = await fetch('/api/uploads/upload', {
+        method: 'POST',
+        body: formData,
+      })
+
+      const data = await res.json()
+      if (!res.ok) {
+        throw new Error(data.error || 'Failed to upload image')
+      }
+
+      const result = await addEventPhotoAction(eventId, data.url, newAltText)
       
       if (result.success && result.photo) {
         setPhotos(prev => [...prev, result.photo as EventPhoto])
-        setNewPhotoUrl('')
+        setFile(null)
         setNewAltText('')
+        
+        const fileInput = document.getElementById('photo_file') as HTMLInputElement
+        if (fileInput) fileInput.value = ''
+        
         router.refresh()
       } else {
         setError(result.error || 'Failed to add photo.')
@@ -138,18 +155,17 @@ export default function EventPhotosManager({ eventId, initialPhotos }: EventPhot
 
         <form onSubmit={handleAddPhoto} className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* Photo URL */}
+            {/* Photo File Input */}
             <div className="flex flex-col space-y-1">
-              <label htmlFor="photo_url" className="text-[10px] uppercase font-black tracking-wider text-neutral-400">
-                Photo Image URL <span className="text-red-500">*</span>
+              <label htmlFor="photo_file" className="text-[10px] uppercase font-black tracking-wider text-neutral-400">
+                Choose Photo Image <span className="text-red-500">*</span>
               </label>
               <input
-                id="photo_url"
-                type="url"
-                value={newPhotoUrl}
-                onChange={(e) => setNewPhotoUrl(e.target.value)}
-                placeholder="e.g. https://images.unsplash.com/photo-..."
-                className="rounded-xl border border-border bg-surface px-4 py-2.5 text-xs text-neutral-800 focus:border-accent focus:ring-1 focus:ring-accent outline-none"
+                id="photo_file"
+                type="file"
+                accept="image/*"
+                onChange={(e) => setFile(e.target.files?.[0] || null)}
+                className="rounded-xl border border-border bg-surface px-4 py-2 text-xs text-neutral-800 focus:border-accent focus:ring-1 focus:ring-accent outline-none"
                 required
               />
             </div>
@@ -157,7 +173,7 @@ export default function EventPhotosManager({ eventId, initialPhotos }: EventPhot
             {/* Alt Text */}
             <div className="flex flex-col space-y-1">
               <label htmlFor="alt_text" className="text-[10px] uppercase font-black tracking-wider text-neutral-400">
-                Alt / Caption Text
+                Caption / Description Text
               </label>
               <input
                 id="alt_text"
@@ -173,10 +189,10 @@ export default function EventPhotosManager({ eventId, initialPhotos }: EventPhot
           <div className="flex justify-end">
             <button
               type="submit"
-              disabled={adding}
+              disabled={adding || !file}
               className="px-4 py-2 rounded-xl bg-neutral-900 hover:bg-neutral-800 text-white font-bold text-[10px] uppercase tracking-wider transition-colors active:scale-95 disabled:opacity-50"
             >
-              {adding ? 'Adding...' : '+ Add Photo'}
+              {adding ? 'Uploading...' : '+ Add Photo to Gallery'}
             </button>
           </div>
         </form>

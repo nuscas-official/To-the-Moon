@@ -81,6 +81,7 @@ create table public.gallery_consent (
   consented_at          timestamptz not null,
   consent_method        text not null,
   artist_credit         text not null,
+  note                  text,
   removal_requested_at  timestamptz,
   removed_at            timestamptz
 );

@@ -4,6 +4,7 @@ import { createClient } from '@/lib/supabase/server'
 import { getUserRole } from '@/lib/supabase/role'
 import { generateUniqueSlug } from '@/lib/utils/slug'
 import { revalidatePath } from 'next/cache'
+import { deleteFromR2 } from '@/lib/r2'
 
 interface EventInput {
   title: string;
@@ -166,11 +167,21 @@ export async function deleteEventAction(id: string) {
   }
 
   try {
-    const { data: event } = await supabase
+    const { data: event, error: fetchError } = await supabase
       .from('events')
-      .select('slug')
+      .select('slug, cover_image_key')
       .eq('id', id)
       .single()
+
+    if (fetchError || !event) {
+      return { success: false, error: 'Event not found.' }
+    }
+
+    // Fetch all associated photo records for R2 cleanup
+    const { data: photos } = await supabase
+      .from('event_photos')
+      .select('storage_key')
+      .eq('event_id', id)
 
     const { error: deleteError } = await supabase
       .from('events')
@@ -182,10 +193,29 @@ export async function deleteEventAction(id: string) {
       return { success: false, error: deleteError.message }
     }
 
-    revalidatePath('/events')
-    if (event) {
-      revalidatePath(`/events/${event.slug}`)
+    // Clean up assets from storage
+    if (event.cover_image_key) {
+      try {
+        await deleteFromR2(event.cover_image_key)
+      } catch (err) {
+        console.error('Failed to delete cover image from storage:', err)
+      }
     }
+
+    if (photos && photos.length > 0) {
+      for (const photo of photos) {
+        if (photo.storage_key) {
+          try {
+            await deleteFromR2(photo.storage_key)
+          } catch (err) {
+            console.error('Failed to delete event photo from storage:', err)
+          }
+        }
+      }
+    }
+
+    revalidatePath('/events')
+    revalidatePath(`/events/${event.slug}`)
     revalidatePath('/admin/events')
     revalidatePath('/')
 
@@ -285,6 +315,17 @@ export async function deleteEventPhotoAction(photoId: string, eventId: string) {
   }
 
   try {
+    // Fetch photo info to get storage_key before delete
+    const { data: photo, error: fetchPhotoError } = await supabase
+      .from('event_photos')
+      .select('storage_key')
+      .eq('id', photoId)
+      .single()
+
+    if (fetchPhotoError || !photo) {
+      return { success: false, error: 'Photo not found or already deleted.' }
+    }
+
     const { error: deleteError } = await supabase
       .from('event_photos')
       .delete()
@@ -293,6 +334,15 @@ export async function deleteEventPhotoAction(photoId: string, eventId: string) {
     if (deleteError) {
       console.error('Error deleting event photo:', deleteError)
       return { success: false, error: deleteError.message }
+    }
+
+    // Clean up file from storage
+    if (photo.storage_key) {
+      try {
+        await deleteFromR2(photo.storage_key)
+      } catch (err) {
+        console.error('Failed to delete photo from storage:', err)
+      }
     }
 
     // Fetch the event slug to revalidate page
