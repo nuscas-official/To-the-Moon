@@ -1,6 +1,7 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 import { getUserRole } from './src/lib/supabase/role'
+import { createAdminClient } from './src/lib/supabase/admin'
 
 export async function middleware(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
@@ -33,6 +34,47 @@ export async function middleware(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser()
 
+  // Decode JWT access token to get custom role claim
+  const userRole = await getUserRole(supabase)
+
+  // Check if user is deactivated
+  if (user) {
+    try {
+      const adminSupabase = createAdminClient()
+      const { data: dbUser } = await adminSupabase
+        .from('users')
+        .select('is_active')
+        .eq('id', user.id)
+        .single()
+
+      if (dbUser && dbUser.is_active === false) {
+        const redirectResponse = NextResponse.redirect(new URL('/?reason=deactivated', request.url))
+        
+        // Use a temporary server client bound to the redirectResponse to clear cookies
+        const signOutSupabase = createServerClient(
+          process.env.NEXT_PUBLIC_SUPABASE_URL!,
+          process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+          {
+            cookies: {
+              getAll() {
+                return request.cookies.getAll()
+              },
+              setAll(cookiesToSet) {
+                cookiesToSet.forEach(({ name, value, options }) =>
+                  redirectResponse.cookies.set(name, value, options)
+                )
+              },
+            },
+          }
+        )
+        await signOutSupabase.auth.signOut()
+        return redirectResponse
+      }
+    } catch (err) {
+      console.error('Middleware deactivation check failed:', err)
+    }
+  }
+
   const pathname = request.nextUrl.pathname
 
   const isAdminPath = pathname.startsWith('/admin')
@@ -40,9 +82,35 @@ export async function middleware(request: NextRequest) {
   const isAdminApiPath = pathname.startsWith('/api/admin')
   const isMemberApiPath = pathname.startsWith('/api/member')
   const isUploadApiPath = pathname.startsWith('/api/uploads')
+  const isAdminMembersPath = pathname.startsWith('/admin/members')
+  const isAdminInvitesApiPath = pathname.startsWith('/api/admin/invites')
 
-  // Decode JWT access token to get custom role claim
-  const userRole = await getUserRole(supabase)
+  // /admin/members/* and /api/admin/invites/* route protection (admin role only)
+  if (isAdminMembersPath || isAdminInvitesApiPath) {
+    if (!user) {
+      if (isAdminInvitesApiPath) {
+        return new NextResponse(
+          JSON.stringify({ error: 'Forbidden' }),
+          { status: 403, headers: { 'content-type': 'application/json' } }
+        )
+      }
+      const url = request.nextUrl.clone()
+      url.pathname = '/'
+      return NextResponse.redirect(url)
+    }
+
+    if (userRole !== 'admin') {
+      if (isAdminInvitesApiPath) {
+        return new NextResponse(
+          JSON.stringify({ error: 'Forbidden' }),
+          { status: 403, headers: { 'content-type': 'application/json' } }
+        )
+      }
+      const url = request.nextUrl.clone()
+      url.pathname = '/'
+      return NextResponse.redirect(url)
+    }
+  }
 
   // /admin/*, /api/admin/*, and /api/uploads/* route protection
   if (isAdminPath || isAdminApiPath || isUploadApiPath) {

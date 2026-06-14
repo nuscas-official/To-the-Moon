@@ -7,12 +7,19 @@ import SeasonalBanner from '@/components/features/SeasonalBanner'
 import AbsurdReasons from '@/components/features/AbsurdReasons'
 import EventsPreview from '@/components/features/EventsPreview'
 
-export default async function Home() {
+interface HomeProps {
+  searchParams?: {
+    reason?: string
+  }
+}
+
+export default async function Home({ searchParams }: HomeProps) {
   const supabase = createClient()
   const { data: { user } } = await supabase.auth.getUser()
   const role = await getUserRole(supabase)
   
   const displayName = user?.user_metadata?.name || user?.email?.split('@')[0] || 'Member'
+  const reason = searchParams?.reason
 
   // Fetch join reasons from site_config server-side
   let joinReasons: string[] = []
@@ -33,6 +40,36 @@ export default async function Home() {
 
   return (
     <div className="w-full space-y-12 pb-16">
+      {/* Toast / Banner Notifications */}
+      {reason && (
+        <div className="w-full animate-fade-in text-left">
+          {reason === 'deactivated' && (
+            <div className="rounded-xl bg-red-50 border border-red-200 p-4 text-xs font-semibold text-red-700 flex items-center gap-2">
+              <svg className="w-4 h-4 text-red-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              </svg>
+              <span>Your account has been deactivated. Please contact an administrator if you believe this is an error.</span>
+            </div>
+          )}
+          {reason === 'invite-required' && (
+            <div className="rounded-xl bg-red-50 border border-red-200 p-4 text-xs font-semibold text-red-700 flex items-center gap-2">
+              <svg className="w-4 h-4 text-red-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              </svg>
+              <span>Registration to the portal is invite-only. You must use a valid invitation link to sign up.</span>
+            </div>
+          )}
+          {reason === 'invalid-token' && (
+            <div className="rounded-xl bg-red-50 border border-red-200 p-4 text-xs font-semibold text-red-700 flex items-center gap-2">
+              <svg className="w-4 h-4 text-red-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              </svg>
+              <span>The invitation link you used is invalid, expired, or has already been redeemed.</span>
+            </div>
+          )}
+        </div>
+      )}
+
       {/* 1. Hero Seasonal Banner */}
       <SeasonalBanner />
 

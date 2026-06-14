@@ -71,7 +71,7 @@ export default async function AdminEventsDashboard() {
       </div>
 
       {/* Admin Sub-navigation Tabs */}
-      <div className="flex border-b border-border mb-6">
+      <div className="flex border-b border-border mb-6 overflow-x-auto whitespace-nowrap">
         <Link
           href="/admin/posts"
           className="pb-3 px-4 text-xs uppercase tracking-wider font-extrabold border-b-2 transition-all border-transparent text-text-muted hover:text-neutral-700"
@@ -90,6 +90,22 @@ export default async function AdminEventsDashboard() {
         >
           Manage Gallery
         </Link>
+        {role === 'admin' && (
+          <>
+            <Link
+              href="/admin/members"
+              className="pb-3 px-4 text-xs uppercase tracking-wider font-extrabold border-b-2 transition-all border-transparent text-text-muted hover:text-neutral-700"
+            >
+              Manage Members
+            </Link>
+            <Link
+              href="/admin/members/invites"
+              className="pb-3 px-4 text-xs uppercase tracking-wider font-extrabold border-b-2 transition-all border-transparent text-text-muted hover:text-neutral-700"
+            >
+              Manage Invites
+            </Link>
+          </>
+        )}
       </div>
 
       {/* Event list dashboard */}
