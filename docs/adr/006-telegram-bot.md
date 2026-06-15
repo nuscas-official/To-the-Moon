@@ -27,15 +27,13 @@ For production deployment, relying on the default in-memory session store is **n
 1. **Serverless Instance Recycling**: Vercel recycles serverless containers frequently. Any in-progress rating flow (e.g., waiting for the user to select a rating score) will be lost if the container spins down.
 2. **Horizontal Scaling**: Multiple concurrent requests may be routed to different serverless containers, making memory sharing impossible.
 
-### Layman's Explanation
-* **In-Memory (Mental Notes)**: The bot remembers your active conversation (like selecting an anime to rate) by keeping it in the server's temporary memory. If the server goes to sleep (which Vercel does constantly when there is no traffic), the bot "forgets" what you were doing.
-* **Persistent Database (The Order Ticket)**: The bot writes your conversation state onto a central database ticket (Supabase). Even if the server shuts down, restarts, or a different server handles your next message, the server reads the ticket and resumes the conversation where you left off.
-* **Horizontal Scaling (Multiple Baristas)**: If many users talk to the bot at once, Vercel starts up multiple copies of the server to handle the load. With in-memory sessions, Server Copy B cannot read Server Copy A's mind. A database lets all copies look at the same "order tickets" to share progress.
-
 ### User Experience (UX) Impact
 - **In-Memory (Time Expired)**: If a member initiates a `/rate` flow but gets distracted and waits more than a few minutes before tapping a button, the server will sleep. When they finally tap the button, the bot will fail with a *"Session expired. Please start over with /rate."* error.
 - **In-Memory (Busy Server / Random Failure)**: During peak usage (e.g., a club meeting), Vercel automatically spins up multiple copies of the server. A user's messages might be routed to different copies. This causes the bot to randomly forget their active search, throwing *"Session expired"* errors even if the user replies instantly. The bot feels buggy and unpredictable.
-- **Persistent Database**: Members can pause their conversation indefinitely, and multiple concurrent users never experience state conflicts or random session drops.
+
+### Solution
+* **Persistent Database (The Order Ticket)**: The bot writes your conversation state onto a central database ticket (Supabase). Even if the server shuts down, restarts, or a different server handles your next message, the server reads the ticket and resumes the conversation where you left off.
+- Members can pause their conversation indefinitely, and multiple concurrent users never experience state conflicts or random session drops.
 
 ### Recommended Implementation
 To upgrade the bot to use persistent database sessions:
