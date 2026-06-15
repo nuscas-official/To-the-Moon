@@ -33,7 +33,7 @@ export default async function MemberSettingsPage() {
   }
 
   const telegramId = profile?.telegram_id || null
-  const botUsername = process.env.NEXT_PUBLIC_TELEGRAM_BOT_USERNAME || 'NUSCAS_Bot'
+  const botUsername = process.env.NEXT_PUBLIC_TELEGRAM_BOT_USERNAME || 'LunaProto_bot:'
 
   return (
     <div className="w-full max-w-7xl mx-auto py-6 animate-fade-in text-left">
