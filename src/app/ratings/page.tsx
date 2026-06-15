@@ -1,5 +1,11 @@
 import { createClient } from '@/lib/supabase/server'
 import PublicRatingsView from '@/components/features/PublicRatingsView'
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: "Anime & Manga Ratings",
+  description: "Browse the community rating aggregates and top picks submitted by members of the university anime club.",
+}
 
 interface RatingAggregate {
   anilist_id: number;

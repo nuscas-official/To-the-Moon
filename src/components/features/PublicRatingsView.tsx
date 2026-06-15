@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useMemo } from 'react'
+import Image from 'next/image'
 
 interface RatingAggregate {
   anilist_id: number;
@@ -150,13 +151,14 @@ export default function PublicRatingsView({ initialAggregates }: PublicRatingsVi
               className="group flex items-center gap-4 overflow-hidden rounded-2xl border border-border bg-surface p-4 shadow-sm hover:shadow-md hover:border-accent/30 transition-all duration-300 chaos-card-active text-left"
             >
               {/* Cover Image */}
-              <div className="h-24 w-16 flex-shrink-0 overflow-hidden rounded-lg border border-border bg-neutral-100 shadow-inner">
+              <div className="relative h-24 w-16 flex-shrink-0 overflow-hidden rounded-lg border border-border bg-neutral-100 shadow-inner">
                 {item.cover_image_url ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
+                  <Image
                     src={item.cover_image_url}
                     alt=""
-                    className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    fill
+                    unoptimized
+                    className="object-cover group-hover:scale-105 transition-transform duration-500"
                   />
                 ) : (
                   <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-accent-muted to-accent/15 text-accent/30">

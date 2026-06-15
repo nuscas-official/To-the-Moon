@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { searchAniList, type AniListResult } from '@/lib/anilist'
 import { submitRatingAction, deleteRatingAction } from '@/server/actions/ratings'
@@ -208,10 +209,9 @@ export default function MemberRatingsDashboard({ initialRatings }: MemberRatings
                   onClick={() => handleOpenForSearchResult(item)}
                   className="flex flex-col items-center p-3 rounded-xl border border-border hover:border-accent bg-surface hover:bg-neutral-50/50 shadow-sm transition-all text-center group cursor-pointer"
                 >
-                  <div className="h-28 w-20 overflow-hidden rounded-md border border-border bg-neutral-100 mb-3 shrink-0">
+                  <div className="relative h-28 w-20 overflow-hidden rounded-md border border-border bg-neutral-100 mb-3 shrink-0">
                     {item.coverImage.medium ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img src={item.coverImage.medium} alt="" className="w-full h-full object-cover" />
+                      <Image fill unoptimized src={item.coverImage.medium} alt={item.title.english || item.title.romaji || 'Cover image'} className="object-cover" />
                     ) : (
                       <div className="w-full h-full bg-neutral-200 flex items-center justify-center text-neutral-400">
                         <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -279,10 +279,9 @@ export default function MemberRatingsDashboard({ initialRatings }: MemberRatings
                     {/* Cover & Title */}
                     <td className="px-6 py-4 font-normal text-neutral-900">
                       <div className="flex items-center gap-3">
-                        <div className="h-10 w-7 flex-shrink-0 overflow-hidden rounded border border-border bg-neutral-100">
+                        <div className="relative h-10 w-7 flex-shrink-0 overflow-hidden rounded border border-border bg-neutral-100">
                           {rating.cover_image_url ? (
-                            // eslint-disable-next-line @next/next/no-img-element
-                            <img src={rating.cover_image_url} alt="" className="h-full w-full object-cover" />
+                            <Image fill unoptimized src={rating.cover_image_url} alt={rating.title_en} className="object-cover" />
                           ) : (
                             <div className="flex h-full w-full items-center justify-center bg-neutral-100 text-neutral-400">
                               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -378,10 +377,9 @@ export default function MemberRatingsDashboard({ initialRatings }: MemberRatings
             <form onSubmit={handleSaveRating} className="space-y-5">
               {/* Media Card Details */}
               <div className="flex gap-3 items-center bg-neutral-50 p-3 rounded-xl border border-border/80">
-                <div className="h-14 w-10 overflow-hidden rounded border border-border bg-neutral-100 shrink-0">
+                <div className="relative h-14 w-10 overflow-hidden rounded border border-border bg-neutral-100 shrink-0">
                   {activeRating.cover_image_url ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img src={activeRating.cover_image_url} alt="" className="w-full h-full object-cover" />
+                    <Image fill unoptimized src={activeRating.cover_image_url} alt={activeRating.title_en} className="object-cover" />
                   ) : (
                     <div className="w-full h-full bg-neutral-200 flex items-center justify-center text-neutral-400" />
                   )}

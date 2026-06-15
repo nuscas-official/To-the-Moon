@@ -17,6 +17,16 @@
   .chaos-mode h1, .chaos-mode h2, .chaos-mode h3, .chaos-mode h4, .chaos-mode h5, .chaos-mode h6 {
     @apply text-white;
   }
+
+  /* Accessible visible focus outline for keyboard navigation */
+  button:focus-visible,
+  a:focus-visible,
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
 }
 
 /* Premium Visual Elements */

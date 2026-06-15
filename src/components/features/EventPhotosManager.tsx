@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { addEventPhotoAction, deleteEventPhotoAction, reorderEventPhotosAction } from '@/server/actions/events'
 
@@ -44,8 +45,12 @@ export default function EventPhotosManager({ eventId, initialPhotos }: EventPhot
 
     setAdding(true)
     try {
+      // Compress file client-side using canvas WebP conversion
+      const { compressImageClient } = await import('@/lib/image-client')
+      const compressedFile = await compressImageClient(file)
+
       const formData = new FormData()
-      formData.append('file', file)
+      formData.append('file', compressedFile)
       formData.append('folder', 'events')
 
       const res = await fetch('/api/uploads/upload', {
@@ -239,11 +244,12 @@ export default function EventPhotosManager({ eventId, initialPhotos }: EventPhot
                   }`}
                 >
                   {/* Photo Image */}
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
+                  <Image
                     src={photo.storage_key}
                     alt={photo.alt_text || ''}
-                    className="w-full h-full object-cover pointer-events-none"
+                    fill
+                    unoptimized
+                    className="object-cover pointer-events-none"
                   />
 
                   {/* Drag Handle Indicator */}

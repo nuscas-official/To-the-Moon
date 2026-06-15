@@ -1,5 +1,12 @@
 import { createClient } from '@/lib/supabase/server'
 import Link from 'next/link'
+import type { Metadata } from 'next'
+import Image from 'next/image'
+
+export const metadata: Metadata = {
+  title: "Blog & Articles",
+  description: "Browse news, essays, interviews, and reviews written by members of the university anime club.",
+}
 
 interface Post {
   id: string;
@@ -128,11 +135,12 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
                   {/* Thumbnail / Header */}
                   <div className="relative h-48 w-full bg-neutral-100 overflow-hidden border-b border-border">
                     {post.cover_image_key ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img 
+                      <Image 
                         src={post.cover_image_key} 
                         alt={post.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        fill
+                        unoptimized
+                        className="object-cover group-hover:scale-105 transition-transform duration-500"
                       />
                     ) : (
                       <div className="w-full h-full bg-gradient-to-br from-accent/5 to-accent/20 flex items-center justify-center">

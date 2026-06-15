@@ -69,6 +69,41 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Bad Request: media_type must be anime, manga, or other.' }, { status: 400 })
     }
 
+    // 3.5. Enforce Rate Limit: max 30 ratings submitted today per user (excluding updates of existing ratings)
+    const startOfDay = new Date()
+    startOfDay.setUTCHours(0, 0, 0, 0)
+
+    const { count, error: countError } = await supabase
+      .from('ratings')
+      .select('id', { count: 'exact', head: true })
+      .eq('user_id', user.id)
+      .gte('created_at', startOfDay.toISOString())
+
+    if (countError) {
+      console.error('Error counting ratings for rate limit:', countError)
+      return NextResponse.json({ error: 'Internal Server Error: Rate limit verification failed.' }, { status: 500 })
+    }
+
+    if (count !== null && count >= 30) {
+      // Check if this is an update to an existing rating for this user & anilist_id
+      const { data: existingRating, error: existError } = await supabase
+        .from('ratings')
+        .select('id')
+        .eq('user_id', user.id)
+        .eq('anilist_id', anilist_id)
+        .maybeSingle()
+
+      if (existError) {
+        console.error('Error checking existing rating for rate limit:', existError)
+        return NextResponse.json({ error: 'Internal Server Error: Rate limit verification failed.' }, { status: 500 })
+      }
+
+      // If it doesn't exist, this is a new submission, which exceeds the limit
+      if (!existingRating) {
+        return NextResponse.json({ error: 'Rate Limit Exceeded: You have reached the limit of 30 review submissions per day.' }, { status: 429 })
+      }
+    }
+
     // 4. Perform database upsert
     const { error: upsertError } = await supabase
       .from('ratings')

@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Image from 'next/image'
 import { updateSeasonalPickAction, updateJoinReasonsAction } from '@/server/actions/settings'
 
 interface SeasonalPick {
@@ -213,11 +214,12 @@ export default function AdminSettingsClient({
               {/* Image Live Preview */}
               {seasonalPick.image_url && /^https?:\/\/.+/.test(seasonalPick.image_url) && (
                 <div className="mt-3 rounded-xl border border-neutral-200 overflow-hidden bg-neutral-100 aspect-video relative">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
+                  <Image
                     src={seasonalPick.image_url}
                     alt="Live preview"
-                    className="w-full h-full object-cover"
+                    fill
+                    unoptimized
+                    className="object-cover"
                   />
                   <div className="absolute bottom-2 left-2 bg-neutral-900/80 backdrop-blur text-white text-[9px] font-black uppercase tracking-wider px-2 py-0.5 rounded">
                     Preview

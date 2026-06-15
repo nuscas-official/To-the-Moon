@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import Image from 'next/image'
 import { deleteEventAction } from '@/server/actions/events'
 
 interface ClubEvent {
@@ -120,13 +121,14 @@ export default function AdminEventList({ initialEvents }: AdminEventListProps) {
                     <td className="px-6 py-4 font-normal text-neutral-900">
                       <div className="flex items-center gap-3">
                         {/* Cover Image Thumbnail */}
-                        <div className="h-12 w-20 flex-shrink-0 overflow-hidden rounded-lg border border-border bg-neutral-100">
+                        <div className="relative h-12 w-20 flex-shrink-0 overflow-hidden rounded-lg border border-border bg-neutral-100">
                           {event.cover_image_key ? (
-                            // eslint-disable-next-line @next/next/no-img-element
-                            <img 
+                            <Image 
                               src={event.cover_image_key} 
                               alt="" 
-                              className="h-full w-full object-cover"
+                              fill
+                              unoptimized
+                              className="object-cover"
                             />
                           ) : (
                             <div className="flex h-full w-full items-center justify-center bg-neutral-100 text-neutral-400">

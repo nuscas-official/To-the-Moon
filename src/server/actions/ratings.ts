@@ -54,6 +54,41 @@ export async function submitRatingAction(input: RatingInput) {
     return { success: false, error: 'Invalid media type.' }
   }
 
+  // 3.5. Enforce Rate Limit: max 30 ratings submitted today per user (excluding updates of existing ratings)
+  const startOfDay = new Date()
+  startOfDay.setUTCHours(0, 0, 0, 0)
+
+  const { count, error: countError } = await supabase
+    .from('ratings')
+    .select('id', { count: 'exact', head: true })
+    .eq('user_id', user.id)
+    .gte('created_at', startOfDay.toISOString())
+
+  if (countError) {
+    console.error('Error counting ratings for rate limit in server action:', countError)
+    return { success: false, error: 'Failed to verify submission rate limit.' }
+  }
+
+  if (count !== null && count >= 30) {
+    // Check if this is an update to an existing rating for this user & anilist_id
+    const { data: existingRating, error: existError } = await supabase
+      .from('ratings')
+      .select('id')
+      .eq('user_id', user.id)
+      .eq('anilist_id', input.anilist_id)
+      .maybeSingle()
+
+    if (existError) {
+      console.error('Error checking existing rating for rate limit in server action:', existError)
+      return { success: false, error: 'Failed to verify submission rate limit.' }
+    }
+
+    // If it doesn't exist, this is a new submission, which exceeds the limit
+    if (!existingRating) {
+      return { success: false, error: 'Rate Limit Exceeded: You have reached the limit of 30 review submissions per day.' }
+    }
+  }
+
   try {
     // 4. Upsert rating (user_id and anilist_id unique constraint guarantees single entry per title)
     const { error: upsertError } = await supabase

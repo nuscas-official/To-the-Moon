@@ -101,12 +101,13 @@ export default function PublicGalleryClient({ artworks }: PublicGalleryClientPro
             className="relative max-w-5xl max-h-[80vh] flex flex-col items-center p-4"
             onClick={(e) => e.stopPropagation()} // block closing when clicking the image
           >
-            <div className="relative max-h-[70vh] flex items-center justify-center">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
+            <div className="relative w-[90vw] h-[70vh]">
+              <Image
                 src={selectedArtwork.storage_key}
                 alt={selectedArtwork.title || 'Full size artwork'}
-                className="max-h-[70vh] max-w-[90vw] object-contain rounded-xl border border-white/10 shadow-2xl animate-scale-up"
+                fill
+                unoptimized
+                className="object-contain rounded-xl border border-white/10 shadow-2xl animate-scale-up"
               />
             </div>
 

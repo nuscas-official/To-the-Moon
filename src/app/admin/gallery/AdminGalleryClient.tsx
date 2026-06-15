@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { createArtworkAction, takedownArtworkAction } from '@/server/actions/gallery'
 
@@ -64,9 +65,13 @@ export default function AdminGalleryClient({ initialArtworks }: AdminGalleryClie
     setProcessing(true)
 
     try {
+      // Compress file client-side using canvas WebP conversion
+      const { compressImageClient } = await import('@/lib/image-client')
+      const compressedFile = await compressImageClient(file)
+
       // 1. Upload file to /api/uploads/upload
       const formData = new FormData()
-      formData.append('file', file)
+      formData.append('file', compressedFile)
       formData.append('folder', 'gallery')
 
       const uploadRes = await fetch('/api/uploads/upload', {
@@ -330,8 +335,7 @@ export default function AdminGalleryClient({ initialArtworks }: AdminGalleryClie
                         <span className="text-xs uppercase font-extrabold text-neutral-500">Asset Deleted</span>
                       </div>
                     ) : (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img src={art.storage_key} alt={art.title || 'Curated artwork'} className="w-full h-full object-cover" />
+                      <Image fill unoptimized src={art.storage_key} alt={art.title || 'Curated artwork'} className="object-cover" />
                     )}
 
                     {/* Status Badge */}

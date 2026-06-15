@@ -1,8 +1,27 @@
 import { createClient } from '@/lib/supabase/server'
+import { createClient as createBaseClient } from '@supabase/supabase-js'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
+import Image from 'next/image'
 import { MDXRemote } from 'next-mdx-remote/rsc'
 import type { Metadata } from 'next'
+
+export async function generateStaticParams() {
+  const supabase = createBaseClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  )
+  const { data: posts } = await supabase
+    .from('posts')
+    .select('slug')
+    .eq('status', 'published')
+
+  if (!posts) return []
+
+  return posts.map((post) => ({
+    slug: post.slug,
+  }))
+}
 
 interface PostDetailPageProps {
   params: {
@@ -110,11 +129,12 @@ export default async function PostDetailPage({ params }: PostDetailPageProps) {
       {/* Large Featured Image */}
       {post.cover_image_key && (
         <div className="relative w-full h-64 sm:h-[400px] rounded-2xl overflow-hidden border border-border shadow-sm mb-10">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img 
+          <Image 
             src={post.cover_image_key} 
             alt={post.title}
-            className="w-full h-full object-cover object-center"
+            fill
+            unoptimized
+            className="object-cover object-center"
           />
         </div>
       )}

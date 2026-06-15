@@ -1,5 +1,11 @@
 import { createClient } from '@/lib/supabase/server'
 import EventsTabs from '@/components/features/EventsTabs'
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: "Events & Activities",
+  description: "Check out upcoming and past events hosted by our university anime club, including screenings, workshops, and gatherings.",
+}
 
 interface ClubEvent {
   id: string;

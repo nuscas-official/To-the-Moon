@@ -34,6 +34,32 @@ const nextConfig = {
       }] : [])
     ],
   },
+  async headers() {
+    return [
+      {
+        source: '/:path*',
+        headers: [
+          {
+            key: 'Content-Security-Policy',
+            value: [
+              "default-src 'self';",
+              "script-src 'self' 'unsafe-eval' 'unsafe-inline';",
+              "style-src 'self' 'unsafe-inline';",
+              "img-src 'self' blob: data: https://images.unsplash.com https://*.r2.dev https://*.anilist.co https://s4.anilist.co;",
+              "font-src 'self' data:;",
+              "connect-src 'self' https://graphql.anilist.co https://*.supabase.co wss://*.supabase.co;",
+              "frame-src 'self' https://*.supabase.co;",
+              "object-src 'none';",
+              "base-uri 'self';",
+              "form-action 'self';",
+              "frame-ancestors 'none';",
+              "upgrade-insecure-requests;",
+            ].join(' '),
+          },
+        ],
+      },
+    ];
+  },
 };
 
 export default nextConfig;

@@ -20,8 +20,34 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "NUSCAS | University Anime Club",
+  title: {
+    default: "NUSCAS | University Anime Club",
+    template: "%s | NUSCAS"
+  },
   description: "The official website and member portal of NUSCAS.",
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://to-the-moon-gold.vercel.app"),
+  openGraph: {
+    title: "NUSCAS | University Anime Club",
+    description: "The official website and member portal of NUSCAS.",
+    url: "/",
+    siteName: "NUSCAS",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "NUSCAS Portal"
+      }
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "NUSCAS | University Anime Club",
+    description: "The official website and member portal of NUSCAS.",
+    images: ["/og-image.png"],
+  }
 };
 
 export default async function RootLayout({
@@ -40,6 +66,14 @@ export default async function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-full flex flex-col bg-background text-foreground transition-colors duration-300`}
       >
         <ChaosProvider>
+          {/* Skip to content link for a11y */}
+          <a
+            href="#main-content"
+            className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[100] bg-accent text-accent-foreground px-4 py-2 rounded-md shadow-lg font-medium outline-none ring-2 ring-accent transition-all"
+          >
+            Skip to content
+          </a>
+
           {/* Header/Navbar */}
           <header className="sticky top-0 z-50 w-full border-b border-border bg-surface/80 backdrop-blur transition-colors duration-300">
             <div className="max-w-7xl mx-auto flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
@@ -78,7 +112,7 @@ export default async function RootLayout({
           </header>
 
           {/* Main Content Area */}
-          <main className="flex-grow max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8">
+          <main id="main-content" className="flex-grow max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8 outline-none">
             {children}
           </main>
 

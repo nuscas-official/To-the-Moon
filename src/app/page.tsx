@@ -6,6 +6,12 @@ import Link from 'next/link'
 import SeasonalBanner from '@/components/features/SeasonalBanner'
 import AbsurdReasons from '@/components/features/AbsurdReasons'
 import EventsPreview from '@/components/features/EventsPreview'
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: "Home | University Anime Club",
+  description: "Welcome to the official member portal of the university anime club. Submit ratings, discover events, read blogs, and explore our gallery.",
+}
 
 interface HomeProps {
   searchParams?: {

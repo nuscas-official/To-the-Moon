@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 
 interface EventInput {
@@ -72,11 +73,15 @@ export default function EventForm({ initialData, onSave }: EventFormProps) {
     setUploadProgress('Compressing & uploading...')
     setError(null)
 
-    const formData = new FormData()
-    formData.append('file', file)
-    formData.append('folder', 'events')
-
     try {
+      // Compress file client-side using canvas WebP conversion
+      const { compressImageClient } = await import('@/lib/image-client')
+      const compressedFile = await compressImageClient(file)
+
+      const formData = new FormData()
+      formData.append('file', compressedFile)
+      formData.append('folder', 'events')
+
       const res = await fetch('/api/uploads/upload', {
         method: 'POST',
         body: formData,
@@ -262,8 +267,7 @@ export default function EventForm({ initialData, onSave }: EventFormProps) {
         </span>
         {coverImageKey ? (
           <div className="relative h-60 w-full rounded-xl border border-border bg-neutral-100 overflow-hidden group">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={coverImageKey} alt="Cover image preview" className="w-full h-full object-cover" />
+            <Image fill unoptimized src={coverImageKey} alt="Cover image preview" className="object-cover" />
             <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3">
               <button
                 type="button"

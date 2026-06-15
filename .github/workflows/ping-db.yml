@@ -1,0 +1,16 @@
+name: Ping Database (Prevent Free Tier Pause)
+
+on:
+  schedule:
+    - cron: '0 9 * * 1' # Runs every Monday at 9:00 AM UTC (5:00 PM SG/Malay time)
+  workflow_dispatch:     # Allows manual triggering via GitHub Actions UI
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Health Endpoint
+        run: |
+          curl -f \
+            -H "X-Health-Check-Key: ${{ secrets.HEALTH_CHECK_SECRET }}" \
+            "https://to-the-moon-gold.vercel.app/api/health"

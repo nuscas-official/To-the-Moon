@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 
 interface ClubEvent {
   id: string;
@@ -92,11 +93,12 @@ export default function EventsTabs({ upcomingEvents, pastEvents }: EventsTabsPro
                 {/* Cover Image */}
                 <div className="relative h-48 w-full bg-neutral-100 overflow-hidden border-b border-border">
                   {event.cover_image_key ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
+                    <Image
                       src={event.cover_image_key}
                       alt={event.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      fill
+                      sizes="(max-width: 768px) 100vw, 400px"
+                      className="object-cover group-hover:scale-105 transition-transform duration-500"
                     />
                   ) : (
                     <div className="w-full h-full bg-gradient-to-br from-accent-muted to-accent/20 flex items-center justify-center">

@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
+import Image from 'next/image'
 
 interface EventPhoto {
   id: string;
@@ -132,11 +133,12 @@ export default async function EventDetailPage({ params }: { params: { slug: stri
         {/* Cover Banner */}
         <div className="relative h-64 sm:h-96 w-full bg-neutral-100 overflow-hidden border-b border-border">
           {event.cover_image_key ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
+            <Image
               src={event.cover_image_key}
               alt={event.title}
-              className="w-full h-full object-cover"
+              fill
+              unoptimized
+              className="object-cover"
             />
           ) : (
             <div className="w-full h-full bg-gradient-to-br from-accent-muted to-accent/20 flex items-center justify-center">
@@ -222,11 +224,12 @@ export default async function EventDetailPage({ params }: { params: { slug: stri
                 key={photo.id}
                 className="group relative h-60 overflow-hidden rounded-2xl border border-border bg-neutral-100 shadow-sm hover:shadow-md hover:border-accent/20 transition-all duration-300 chaos-card-active"
               >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
+                <Image
                   src={photo.storage_key}
                   alt={photo.alt_text || 'Event photo'}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  fill
+                  unoptimized
+                  className="object-cover group-hover:scale-105 transition-transform duration-500"
                 />
                 {photo.alt_text && (
                   <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">

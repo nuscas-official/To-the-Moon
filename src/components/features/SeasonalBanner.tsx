@@ -1,5 +1,6 @@
 import { createAdminClient } from '@/lib/supabase/admin'
 import Link from 'next/link'
+import Image from 'next/image'
 
 interface SeasonalPick {
   title: string;
@@ -58,11 +59,12 @@ export default async function SeasonalBanner() {
     >
       {/* Background Image Container */}
       <div className="absolute inset-0 z-0">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img 
+        <Image 
           src={seasonalPick.image_url} 
           alt={seasonalPick.title}
-          className="w-full h-full object-cover object-center scale-100 group-hover:scale-105 transition-transform duration-[6000ms] ease-out opacity-60 group-hover:opacity-75"
+          fill
+          unoptimized
+          className="object-cover object-center scale-100 group-hover:scale-105 transition-transform duration-[6000ms] ease-out opacity-60 group-hover:opacity-75"
         />
         {/* Dark Editorial Vignette / Overlay Gradients */}
         <div className="absolute inset-0 bg-gradient-to-t from-neutral-950 via-neutral-950/40 to-transparent z-10" />
