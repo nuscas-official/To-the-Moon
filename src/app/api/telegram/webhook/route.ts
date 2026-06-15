@@ -27,8 +27,12 @@ export async function POST(request: Request) {
     const update = await request.json()
     const bot = getBotInstance()
 
-    // Initialize bot info (fetches bot username/details from Telegram) if not already cached
-    if (!bot.botInfo) {
+    // Initialize bot info if not already cached (accessing bot.botInfo throws if unset)
+    try {
+      if (bot.botInfo) {
+        // Already initialized
+      }
+    } catch {
       await bot.init()
     }
     
