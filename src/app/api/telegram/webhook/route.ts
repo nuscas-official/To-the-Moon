@@ -26,6 +26,11 @@ export async function POST(request: Request) {
     // 2. Parse and handle update
     const update = await request.json()
     const bot = getBotInstance()
+
+    // Initialize bot info (fetches bot username/details from Telegram) if not already cached
+    if (!bot.botInfo) {
+      await bot.init()
+    }
     
     // We must await update handling in serverless environments to prevent early termination
     await bot.handleUpdate(update)
