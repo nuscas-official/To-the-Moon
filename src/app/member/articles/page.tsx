@@ -83,6 +83,12 @@ export default async function MemberArticlesPage() {
         >
           My Ratings
         </Link>
+        <Link
+          href="/member/settings"
+          className="pb-3 px-4 text-xs uppercase tracking-wider font-extrabold border-b-2 transition-all border-transparent text-text-muted hover:text-neutral-700"
+        >
+          Settings
+        </Link>
       </div>
 
       <div className="space-y-10">
