@@ -116,6 +116,8 @@ export async function POST(request: Request) {
         score: validatedScore,
         note: note ? note.trim() : null,
         updated_at: new Date().toISOString(),
+      }, {
+        onConflict: 'user_id,anilist_id'
       })
 
     if (upsertError) {

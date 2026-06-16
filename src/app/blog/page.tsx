@@ -43,7 +43,7 @@ function getExcerpt(content: string, length = 120): string {
     .replace(/[#*`_\[\]()]/g, "") // remove simple Markdown formatting
     .replace(/\s+/g, " ")
     .trim()
-  
+
   if (clean.length <= length) return clean
   return clean.slice(0, length) + "..."
 }
@@ -72,14 +72,14 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
 
   return (
     <div className="w-full max-w-7xl mx-auto py-6 animate-fade-in">
-      
+
       {/* Title Header */}
       <div className="border-b border-border pb-6 mb-8 text-left">
         <h1 className="text-4xl font-black tracking-tight text-neutral-900 sm:text-5xl">
           Club Blog & Reviews
         </h1>
         <p className="text-base text-text-muted mt-2 max-w-2xl leading-relaxed">
-          Explore news, reviews, long-form essays, and the legendary presidential interview series written by members of the NUS Anime Club.
+          Explore news, reviews, long-form essays, and the legendary presidential interview series written by members of the NUSCAS.
         </p>
       </div>
 
@@ -89,16 +89,15 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
         {POST_TYPES.map((type) => {
           const isActive = activeType === type.value
           const href = type.value === 'all' ? '/blog' : `/blog?type=${type.value}`
-          
+
           return (
             <Link
               key={type.value}
               href={href}
-              className={`px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all border ${
-                isActive 
-                  ? 'bg-neutral-900 text-white border-neutral-900 shadow-sm' 
+              className={`px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all border ${isActive
+                  ? 'bg-neutral-900 text-white border-neutral-900 shadow-sm'
                   : 'bg-surface hover:bg-surface-hover text-text-muted border-border'
-              }`}
+                }`}
             >
               {type.label}
             </Link>
@@ -127,7 +126,7 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
             })
 
             return (
-              <article 
+              <article
                 key={post.id}
                 className="group flex flex-col justify-between overflow-hidden rounded-2xl border border-border bg-surface shadow-sm hover:shadow-md hover:border-accent/30 transition-all duration-300 chaos-card-active"
               >
@@ -135,8 +134,8 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
                   {/* Thumbnail / Header */}
                   <div className="relative h-48 w-full bg-neutral-100 overflow-hidden border-b border-border">
                     {post.cover_image_key ? (
-                      <Image 
-                        src={post.cover_image_key} 
+                      <Image
+                        src={post.cover_image_key}
                         alt={post.title}
                         fill
                         unoptimized
@@ -160,13 +159,13 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
                     <div className="text-[10px] uppercase font-bold text-accent tracking-wider">
                       {publishDate}
                     </div>
-                    
+
                     <h2 className="text-xl font-black text-neutral-900 tracking-tight mt-2 line-clamp-2 group-hover:text-accent transition-colors">
                       <Link href={`/blog/${post.slug}`}>
                         {post.title}
                       </Link>
                     </h2>
-                    
+
                     <p className="text-xs text-text-muted mt-3 line-clamp-3 leading-relaxed">
                       {getExcerpt(post.content_mdx)}
                     </p>
@@ -181,8 +180,8 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
                     </span>
                     <span>By {post.author?.display_name || 'Member'}</span>
                   </span>
-                  
-                  <Link 
+
+                  <Link
                     href={`/blog/${post.slug}`}
                     className="font-bold text-accent group-hover:underline flex items-center gap-0.5"
                   >

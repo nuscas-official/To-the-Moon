@@ -1,20 +1,20 @@
 /* Design Tokens System for NUSCAS Website */
 
 :root {
-  /* Colors - Default Theme (Clean Light Mode with Violet Accents) */
-  --color-background: #f8fafc;        /* slate-50 */
-  --color-foreground: #0f172a;        /* slate-900 */
+  /* Colors - Default Theme (Clean Light Mode with Logo-Inspired Orange & Navy Accents) */
+  --color-background: #fdfdfd;        /* Soft off-white */
+  --color-foreground: #122547;        /* Logo-inspired Navy Blue (#1b335f, optimized for text contrast) */
   --color-surface: #ffffff;           /* Pure white */
   --color-surface-raised: #ffffff;    /* Card white */
-  --color-surface-hover: #f1f5f9;     /* slate-100 */
-  --color-text: #0f172a;              /* slate-900 */
-  --color-text-muted: #64748b;        /* slate-500 */
+  --color-surface-hover: #f8fafc;     /* Soft slate hover */
+  --color-text: #122547;              /* Deep Navy text */
+  --color-text-muted: #4e5e7a;        /* Muted Navy-gray */
   --color-border: #e2e8f0;            /* slate-200 */
   
   /* Primary Accent Color - can be overridden dynamically by the seasonal pick */
-  --color-accent: #a855f7;            /* Default Purple (violet-500) */
-  --color-accent-muted: #f3e8ff;      /* violet-100 */
-  --color-accent-hover: #9333ea;      /* violet-600 */
+  --color-accent: #f7934a;            /* Logo Orange */
+  --color-accent-muted: #fff7ed;      /* Soft peach/orange-50 tint */
+  --color-accent-hover: #ea580c;      /* Deeper Orange hover */
   --color-accent-foreground: #ffffff; /* text on accent */
 
   /* Neutral Scale */
@@ -40,8 +40,10 @@
   --radius-full: 9999px;
 
   /* Typography Fonts */
-  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
-  --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, monospace;
+  --font-sans: var(--font-quicksand), "Quicksand", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-spectral), "Spectral", serif;
+  --font-display: var(--font-josefin-sans), "Josefin Sans", sans-serif;
+  --font-mono: var(--font-azeret-mono), "Azeret Mono", monospace;
 
   /* Shadows */
   --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);

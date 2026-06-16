@@ -289,6 +289,8 @@ export function getBotInstance(): Bot<BotContext> {
           cover_image_url: media.cover_image_url,
           score,
           updated_at: new Date().toISOString()
+        }, {
+          onConflict: 'user_id,anilist_id'
         })
 
       if (error) {

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import localFont from "next/font/local";
+import { Quicksand, Spectral, Josefin_Sans, Azeret_Mono } from "next/font/google";
 import Link from "next/link";
 import "./globals.css";
 import { createClient } from '@/lib/supabase/server'
@@ -8,15 +8,25 @@ import { getUserRole } from '@/lib/supabase/role'
 import ChaosProvider from '@/components/providers/ChaosProvider'
 import Footer from '@/components/layout/Footer'
 
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
+const quicksand = Quicksand({
+  subsets: ["latin"],
+  variable: "--font-quicksand",
 });
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
+
+const spectral = Spectral({
+  subsets: ["latin"],
+  weight: ["200", "300", "400", "500", "600", "700", "800"],
+  variable: "--font-spectral",
+});
+
+const josefinSans = Josefin_Sans({
+  subsets: ["latin"],
+  variable: "--font-josefin-sans",
+});
+
+const azeretMono = Azeret_Mono({
+  subsets: ["latin"],
+  variable: "--font-azeret-mono",
 });
 
 export const metadata: Metadata = {
@@ -61,9 +71,9 @@ export default async function RootLayout({
   const showAdminLink = user && (role === 'committee' || role === 'admin')
 
   return (
-    <html lang="en" className="h-full">
+    <html lang="en" className={`h-full ${quicksand.variable} ${spectral.variable} ${josefinSans.variable} ${azeretMono.variable}`}>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-full flex flex-col bg-background text-foreground transition-colors duration-300`}
+        className="antialiased min-h-full flex flex-col bg-background text-foreground transition-colors duration-300"
       >
         <ChaosProvider>
           {/* Skip to content link for a11y */}
@@ -78,8 +88,12 @@ export default async function RootLayout({
           <header className="sticky top-0 z-50 w-full border-b border-border bg-surface/80 backdrop-blur transition-colors duration-300">
             <div className="max-w-7xl mx-auto flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
               <div className="flex items-center gap-6">
-                <Link href="/" className="font-bold text-xl tracking-tight hover:opacity-80 transition-opacity">
-                  NUSCAS
+                <Link href="/" className="flex items-center hover:opacity-80 transition-opacity">
+                  <img
+                    src="/images/nuscas_logo.webp"
+                    alt="NUSCAS Logo"
+                    className="h-10 w-auto object-contain"
+                  />
                 </Link>
                 <nav className="hidden md:flex items-center gap-6 text-sm font-medium text-text-muted">
                   <Link href="/blog" className="hover:text-neutral-900 dark:hover:text-white transition-colors">Blog</Link>

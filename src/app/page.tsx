@@ -6,11 +6,12 @@ import Link from 'next/link'
 import SeasonalBanner from '@/components/features/SeasonalBanner'
 import AbsurdReasons from '@/components/features/AbsurdReasons'
 import EventsPreview from '@/components/features/EventsPreview'
+import ClubDepartments from '@/components/features/ClubDepartments'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: "Home | University Anime Club",
-  description: "Welcome to the official member portal of the university anime club. Submit ratings, discover events, read blogs, and explore our gallery.",
+  title: "Home | NUSCAS",
+  description: "Welcome to the official member portal of NUS Comics and Animation Society. Submit ratings, discover events, read blogs, and explore our gallery.",
 }
 
 interface HomeProps {
@@ -23,7 +24,7 @@ export default async function Home({ searchParams }: HomeProps) {
   const supabase = createClient()
   const { data: { user } } = await supabase.auth.getUser()
   const role = await getUserRole(supabase)
-  
+
   const displayName = user?.user_metadata?.name || user?.email?.split('@')[0] || 'Member'
   const reason = searchParams?.reason
 
@@ -81,13 +82,13 @@ export default async function Home({ searchParams }: HomeProps) {
 
       {/* Main Grid: Welcome greeting & Absurd reasons */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
-        
+
         {/* Welcome Panel / Auth Greeting Card (4 cols on lg) */}
         <div className="lg:col-span-5 flex flex-col justify-between p-6 sm:p-8 rounded-2xl border border-border bg-surface shadow-sm fanzine-dot-grid chaos-card-active relative overflow-hidden">
           <div>
             <h2 className="text-xl sm:text-2xl font-black text-neutral-900 tracking-tight flex items-center gap-2">
               <span className="w-3 h-3 rounded-full bg-accent" />
-              NUS Anime Club
+              NUS Comics and Animation Society
             </h2>
             <p className="text-sm text-text-muted mt-2 leading-relaxed">
               We are a community of creatives, artists, gamers, and enthusiasts at the National University of Singapore.
@@ -148,6 +149,9 @@ export default async function Home({ searchParams }: HomeProps) {
 
       {/* 3. Events Preview */}
       <EventsPreview />
+
+      {/* 4. Club Departments */}
+      <ClubDepartments />
     </div>
   )
 }

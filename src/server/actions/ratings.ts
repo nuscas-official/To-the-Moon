@@ -102,6 +102,8 @@ export async function submitRatingAction(input: RatingInput) {
         score,
         note: input.note ? input.note.trim() : null,
         updated_at: new Date().toISOString(),
+      }, {
+        onConflict: 'user_id,anilist_id'
       })
 
     if (upsertError) {
