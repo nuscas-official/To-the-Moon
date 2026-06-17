@@ -6,6 +6,7 @@ import { createClient } from '@/lib/supabase/server'
 import AuthButton from '@/components/features/AuthButton'
 import { getUserRole } from '@/lib/supabase/role'
 import ChaosProvider from '@/components/providers/ChaosProvider'
+import RoleSyncListener from '@/components/features/RoleSyncListener'
 import Footer from '@/components/layout/Footer'
 
 const quicksand = Quicksand({
@@ -76,6 +77,7 @@ export default async function RootLayout({
         className="antialiased min-h-full flex flex-col bg-background text-foreground transition-colors duration-300"
       >
         <ChaosProvider>
+          <RoleSyncListener user={user} currentRole={role} />
           {/* Skip to content link for a11y */}
           <a
             href="#main-content"

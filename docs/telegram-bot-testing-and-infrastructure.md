@@ -46,21 +46,21 @@ Perform these tests on a staging deployment (or locally using `ngrok`) to guaran
 
 ---
 
-## Part 2: Supabase Inactivity Workaround (Planned)
+## Part 2: Supabase Inactivity Workaround (Implemented)
 
 ### The Problem
 Supabase automatically **pauses free-tier databases** after 1 week of inactivity (i.e., if no read/write connections occur). During university semester breaks, this can cause the NUSCAS website to appear offline when members return.
 
 ### The Workaround Strategy
-To keep the database awake indefinitely, we will implement a **GitHub Actions scheduled cron job** that calls our site's health endpoint once a week. 
+To keep the database awake indefinitely, we have implemented a **GitHub Actions scheduled cron job** that calls our site's health endpoint once a week. 
 
 ### Why a standard `/api/health` call fails
 If the health endpoint simply returns `NextResponse.json({ status: 'ok' })`, **Supabase will still pause**. The serverless function must actively execute a query to trigger database traffic.
 
-### Implementation Blueprint (To Be Added Later)
+### Implementation Blueprint
 
 #### 1. Next.js API Route Update (`src/app/api/health/route.ts`)
-We will rewrite the health handler to query the database:
+We have rewritten the health handler to query the database:
 ```typescript
 import { createClient } from '@/lib/supabase/server'
 import { NextResponse } from 'next/server'
@@ -94,7 +94,7 @@ export async function GET(request: Request) {
 ```
 
 #### 2. GitHub Actions Workflow (`.github/workflows/ping-db.yml`)
-We will create a GitHub Action file scheduled to run weekly:
+We have created a GitHub Action file scheduled to run weekly:
 ```yaml
 name: Ping Database (Prevent Free Tier Pause)
 
@@ -113,3 +113,20 @@ jobs:
             -H "X-Health-Check-Key: ${{ secrets.HEALTH_CHECK_SECRET }}" \
             "https://to-the-moon-gold.vercel.app/api/health"
 ```
+
+### Local Verification
+
+To verify that the health check endpoint and the database connectivity check are working correctly, you can run the local health test script:
+
+```bash
+node scripts/test-health.mjs
+```
+
+This script will:
+1. Load `HEALTH_CHECK_SECRET` from `.env.local`.
+2. Start a local Next.js development server.
+3. Ping `/api/health` without a secret (asserting it gets blocked with a `401`).
+4. Ping `/api/health` with a wrong secret (asserting it gets blocked with a `401`).
+5. Ping `/api/health` with the correct secret (asserting it succeeds with a `200` and verifies active Supabase connection).
+6. Gracefully shut down the development server.
+
