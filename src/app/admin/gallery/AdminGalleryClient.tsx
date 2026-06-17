@@ -29,6 +29,8 @@ export default function AdminGalleryClient({ initialArtworks }: AdminGalleryClie
 
   // Upload Form states
   const [file, setFile] = useState<File | null>(null)
+  const [imageSource, setImageSource] = useState<'upload' | 'url'>('upload')
+  const [imageUrl, setImageUrl] = useState('')
   const [title, setTitle] = useState('')
   const [artistCredit, setArtistCredit] = useState('')
   const [consentMethod, setConsentMethod] = useState<'telegram_message' | 'in_person' | 'email'>('telegram_message')
@@ -45,8 +47,12 @@ export default function AdminGalleryClient({ initialArtworks }: AdminGalleryClie
     setError(null)
     setSuccess(null)
 
-    if (!file) {
+    if (imageSource === 'upload' && !file) {
       setError('Please select an artwork image file.')
+      return
+    }
+    if (imageSource === 'url' && !imageUrl.trim()) {
+      setError('Please enter an artwork image URL.')
       return
     }
     if (!artistCredit.trim()) {
@@ -65,28 +71,35 @@ export default function AdminGalleryClient({ initialArtworks }: AdminGalleryClie
     setProcessing(true)
 
     try {
-      // Compress file client-side using canvas WebP conversion
-      const { compressImageClient } = await import('@/lib/image-client')
-      const compressedFile = await compressImageClient(file)
+      let storageKey = ''
 
-      // 1. Upload file to /api/uploads/upload
-      const formData = new FormData()
-      formData.append('file', compressedFile)
-      formData.append('folder', 'gallery')
+      if (imageSource === 'upload') {
+        // Compress file client-side using canvas WebP conversion
+        const { compressImageClient } = await import('@/lib/image-client')
+        const compressedFile = await compressImageClient(file!)
 
-      const uploadRes = await fetch('/api/uploads/upload', {
-        method: 'POST',
-        body: formData,
-      })
+        // 1. Upload file to /api/uploads/upload
+        const formData = new FormData()
+        formData.append('file', compressedFile)
+        formData.append('folder', 'gallery')
 
-      const uploadData = await uploadRes.json()
-      if (!uploadRes.ok) {
-        throw new Error(uploadData.error || 'Failed to upload image to storage.')
+        const uploadRes = await fetch('/api/uploads/upload', {
+          method: 'POST',
+          body: formData,
+        })
+
+        const uploadData = await uploadRes.json()
+        if (!uploadRes.ok) {
+          throw new Error(uploadData.error || 'Failed to upload image to storage.')
+        }
+        storageKey = uploadData.url
+      } else {
+        storageKey = imageUrl.trim()
       }
 
       // 2. Call Server Action to save records to database
       const actionResult = await createArtworkAction({
-        storage_key: uploadData.url,
+        storage_key: storageKey,
         title: title.trim() || null,
         artist_credit: artistCredit.trim(),
         consent_method: consentMethod,
@@ -100,7 +113,7 @@ export default function AdminGalleryClient({ initialArtworks }: AdminGalleryClie
         // Optimistically prepend to list
         const newArtwork: ArtworkConsent = {
           id: actionResult.id as string,
-          storage_key: uploadData.url,
+          storage_key: storageKey,
           title: title.trim() || null,
           artist_credit: artistCredit.trim(),
           status: 'visible',
@@ -116,6 +129,7 @@ export default function AdminGalleryClient({ initialArtworks }: AdminGalleryClie
         
         // Reset form
         setFile(null)
+        setImageUrl('')
         setTitle('')
         setArtistCredit('')
         setConsentMethod('telegram_message')
@@ -183,21 +197,77 @@ export default function AdminGalleryClient({ initialArtworks }: AdminGalleryClie
           )}
 
           <form onSubmit={handleUploadArtwork} className="space-y-4">
-            {/* File Input */}
-            <div className="flex flex-col space-y-1">
-              <label htmlFor="artwork_file" className="text-[10px] uppercase font-black tracking-wider text-neutral-500">
-                Artwork File <span className="text-red-500">*</span>
-              </label>
-              <input
-                id="artwork_file"
-                type="file"
-                accept="image/*"
-                onChange={(e) => setFile(e.target.files?.[0] || null)}
-                disabled={processing}
-                className="w-full rounded-xl border border-border bg-neutral-50 px-3 py-2 text-xs text-neutral-800 focus:border-accent focus:ring-1 focus:ring-accent outline-none cursor-pointer disabled:cursor-not-allowed"
-                required
-              />
+            {/* Image Source Selection */}
+            <div className="flex rounded-xl bg-neutral-100 p-1 border border-border">
+              <button
+                type="button"
+                onClick={() => setImageSource('upload')}
+                className={`flex-1 py-1.5 text-[10px] font-black uppercase tracking-wider rounded-lg transition-all ${
+                  imageSource === 'upload'
+                    ? 'bg-white text-neutral-900 shadow-sm'
+                    : 'text-neutral-500 hover:text-neutral-900'
+                }`}
+              >
+                Upload File
+              </button>
+              <button
+                type="button"
+                onClick={() => setImageSource('url')}
+                className={`flex-1 py-1.5 text-[10px] font-black uppercase tracking-wider rounded-lg transition-all ${
+                  imageSource === 'url'
+                    ? 'bg-white text-neutral-900 shadow-sm'
+                    : 'text-neutral-500 hover:text-neutral-900'
+                }`}
+              >
+                Image URL
+              </button>
             </div>
+
+            {/* Conditionally Render File Input or URL Input */}
+            {imageSource === 'upload' ? (
+              <div className="flex flex-col space-y-1">
+                <label htmlFor="artwork_file" className="text-[10px] uppercase font-black tracking-wider text-neutral-500">
+                  Artwork File <span className="text-red-500">*</span>
+                </label>
+                <input
+                  id="artwork_file"
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => setFile(e.target.files?.[0] || null)}
+                  disabled={processing}
+                  className="w-full rounded-xl border border-border bg-neutral-50 px-3 py-2 text-xs text-neutral-800 focus:border-accent focus:ring-1 focus:ring-accent outline-none cursor-pointer disabled:cursor-not-allowed"
+                  required={imageSource === 'upload'}
+                />
+              </div>
+            ) : (
+              <div className="flex flex-col space-y-1">
+                <label htmlFor="artwork_url" className="text-[10px] uppercase font-black tracking-wider text-neutral-500">
+                  Artwork Image URL <span className="text-red-500">*</span>
+                </label>
+                <input
+                  id="artwork_url"
+                  type="url"
+                  value={imageUrl}
+                  onChange={(e) => setImageUrl(e.target.value)}
+                  placeholder="https://example.com/my-art.jpg"
+                  disabled={processing}
+                  className="w-full rounded-xl border border-border bg-surface px-4 py-2 text-xs text-neutral-800 placeholder-neutral-400 focus:border-accent focus:ring-1 focus:ring-accent outline-none"
+                  required={imageSource === 'url'}
+                />
+                {imageUrl && /^(https?:\/\/|\/).+/.test(imageUrl) && (
+                  <div className="mt-2 relative h-32 w-full rounded-xl border border-border bg-neutral-50 overflow-hidden">
+                    <img
+                      src={imageUrl}
+                      alt="Artwork URL Preview"
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="red" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>';
+                      }}
+                    />
+                  </div>
+                )}
+              </div>
+            )}
 
             {/* Title */}
             <div className="flex flex-col space-y-1">

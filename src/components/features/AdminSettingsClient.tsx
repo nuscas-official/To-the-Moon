@@ -30,6 +30,46 @@ export default function AdminSettingsClient({
     initialSeasonalPick || DEFAULT_SEASONAL_PICK
   )
   const [loadingSeasonal, setLoadingSeasonal] = useState(false)
+  const [imageSource, setImageSource] = useState<'upload' | 'url'>('url')
+  const [uploading, setUploading] = useState(false)
+  const [uploadProgress, setUploadProgress] = useState<string | null>(null)
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    setUploading(true)
+    setUploadProgress('Compressing & uploading...')
+    
+    try {
+      // Compress file client-side using canvas WebP conversion
+      const { compressImageClient } = await import('@/lib/image-client')
+      const compressedFile = await compressImageClient(file)
+
+      const formData = new FormData()
+      formData.append('file', compressedFile)
+      formData.append('folder', 'settings')
+
+      const res = await fetch('/api/uploads/upload', {
+        method: 'POST',
+        body: formData,
+      })
+
+      const data = await res.json()
+      if (!res.ok) {
+        throw new Error(data.error || 'Failed to upload image')
+      }
+
+      setSeasonalPick(prev => ({ ...prev, image_url: data.url }))
+      setUploadProgress(null)
+      showFeedback('success', 'Image uploaded successfully!')
+    } catch (err) {
+      showFeedback('error', err instanceof Error ? err.message : 'Failed to upload banner image')
+      setUploadProgress(null)
+    } finally {
+      setUploading(false)
+    }
+  }
 
   // 2. Join Reasons State
   const [joinReasons, setJoinReasons] = useState<string[]>(
@@ -200,19 +240,64 @@ export default function AdminSettingsClient({
               </div>
             </div>
 
-            {/* Banner Image URL */}
-            <div className="space-y-1.5">
-              <label className="text-[10px] uppercase font-extrabold tracking-wider text-neutral-500">Banner Image URL</label>
-              <input
-                type="text"
-                required
-                placeholder="e.g. https://images.unsplash.com/..."
-                value={seasonalPick.image_url}
-                onChange={(e) => setSeasonalPick({ ...seasonalPick, image_url: e.target.value })}
-                className="w-full px-4 py-2.5 bg-neutral-50 border border-neutral-200 rounded-xl focus:outline-none focus:border-accent text-sm font-bold text-neutral-800"
-              />
+            {/* Banner Image */}
+            <div className="space-y-3">
+              <label className="text-[10px] uppercase font-extrabold tracking-wider text-neutral-500 block">Banner Image</label>
+              
+              {/* Image Source Selection */}
+              <div className="flex rounded-xl bg-neutral-100 p-1 border border-border max-w-xs">
+                <button
+                  type="button"
+                  onClick={() => setImageSource('upload')}
+                  className={`flex-1 py-1.5 text-[10px] font-black uppercase tracking-wider rounded-lg transition-all ${
+                    imageSource === 'upload'
+                      ? 'bg-white text-neutral-900 shadow-sm'
+                      : 'text-neutral-500 hover:text-neutral-900'
+                  }`}
+                >
+                  Upload File
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setImageSource('url')}
+                  className={`flex-1 py-1.5 text-[10px] font-black uppercase tracking-wider rounded-lg transition-all ${
+                    imageSource === 'url'
+                      ? 'bg-white text-neutral-900 shadow-sm'
+                      : 'text-neutral-500 hover:text-neutral-900'
+                  }`}
+                >
+                  Image URL
+                </button>
+              </div>
+
+              {imageSource === 'upload' ? (
+                <div className="flex flex-col space-y-1">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleFileChange}
+                    disabled={uploading}
+                    className="w-full rounded-xl border border-neutral-200 bg-neutral-50 px-3 py-2 text-xs text-neutral-800 focus:border-accent focus:ring-1 focus:ring-accent outline-none cursor-pointer disabled:cursor-not-allowed font-bold"
+                  />
+                  {uploading && (
+                    <p className="text-xs text-accent font-bold animate-pulse mt-1">
+                      {uploadProgress || 'Uploading image...'}
+                    </p>
+                  )}
+                </div>
+              ) : (
+                <input
+                  type="text"
+                  required
+                  placeholder="e.g. https://images.unsplash.com/... or any HTTPS url"
+                  value={seasonalPick.image_url}
+                  onChange={(e) => setSeasonalPick({ ...seasonalPick, image_url: e.target.value })}
+                  className="w-full px-4 py-2.5 bg-neutral-50 border border-neutral-200 rounded-xl focus:outline-none focus:border-accent text-sm font-bold text-neutral-800"
+                />
+              )}
+
               {/* Image Live Preview */}
-              {seasonalPick.image_url && /^https?:\/\/.+/.test(seasonalPick.image_url) && (
+              {seasonalPick.image_url && /^(https?:\/\/|\/).+/.test(seasonalPick.image_url) && (
                 <div className="mt-3 rounded-xl border border-neutral-200 overflow-hidden bg-neutral-100 aspect-video relative">
                   <Image
                     src={seasonalPick.image_url}
@@ -224,6 +309,16 @@ export default function AdminSettingsClient({
                   <div className="absolute bottom-2 left-2 bg-neutral-900/80 backdrop-blur text-white text-[9px] font-black uppercase tracking-wider px-2 py-0.5 rounded">
                     Preview
                   </div>
+                  <button
+                    type="button"
+                    onClick={() => setSeasonalPick({ ...seasonalPick, image_url: '' })}
+                    className="absolute top-2 right-2 flex h-6 w-6 items-center justify-center rounded-full bg-red-600 hover:bg-red-700 text-white shadow-sm transition-colors"
+                    title="Remove Image"
+                  >
+                    <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
                 </div>
               )}
             </div>

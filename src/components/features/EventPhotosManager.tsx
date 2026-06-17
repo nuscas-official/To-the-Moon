@@ -25,6 +25,8 @@ export default function EventPhotosManager({ eventId, initialPhotos }: EventPhot
 
   // Add photo states
   const [file, setFile] = useState<File | null>(null)
+  const [imageSource, setImageSource] = useState<'upload' | 'url'>('upload')
+  const [imageUrl, setImageUrl] = useState('')
   const [newAltText, setNewAltText] = useState('')
   const [adding, setAdding] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -38,36 +40,48 @@ export default function EventPhotosManager({ eventId, initialPhotos }: EventPhot
     e.preventDefault()
     setError(null)
 
-    if (!file) {
+    if (imageSource === 'upload' && !file) {
       setError('Please select an image file.')
+      return
+    }
+    if (imageSource === 'url' && !imageUrl.trim()) {
+      setError('Please enter an image URL.')
       return
     }
 
     setAdding(true)
     try {
-      // Compress file client-side using canvas WebP conversion
-      const { compressImageClient } = await import('@/lib/image-client')
-      const compressedFile = await compressImageClient(file)
+      let storageKey = ''
 
-      const formData = new FormData()
-      formData.append('file', compressedFile)
-      formData.append('folder', 'events')
+      if (imageSource === 'upload') {
+        // Compress file client-side using canvas WebP conversion
+        const { compressImageClient } = await import('@/lib/image-client')
+        const compressedFile = await compressImageClient(file!)
 
-      const res = await fetch('/api/uploads/upload', {
-        method: 'POST',
-        body: formData,
-      })
+        const formData = new FormData()
+        formData.append('file', compressedFile)
+        formData.append('folder', 'events')
 
-      const data = await res.json()
-      if (!res.ok) {
-        throw new Error(data.error || 'Failed to upload image')
+        const res = await fetch('/api/uploads/upload', {
+          method: 'POST',
+          body: formData,
+        })
+
+        const data = await res.json()
+        if (!res.ok) {
+          throw new Error(data.error || 'Failed to upload image')
+        }
+        storageKey = data.url
+      } else {
+        storageKey = imageUrl.trim()
       }
 
-      const result = await addEventPhotoAction(eventId, data.url, newAltText)
+      const result = await addEventPhotoAction(eventId, storageKey, newAltText)
       
       if (result.success && result.photo) {
         setPhotos(prev => [...prev, result.photo as EventPhoto])
         setFile(null)
+        setImageUrl('')
         setNewAltText('')
         
         const fileInput = document.getElementById('photo_file') as HTMLInputElement
@@ -159,21 +173,76 @@ export default function EventPhotosManager({ eventId, initialPhotos }: EventPhot
         )}
 
         <form onSubmit={handleAddPhoto} className="space-y-4">
+          {/* Image Source Selection */}
+          <div className="flex rounded-xl bg-neutral-100 p-1 border border-border max-w-xs mb-4">
+            <button
+              type="button"
+              onClick={() => setImageSource('upload')}
+              className={`flex-1 py-1.5 text-[10px] font-black uppercase tracking-wider rounded-lg transition-all ${
+                imageSource === 'upload'
+                  ? 'bg-white text-neutral-900 shadow-sm'
+                  : 'text-neutral-500 hover:text-neutral-900'
+              }`}
+            >
+              Upload File
+            </button>
+            <button
+              type="button"
+              onClick={() => setImageSource('url')}
+              className={`flex-1 py-1.5 text-[10px] font-black uppercase tracking-wider rounded-lg transition-all ${
+                imageSource === 'url'
+                  ? 'bg-white text-neutral-900 shadow-sm'
+                  : 'text-neutral-500 hover:text-neutral-900'
+              }`}
+            >
+              Image URL
+            </button>
+          </div>
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* Photo File Input */}
-            <div className="flex flex-col space-y-1">
-              <label htmlFor="photo_file" className="text-[10px] uppercase font-black tracking-wider text-neutral-400">
-                Choose Photo Image <span className="text-red-500">*</span>
-              </label>
-              <input
-                id="photo_file"
-                type="file"
-                accept="image/*"
-                onChange={(e) => setFile(e.target.files?.[0] || null)}
-                className="rounded-xl border border-border bg-surface px-4 py-2 text-xs text-neutral-800 focus:border-accent focus:ring-1 focus:ring-accent outline-none"
-                required
-              />
-            </div>
+            {/* Photo File Input or URL Input */}
+            {imageSource === 'upload' ? (
+              <div className="flex flex-col space-y-1">
+                <label htmlFor="photo_file" className="text-[10px] uppercase font-black tracking-wider text-neutral-400">
+                  Choose Photo Image <span className="text-red-500">*</span>
+                </label>
+                <input
+                  id="photo_file"
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => setFile(e.target.files?.[0] || null)}
+                  className="rounded-xl border border-border bg-surface px-4 py-2 text-xs text-neutral-800 focus:border-accent focus:ring-1 focus:ring-accent outline-none"
+                  required={imageSource === 'upload'}
+                />
+              </div>
+            ) : (
+              <div className="flex flex-col space-y-1">
+                <label htmlFor="photo_url" className="text-[10px] uppercase font-black tracking-wider text-neutral-400">
+                  Photo Image URL <span className="text-red-500">*</span>
+                </label>
+                <input
+                  id="photo_url"
+                  type="url"
+                  value={imageUrl}
+                  onChange={(e) => setImageUrl(e.target.value)}
+                  placeholder="https://example.com/photo.jpg"
+                  className="rounded-xl border border-border bg-surface px-4 py-2.5 text-xs text-neutral-800 focus:border-accent focus:ring-1 focus:ring-accent outline-none"
+                  required={imageSource === 'url'}
+                />
+                {imageUrl && /^(https?:\/\/|\/).+/.test(imageUrl) && (
+                  <div className="mt-2 relative h-32 w-full rounded-xl border border-border bg-neutral-50 overflow-hidden">
+                    <img
+                      src={imageUrl}
+                      alt="Photo URL Preview"
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="red" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>';
+                      }}
+                    />
+                  </div>
+                )}
+              </div>
+            )}
 
             {/* Alt Text */}
             <div className="flex flex-col space-y-1">
@@ -194,10 +263,10 @@ export default function EventPhotosManager({ eventId, initialPhotos }: EventPhot
           <div className="flex justify-end">
             <button
               type="submit"
-              disabled={adding || !file}
+              disabled={adding || (imageSource === 'upload' && !file) || (imageSource === 'url' && !imageUrl.trim())}
               className="px-4 py-2 rounded-xl bg-neutral-900 hover:bg-neutral-800 text-white font-bold text-[10px] uppercase tracking-wider transition-colors active:scale-95 disabled:opacity-50"
             >
-              {adding ? 'Uploading...' : '+ Add Photo to Gallery'}
+              {adding ? 'Adding...' : '+ Add Photo to Gallery'}
             </button>
           </div>
         </form>

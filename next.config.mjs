@@ -45,7 +45,7 @@ const nextConfig = {
               "default-src 'self';",
               "script-src 'self' 'unsafe-eval' 'unsafe-inline';",
               "style-src 'self' 'unsafe-inline';",
-              "img-src 'self' blob: data: https://images.unsplash.com https://*.r2.dev https://*.anilist.co https://s4.anilist.co;",
+              "img-src 'self' blob: data: https:;",
               "font-src 'self' data:;",
               "connect-src 'self' https://graphql.anilist.co https://*.supabase.co wss://*.supabase.co;",
               "frame-src 'self' https://*.supabase.co;",

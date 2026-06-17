@@ -4,6 +4,7 @@ import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { getUserRole } from '@/lib/supabase/role'
 import { revalidatePath } from 'next/cache'
+import { deleteFromR2 } from '@/lib/r2'
 
 interface SeasonalPickInput {
   title: string
@@ -37,13 +38,20 @@ export async function updateSeasonalPickAction(data: SeasonalPickInput) {
   if (!data.accent_hex?.trim() || !/^#[0-9A-Fa-f]{3,6}$/.test(data.accent_hex)) {
     return { success: false, error: 'A valid Accent Hex Color (e.g. #a855f7) is required.' }
   }
-  if (!data.image_url?.trim() || !/^https?:\/\/.+/.test(data.image_url)) {
-    return { success: false, error: 'A valid Banner Image URL is required.' }
+  if (!data.image_url?.trim() || !/^(https?:\/\/|\/).+/.test(data.image_url)) {
+    return { success: false, error: 'A valid Banner Image URL or path is required.' }
   }
 
   const adminClient = createAdminClient()
 
   try {
+    // Fetch old configuration to clean up overwritten R2 image files
+    const { data: oldConfig } = await adminClient
+      .from('site_config')
+      .select('value')
+      .eq('key', 'seasonal_pick')
+      .maybeSingle()
+
     // 4. Upsert key seasonal_pick in site_config
     const { error: upsertError } = await adminClient
       .from('site_config')
@@ -60,6 +68,22 @@ export async function updateSeasonalPickAction(data: SeasonalPickInput) {
 
     if (upsertError) {
       return { success: false, error: upsertError.message }
+    }
+
+    // Clean up old image if it is different and was an uploaded file
+    if (oldConfig?.value) {
+      const oldVal = oldConfig.value as { image_url?: string } | null
+      if (oldVal?.image_url && oldVal.image_url !== data.image_url.trim()) {
+        const isUploaded = oldVal.image_url.startsWith('/') || 
+                           (process.env.CLOUDFLARE_R2_PUBLIC_URL && oldVal.image_url.includes(process.env.CLOUDFLARE_R2_PUBLIC_URL))
+        if (isUploaded) {
+          try {
+            await deleteFromR2(oldVal.image_url)
+          } catch (r2Err) {
+            console.error('Failed to delete old seasonal banner image from storage:', r2Err)
+          }
+        }
+      }
     }
 
     // 5. Log to audit log

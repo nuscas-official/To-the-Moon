@@ -102,7 +102,7 @@ export async function updateEventAction(id: string, input: Partial<EventInput>) 
     // Fetch original event to check slug or existence
     const { data: event, error: fetchError } = await supabase
       .from('events')
-      .select('title, slug')
+      .select('title, slug, cover_image_key')
       .eq('id', id)
       .single()
 
@@ -132,6 +132,23 @@ export async function updateEventAction(id: string, input: Partial<EventInput>) 
     if (updateError) {
       console.error('Error updating event:', updateError)
       return { success: false, error: updateError.message }
+    }
+
+    // Clean up old cover image from R2 if it changed
+    if (
+      event.cover_image_key &&
+      input.cover_image_key !== undefined &&
+      input.cover_image_key !== event.cover_image_key
+    ) {
+      const isUploaded = event.cover_image_key.startsWith('/') || 
+                         (process.env.CLOUDFLARE_R2_PUBLIC_URL && event.cover_image_key.includes(process.env.CLOUDFLARE_R2_PUBLIC_URL))
+      if (isUploaded) {
+        try {
+          await deleteFromR2(event.cover_image_key)
+        } catch (r2Err) {
+          console.error('Failed to delete old event cover image from storage:', r2Err)
+        }
+      }
     }
 
     revalidatePath('/events')

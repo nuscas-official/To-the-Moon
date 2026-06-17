@@ -64,6 +64,8 @@ export default function EventForm({ initialData, onSave }: EventFormProps) {
   const [loading, setLoading] = useState(false)
   const [uploading, setUploading] = useState(false)
   const [uploadProgress, setUploadProgress] = useState<string | null>(null)
+  const [imageSource, setImageSource] = useState<'upload' | 'url'>('upload')
+  const [urlInput, setUrlInput] = useState('')
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -104,6 +106,7 @@ export default function EventForm({ initialData, onSave }: EventFormProps) {
 
   const handleRemoveCover = () => {
     setCoverImageKey('')
+    setUrlInput('')
     setUploadProgress(null)
   }
 
@@ -260,7 +263,7 @@ export default function EventForm({ initialData, onSave }: EventFormProps) {
         </div>
       </div>
 
-      {/* Cover Image Upload */}
+      {/* Cover Image */}
       <div className="flex flex-col space-y-1.5">
         <span className="text-xs uppercase font-extrabold tracking-wider text-neutral-500">
           Cover Image
@@ -279,23 +282,74 @@ export default function EventForm({ initialData, onSave }: EventFormProps) {
             </div>
           </div>
         ) : (
-          <div className="border-2 border-dashed border-border rounded-xl p-8 bg-surface flex flex-col items-center justify-center text-center hover:border-accent transition-colors relative">
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleFileChange}
-              disabled={uploading}
-              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer disabled:cursor-not-allowed"
-            />
-            <svg className="w-10 h-10 text-neutral-400 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-            </svg>
-            <p className="text-sm font-semibold text-neutral-700">
-              {uploading ? uploadProgress : 'Click or drag image to upload'}
-            </p>
-            <p className="text-xs text-neutral-400 mt-1">
-              Supports JPEG, PNG, WEBP, GIF up to 10MB (automatically resized to 2000px and compressed)
-            </p>
+          <div className="flex flex-col space-y-3">
+            {/* Image Source Selection */}
+            <div className="flex rounded-xl bg-neutral-100 p-1 border border-border max-w-xs">
+              <button
+                type="button"
+                onClick={() => setImageSource('upload')}
+                className={`flex-1 py-1.5 text-[10px] font-black uppercase tracking-wider rounded-lg transition-all ${
+                  imageSource === 'upload'
+                    ? 'bg-white text-neutral-900 shadow-sm'
+                    : 'text-neutral-500 hover:text-neutral-900'
+                }`}
+              >
+                Upload File
+              </button>
+              <button
+                type="button"
+                onClick={() => setImageSource('url')}
+                className={`flex-1 py-1.5 text-[10px] font-black uppercase tracking-wider rounded-lg transition-all ${
+                  imageSource === 'url'
+                    ? 'bg-white text-neutral-900 shadow-sm'
+                    : 'text-neutral-500 hover:text-neutral-900'
+                }`}
+              >
+                Image URL
+              </button>
+            </div>
+
+            {imageSource === 'upload' ? (
+              <div className="border-2 border-dashed border-border rounded-xl p-8 bg-surface flex flex-col items-center justify-center text-center hover:border-accent transition-colors relative">
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFileChange}
+                  disabled={uploading}
+                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer disabled:cursor-not-allowed"
+                />
+                <svg className="w-10 h-10 text-neutral-400 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+                <p className="text-sm font-semibold text-neutral-700">
+                  {uploading ? uploadProgress : 'Click or drag image to upload'}
+                </p>
+                <p className="text-xs text-neutral-400 mt-1">
+                  Supports JPEG, PNG, WEBP, GIF up to 10MB (automatically resized to 2000px and compressed)
+                </p>
+              </div>
+            ) : (
+              <div className="flex gap-2 items-center">
+                <input
+                  type="url"
+                  placeholder="https://example.com/cover-image.jpg"
+                  value={urlInput}
+                  onChange={(e) => setUrlInput(e.target.value)}
+                  className="flex-grow rounded-xl border border-border bg-surface px-4 py-3 text-sm text-neutral-800 placeholder-neutral-400 focus:border-accent focus:ring-1 focus:ring-accent outline-none transition-colors"
+                />
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (urlInput.trim()) {
+                      setCoverImageKey(urlInput.trim());
+                    }
+                  }}
+                  className="px-4 py-3 rounded-xl bg-neutral-900 hover:bg-neutral-800 text-white font-bold text-xs uppercase tracking-wider transition-colors active:scale-95"
+                >
+                  Apply
+                </button>
+              </div>
+            )}
           </div>
         )}
       </div>
