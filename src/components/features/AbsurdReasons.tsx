@@ -48,14 +48,8 @@ export default function AbsurdReasons({ initialReasons }: AbsurdReasonsProps) {
 
   return (
     <div className="w-full max-w-2xl mx-auto my-12 animate-fade-in">
-      <div className="relative overflow-hidden rounded-2xl border border-border bg-surface shadow-md p-6 sm:p-8 text-center fanzine-dot-grid group chaos-card-active">
+      <div className="relative overflow-hidden border border-border bg-surface shadow-md p-6 sm:p-8 text-center group chaos-card-active">
         
-        {/* Decorative corner borders */}
-        <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-accent/40 rounded-tl-lg" />
-        <div className="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-accent/40 rounded-tr-lg" />
-        <div className="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-accent/40 rounded-bl-lg" />
-        <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-accent/40 rounded-br-lg" />
-
         <h3 className="text-xs uppercase tracking-widest font-black text-accent mb-3">
           Why Join NUSCAS?
         </h3>
@@ -63,7 +57,7 @@ export default function AbsurdReasons({ initialReasons }: AbsurdReasonsProps) {
         {/* Dynamic Reason Display */}
         <div className="min-h-[100px] flex items-center justify-center px-4">
           <p 
-            className={`text-lg sm:text-xl font-extrabold text-neutral-800 transition-all duration-300 ease-in-out ${
+            className={`text-lg sm:text-xl font-extrabold text-foreground transition-all duration-300 ease-in-out ${
               isAnimating 
                 ? 'opacity-0 scale-95 -translate-y-2 blur-[2px]' 
                 : 'opacity-100 scale-100 translate-y-0 blur-0'

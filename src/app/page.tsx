@@ -46,10 +46,10 @@ export default async function Home({ searchParams }: HomeProps) {
   }
 
   return (
-    <div className="w-full space-y-12 pb-16">
+    <div className="w-full pb-16">
       {/* Toast / Banner Notifications */}
       {reason && (
-        <div className="w-full animate-fade-in text-left">
+        <div className="w-full animate-fade-in text-left mb-8">
           {reason === 'deactivated' && (
             <div className="rounded-xl bg-red-50 border border-red-200 p-4 text-xs font-semibold text-red-700 flex items-center gap-2">
               <svg className="w-4 h-4 text-red-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -78,13 +78,31 @@ export default async function Home({ searchParams }: HomeProps) {
       )}
 
       {/* 1. Hero Seasonal Banner */}
-      <SeasonalBanner />
+      <div className="w-screen relative left-1/2 -translate-x-1/2 pb-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <SeasonalBanner />
+        </div>
+      </div>
 
-      {/* Main Grid: Welcome greeting & Absurd reasons */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+      {/* Outer container remains full-bleed across all screen sizes */}
+      <div className="w-screen relative left-1/2 -translate-x-1/2 bg-background-dark text-text-dark border-y border-border-dark py-14 [--color-text:var(--color-text-dark)] [--color-foreground:var(--color-text-dark)] [--color-border:var(--color-border-dark)] [--color-surface:var(--color-surface-dark)] [--color-text-muted:var(--color-text-muted-dark)] transition-colors duration-300">
+        
+        {/* First Inner Div: Comfortable mobile padding (px-6) */}
+        <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-8">
+          <EventsPreview />
+        </div>
+
+        {/* Second Inner Div: Fixed by adding px-6 so it doesn't hug the screen edges */}
+        <div className="max-w-7xl mx-auto pt-12 pb-4 px-6 sm:px-8 lg:px-8">
+          <ClubDepartments />
+        </div>
+      </div>
+
+
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch mt-16">
 
         {/* Welcome Panel / Auth Greeting Card (4 cols on lg) */}
-        <div className="lg:col-span-5 flex flex-col justify-between p-6 sm:p-8 rounded-2xl border border-border bg-surface shadow-sm fanzine-dot-grid chaos-card-active relative overflow-hidden">
+        <div className="lg:col-span-5 flex flex-col justify-between p-6 sm:p-8 border border-border shadow-sm chaos-card-active relative overflow-hidden">
           <div>
             <h2 className="text-xl sm:text-2xl font-black text-neutral-900 tracking-tight flex items-center gap-2">
               <span className="w-3 h-3 rounded-full bg-accent" />
@@ -146,12 +164,6 @@ export default async function Home({ searchParams }: HomeProps) {
         </div>
 
       </div>
-
-      {/* 3. Events Preview */}
-      <EventsPreview />
-
-      {/* 4. Club Departments */}
-      <ClubDepartments />
     </div>
   )
 }

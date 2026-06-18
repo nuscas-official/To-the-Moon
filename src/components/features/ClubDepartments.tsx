@@ -1,6 +1,7 @@
 'use client'
 
 import Image from 'next/image'
+import { motion } from 'framer-motion'
 
 interface Department {
   id: string
@@ -30,9 +31,31 @@ const DEPARTMENTS: Department[] = [
   }
 ]
 
+const containerVariants = {
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: 0.15,
+    },
+  },
+}
+
+const cardVariants = {
+  hidden: { opacity: 0, y: 35 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      type: 'spring' as const,
+      stiffness: 90,
+      damping: 15,
+    },
+  },
+}
+
 export default function ClubDepartments() {
   return (
-    <section className="w-full space-y-8 py-4 animate-fade-in">
+    <section className="w-full space-y-8 animate-fade-in">
       {/* Section Header */}
       <div className="text-left md:text-center space-y-2">
         <h2 className="text-m uppercase tracking-widest font-black text-accent flex items-center md:justify-center gap-2">
@@ -42,11 +65,18 @@ export default function ClubDepartments() {
       </div>
 
       {/* Grid of Departments */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch">
+      <motion.div 
+        variants={containerVariants}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-60px" }}
+        className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch"
+      >
         {DEPARTMENTS.map((dept) => (
-          <div
+          <motion.div
             key={dept.id}
-            className="group relative overflow-hidden rounded-2xl transition-all duration-300 chaos-card-active p-8 text-center flex flex-col items-center"
+            variants={cardVariants}
+            className="group relative overflow-hidden rounded-2xl p-8 text-center flex flex-col items-center"
           >
 
             {/* Circle Image Wrapper - Added scale transformation on group-hover */}
@@ -61,7 +91,7 @@ export default function ClubDepartments() {
             </div>
 
             {/* Department Name */}
-            <h3 className="text-xl font-black text-neutral-900 group-hover:text-accent transition-all duration-300 transform group-hover:-translate-y-2 tracking-tight">
+            <h3 className="text-xl font-black text-foreground group-hover:text-accent transition-all duration-300 transform group-hover:-translate-y-2 tracking-tight">
               {dept.name}
             </h3>
 
@@ -73,9 +103,9 @@ export default function ClubDepartments() {
                 </p>
               </div>
             </div>
-          </div>
+          </motion.div>
         ))}
-      </div>
+      </motion.div>
     </section>
   )
 }

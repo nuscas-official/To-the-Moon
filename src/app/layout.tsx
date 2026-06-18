@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import { Quicksand, Spectral, Josefin_Sans, Azeret_Mono } from "next/font/google";
-import Link from "next/link";
 import "./globals.css";
 import { createClient } from '@/lib/supabase/server'
-import AuthButton from '@/components/features/AuthButton'
+import Header from '@/components/layout/Header'
 import { getUserRole } from '@/lib/supabase/role'
 import ChaosProvider from '@/components/providers/ChaosProvider'
+import ThemeProvider from '@/components/providers/ThemeProvider'
 import RoleSyncListener from '@/components/features/RoleSyncListener'
 import Footer from '@/components/layout/Footer'
 
@@ -69,72 +69,36 @@ export default async function RootLayout({
   const supabase = createClient()
   const { data: { user } } = await supabase.auth.getUser()
   const role = await getUserRole(supabase)
-  const showAdminLink = user && (role === 'committee' || role === 'admin')
+  const showAdminLink = !!(user && (role === 'committee' || role === 'admin'))
 
   return (
     <html lang="en" className={`h-full ${quicksand.variable} ${spectral.variable} ${josefinSans.variable} ${azeretMono.variable}`}>
       <body
-        className="antialiased min-h-full flex flex-col bg-background text-foreground transition-colors duration-300"
+        className="antialiased min-h-full flex flex-col bg-background text-foreground transition-colors duration-300 overflow-x-hidden"
       >
-        <ChaosProvider>
-          <RoleSyncListener user={user} currentRole={role} />
-          {/* Skip to content link for a11y */}
-          <a
-            href="#main-content"
-            className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[100] bg-accent text-accent-foreground px-4 py-2 rounded-md shadow-lg font-medium outline-none ring-2 ring-accent transition-all"
-          >
-            Skip to content
-          </a>
+        <ThemeProvider>
+          <ChaosProvider>
+            <RoleSyncListener user={user} currentRole={role} />
+            {/* Skip to content link for a11y */}
+            <a
+              href="#main-content"
+              className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[100] bg-accent text-accent-foreground px-4 py-2 rounded-md shadow-lg font-medium outline-none ring-2 ring-accent transition-all"
+            >
+              Skip to content
+            </a>
 
-          {/* Header/Navbar */}
-          <header className="sticky top-0 z-50 w-full border-b border-border bg-surface/80 backdrop-blur transition-colors duration-300">
-            <div className="max-w-7xl mx-auto flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
-              <div className="flex items-center gap-6">
-                <Link href="/" className="flex items-center hover:opacity-80 transition-opacity">
-                  <img
-                    src="/images/nuscas_logo.webp"
-                    alt="NUSCAS Logo"
-                    className="h-10 w-auto object-contain"
-                  />
-                </Link>
-                <nav className="hidden md:flex items-center gap-6 text-sm font-medium text-text-muted">
-                  <Link href="/blog" className="hover:text-neutral-900 dark:hover:text-white transition-colors">Blog</Link>
-                  <Link href="/events" className="hover:text-neutral-900 dark:hover:text-white transition-colors">Events</Link>
-                  <Link href="/gallery" className="hover:text-neutral-900 dark:hover:text-white transition-colors">Gallery</Link>
-                  <Link href="/ratings" className="hover:text-neutral-900 dark:hover:text-white transition-colors">Ratings</Link>
-                  <Link href="/vn" className="hover:text-neutral-900 dark:hover:text-white transition-colors">Visual Novels</Link>
-                </nav>
-              </div>
-              <div className="flex items-center gap-4">
-                {user && (
-                  <Link
-                    href="/member/articles"
-                    className="text-sm font-medium text-text-muted hover:text-neutral-900 dark:hover:text-white transition-colors"
-                  >
-                    Member Area
-                  </Link>
-                )}
-                {showAdminLink && (
-                  <Link
-                    href="/admin/posts"
-                    className="text-sm font-medium text-text-muted hover:text-neutral-900 dark:hover:text-white transition-colors"
-                  >
-                    Admin Area
-                  </Link>
-                )}
-                <AuthButton user={user} />
-              </div>
-            </div>
-          </header>
+            {/* Header/Navbar (Sidebar Navigation) */}
+            <Header user={user} showAdminLink={showAdminLink} />
 
-          {/* Main Content Area */}
-          <main id="main-content" className="flex-grow max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8 outline-none">
-            {children}
-          </main>
+            {/* Main Content Area */}
+            <main id="main-content" className="flex-grow max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 pb-8 outline-none">
+              {children}
+            </main>
 
-          {/* Interactive Footer */}
-          <Footer />
-        </ChaosProvider>
+            {/* Interactive Footer */}
+            <Footer />
+          </ChaosProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

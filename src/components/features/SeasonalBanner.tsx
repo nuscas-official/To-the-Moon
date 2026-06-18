@@ -7,7 +7,6 @@ interface SeasonalPick {
   accent_hex: string;
   image_url: string;
   description?: string;
-  link?: string;
   type?: string;
 }
 
@@ -16,7 +15,6 @@ const FALLBACK_PICK: SeasonalPick = {
   accent_hex: "#a855f7",
   image_url: "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=1200&auto=format&fit=crop&q=80",
   description: "An elf mage and her former party members' journey. A story about time, legacy, and human connection.",
-  link: "https://anilist.co/anime/154587/Sousou-no-Frieren/",
   type: "Featured Anime"
 }
 
@@ -39,7 +37,6 @@ export default async function SeasonalBanner() {
         accent_hex: val.accent_hex || FALLBACK_PICK.accent_hex,
         image_url: val.image_url || FALLBACK_PICK.image_url,
         description: val.description || (val.title ? undefined : FALLBACK_PICK.description),
-        link: val.link || (val.title ? undefined : FALLBACK_PICK.link),
         type: val.type || "Seasonal Pick"
       }
     }
@@ -55,7 +52,7 @@ export default async function SeasonalBanner() {
   return (
     <section 
       style={componentStyles}
-      className="relative w-full aspect-video rounded-2xl md:rounded-3xl overflow-hidden border border-border shadow-xl group flex items-end animate-fade-in"
+      className="relative w-full aspect-video overflow-hidden border border-border shadow-xl group flex items-end animate-fade-in"
     >
       {/* Background Image Container */}
       <div className="absolute inset-0 z-0">
@@ -69,7 +66,7 @@ export default async function SeasonalBanner() {
       </div>
 
       {/* Content Section */}
-      <div className="relative z-20 p-5 sm:p-10 lg:p-12 max-w-2xl text-left w-full">
+      <div className="relative z-20 p-5 sm:p-10 lg:p-12 max-w-xl text-left w-full">
         {/* Badge */}
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider text-white border border-white/20 backdrop-blur mb-3 sm:mb-4">
           <span className="w-2 h-2 rounded-full bg-accent animate-pulse" />
@@ -90,19 +87,6 @@ export default async function SeasonalBanner() {
 
         {/* Action Buttons */}
         <div className="mt-4 sm:mt-8 flex flex-wrap gap-3 sm:gap-4">
-          {seasonalPick.link && (
-            <Link 
-              href={seasonalPick.link}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-5 py-2.5 sm:px-6 sm:py-3 rounded-xl bg-accent text-white font-bold text-xs sm:text-sm hover:bg-accent/90 shadow-lg shadow-accent/20 hover:shadow-accent/40 active:scale-95 transition-all flex items-center gap-2 border border-accent"
-            >
-              <span>Explore on AniList</span>
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-              </svg>
-            </Link>
-          )}
           <Link
             href="/ratings"
             className="px-5 py-2.5 sm:px-6 sm:py-3 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold text-xs sm:text-sm backdrop-blur border border-white/20 active:scale-95 transition-all"

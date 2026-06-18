@@ -10,18 +10,31 @@ const config: Config = {
     extend: {
       colors: {
         background: "var(--color-background)",
+        "background-dark": "var(--color-background-dark)",
+        "background-crimson": "var(--color-background-crimson)",
+        "background-cream": "var(--color-background-cream)",
+        "background-light": "var(--color-background-light)",
         foreground: "var(--color-foreground)",
         surface: "var(--color-surface)",
+        "surface-dark": "var(--color-surface-dark)",
         "surface-raised": "var(--color-surface-raised)",
         "surface-hover": "var(--color-surface-hover)",
         text: "var(--color-text)",
+        "text-dark": "var(--color-text-dark)",
         "text-muted": "var(--color-text-muted)",
+        "text-muted-dark": "var(--color-text-muted-dark)",
         border: "var(--color-border)",
+        "border-dark": "var(--color-border-dark)",
         accent: {
           DEFAULT: "var(--color-accent)",
           muted: "var(--color-accent-muted)",
           hover: "var(--color-accent-hover)",
           foreground: "var(--color-accent-foreground)",
+          gold: {
+            DEFAULT: "var(--color-accent-gold)",
+            hover: "var(--color-accent-gold-hover)",
+            muted: "var(--color-accent-gold-muted)",
+          },
         },
       },
       borderRadius: {

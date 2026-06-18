@@ -1,21 +1,32 @@
 /* Design Tokens System for NUSCAS Website */
 
 :root {
-  /* Colors - Default Theme (Clean Light Mode with Logo-Inspired Orange & Navy Accents) */
-  --color-background: #fdfdfd;        /* Soft off-white */
-  --color-foreground: #122547;        /* Logo-inspired Navy Blue (#1b335f, optimized for text contrast) */
-  --color-surface: #ffffff;           /* Pure white */
-  --color-surface-raised: #ffffff;    /* Card white */
-  --color-surface-hover: #f8fafc;     /* Soft slate hover */
-  --color-text: #122547;              /* Deep Navy text */
-  --color-text-muted: #4e5e7a;        /* Muted Navy-gray */
-  --color-border: #e2e8f0;            /* slate-200 */
-  
-  /* Primary Accent Color - can be overridden dynamically by the seasonal pick */
-  --color-accent: #f7934a;            /* Logo Orange */
-  --color-accent-muted: #fff7ed;      /* Soft peach/orange-50 tint */
-  --color-accent-hover: #ea580c;      /* Deeper Orange hover */
-  --color-accent-foreground: #ffffff; /* text on accent */
+  --color-background: #fcfbf9;
+  --color-foreground: #1a1616;
+  --color-surface: #ffffff;
+  --color-surface-raised: #ffffff;
+  --color-surface-hover: #f7f4f0;
+  --color-text: #1a1616;
+  --color-text-muted: #685f5d;
+  --color-border: #e6dfdf;
+
+  --color-accent: #C61A2E;
+  --color-accent-muted: #fdf2f2;
+  --color-accent-hover: #C61A2E;
+  --color-accent-foreground: #ffffff;
+
+  /* Multiple Surface / Background Colors for Homepage Sections */
+  --color-background-dark: #161414;
+  --color-background-crimson: #8c0e1a;
+  --color-background-cream: #f7f4eb;
+  --color-background-light: #fcfbf9;
+  --color-surface-dark: #1f1a1a;
+  --color-border-dark: #2e2a2a;
+  --color-text-dark: #ece7e7;
+  --color-text-muted-dark: #a8a29e;
+  --color-accent-gold: #c5a059;
+  --color-accent-gold-hover: #ab8741;
+  --color-accent-gold-muted: #2d271a;
 
   /* Neutral Scale */
   --color-neutral-50: #f8fafc;
@@ -30,13 +41,12 @@
   --color-neutral-900: #0f172a;
   --color-neutral-950: #020617;
 
-  /* Border Radii Scale */
-  --radius-xs: 0.25rem;    /* 4px */
-  --radius-sm: 0.375rem;   /* 6px */
-  --radius-md: 0.5rem;     /* 8px */
-  --radius-lg: 0.75rem;    /* 12px */
-  --radius-xl: 1rem;       /* 16px */
-  --radius-2xl: 1.5rem;    /* 24px */
+  --radius-xs: 0.25rem;
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-2xl: 1.5rem;
   --radius-full: 9999px;
 
   /* Typography Fonts */
@@ -52,7 +62,6 @@
   --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
   --shadow-neon: 0 0 15px var(--color-accent);
 
-  /* Transition Durations */
   --transition-fast: 150ms;
   --transition-normal: 250ms;
   --transition-slow: 350ms;
@@ -60,20 +69,131 @@
 
 /* Chaos Mode Overrides (Dark Neon Aesthetic) */
 .chaos-mode {
-  --color-background: #020617;        /* Deep space blue */
-  --color-foreground: #f8fafc;        /* slate-50 */
-  --color-surface: #0b0f19;           /* Glass slate card */
-  --color-surface-raised: #111827;    /* Elevated card dark */
+  --color-background: #020617;
+  --color-foreground: #f8fafc;
+  --color-surface: #0b0f19;
+  --color-surface-raised: #111827;
   --color-surface-hover: #1e293b;
   --color-text: #f8fafc;
-  --color-text-muted: #94a3b8;        /* slate-400 */
-  --color-border: #334155;            /* slate-700 */
+  --color-text-muted: #94a3b8;
+  --color-border: #334155;
 
-  /* Shift Accent to Neon Pink / Magenta */
-  --color-accent: #ff007f;            /* Neon pink */
-  --color-accent-muted: #4c0519;      /* rose-950 */
+  --color-accent: #ff007f;
+  --color-accent-muted: #4c0519;
   --color-accent-hover: #ff3399;
   --color-accent-foreground: #ffffff;
 
   --shadow-neon: 0 0 20px #ff007f, 0 0 40px rgba(255, 0, 127, 0.3);
+}
+
+/* --- Sakura Spring --- */
+.theme-spring {
+  --color-background: #fbf0f5;
+  --color-foreground: #3a2e32;
+  --color-surface: #ffffff;
+  --color-surface-raised: #ffffff;
+  --color-surface-hover: #fce6f2;
+  --color-text: #3a2e32;
+  --color-text-muted: #856b74;
+  --color-border: #f8d3e6;
+  --color-accent: #ff4191;
+  --color-accent-muted: #ffeef6;
+  --color-accent-hover: #e02f7c;
+  --color-accent-foreground: #ffffff;
+}
+
+/* --- Emerald Summer --- */
+.theme-summer {
+  --color-background: #f0faf0;
+  --color-foreground: #1a2e1a;
+  --color-surface: #ffffff;
+  --color-surface-raised: #ffffff;
+  --color-surface-hover: #e4f4e4;
+  --color-text: #1a2e1a;
+  --color-text-muted: #3d6030;
+  --color-border: #c0e0b8;
+  --color-accent: #4d9e3a;
+  --color-accent-muted: #f0f9ee;
+  --color-accent-hover: #3e822e;
+  --color-accent-foreground: #ffffff;
+}
+
+/* --- Maple Autumn --- */
+.theme-autumn {
+  --color-background: #181716;
+  /* Cozy dark charcoal/brown background */
+  --color-foreground: #eceae6;
+  /* Crisp pale gray/cream */
+  --color-surface: #232120;
+  /* Dark warm brown surface */
+  --color-surface-raised: #2d2a29;
+  --color-surface-hover: #353230;
+  --color-text: #eceae6;
+  --color-text-muted: #a29e97;
+  --color-border: #353230;
+  --color-accent: #d13e2e;
+  /* Maple Red */
+  --color-accent-muted: #3d1612;
+  /* Deep maroon */
+  --color-accent-hover: #b82f21;
+  --color-accent-foreground: #ffffff;
+}
+
+/* --- Starlight Winter --- */
+.theme-winter {
+  --color-background: #07111e;
+  /* Midnight frozen blue */
+  --color-foreground: #c8e0f0;
+  /* Frosty light blue text */
+  --color-surface: #0e1c30;
+  /* Dark navy surface */
+  --color-surface-raised: #142842;
+  --color-surface-hover: #1e3550;
+  --color-text: #c8e0f0;
+  --color-text-muted: #6a8caa;
+  --color-border: #1e3550;
+  --color-accent: #5abce8;
+  /* Frost Blue */
+  --color-accent-muted: #0a2338;
+  --color-accent-hover: #3aa4d6;
+  --color-accent-foreground: #ffffff;
+}
+
+/* --- Lumine (Daytime Starlight Blue) --- */
+.theme-lumine {
+  --color-background: #f4f7fc;
+  /* Soft sky-tinted white */
+  --color-foreground: #1e293b;
+  /* Deep slate navy */
+  --color-surface: #ffffff;
+  --color-surface-raised: #ffffff;
+  --color-surface-hover: #e2ebf8;
+  --color-text: #1e293b;
+  --color-text-muted: #475569;
+  --color-border: #e2ebf8;
+  --color-accent: #38bdf8;
+  /* Luminous sky blue */
+  --color-accent-muted: #f0f9ff;
+  --color-accent-hover: #0284c7;
+  --color-accent-foreground: #ffffff;
+}
+
+/* --- Aether (Abyssal Cosmic Gold) --- */
+.theme-aether {
+  --color-background: #0a0d1a;
+  /* Deep, midnight-abyss background */
+  --color-foreground: #f8fafc;
+  /* Crisp white starlight text */
+  --color-surface: #121627;
+  /* Glass slate card */
+  --color-surface-raised: #1c2238;
+  --color-surface-hover: #232a45;
+  --color-text: #f8fafc;
+  --color-text-muted: #94a3b8;
+  --color-border: #1e253d;
+  --color-accent: #e5c37b;
+  /* Pale Cosmic Gold */
+  --color-accent-muted: #272115;
+  --color-accent-hover: #a68542;
+  --color-accent-foreground: #121627;
 }
