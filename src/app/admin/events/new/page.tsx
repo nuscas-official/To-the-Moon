@@ -2,7 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { getUserRole } from '@/lib/supabase/role'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
-import EventForm from '@/components/features/EventForm'
+import EventForm from '@/components/features/events/EventForm'
 import { createEventAction } from '@/server/actions/events'
 
 export default async function AdminNewEventPage() {

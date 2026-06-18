@@ -1,5 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
-import PendingModerationFeed, { PendingPost } from '@/components/features/PendingModerationFeed'
+import PendingModerationFeed, { PendingPost } from '@/components/features/admin/PendingModerationFeed'
 import Link from 'next/link'
 
 // Simple helper to format audit log rows into human-readable strings

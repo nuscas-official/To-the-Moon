@@ -1,5 +1,5 @@
 import { createAdminClient } from '@/lib/supabase/admin'
-import AdminSettingsClient from '@/components/features/AdminSettingsClient'
+import AdminSettingsClient from '@/components/features/admin/AdminSettingsClient'
 
 interface SeasonalPick {
   title: string

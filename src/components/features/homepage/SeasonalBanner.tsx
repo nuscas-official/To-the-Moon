@@ -30,7 +30,6 @@ export default async function SeasonalBanner() {
       .single()
 
     if (!error && data?.value) {
-      // Cast config value
       const val = data.value as unknown as Partial<SeasonalPick>
       seasonalPick = {
         title: val.title || FALLBACK_PICK.title,
@@ -60,6 +59,7 @@ export default async function SeasonalBanner() {
           src={seasonalPick.image_url} 
           alt={seasonalPick.title}
           fill
+          priority
           unoptimized
           className="object-cover object-center"
         />

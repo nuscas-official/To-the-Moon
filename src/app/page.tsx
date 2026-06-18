@@ -1,12 +1,13 @@
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { getUserRole } from '@/lib/supabase/role'
-import AuthButton from '@/components/features/AuthButton'
+import AuthButton from '@/components/features/auth/AuthButton'
 import Link from 'next/link'
-import SeasonalBanner from '@/components/features/SeasonalBanner'
-import AbsurdReasons from '@/components/features/AbsurdReasons'
-import EventsPreview from '@/components/features/EventsPreview'
-import ClubDepartments from '@/components/features/ClubDepartments'
+import SeasonalBanner from '@/components/features/homepage/SeasonalBanner'
+import AbsurdReasons from '@/components/features/homepage/AbsurdReasons'
+import EventsPreview from '@/components/features/events/EventsPreview'
+import ClubDepartments from '@/components/features/homepage/ClubDepartments'
+import RollingGallery from '@/components/features/homepage/RollingGallery'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
@@ -43,6 +44,24 @@ export default async function Home({ searchParams }: HomeProps) {
     }
   } catch (err) {
     console.error('Failed to fetch join reasons:', err)
+  }
+
+  // Fetch artworks for Rolling Gallery
+  let artworks: { id: string; storage_key: string; title: string | null; artist_credit: string }[] = []
+  try {
+    const { data: artworksData, error } = await supabase
+      .from('gallery_artworks')
+      .select('id, storage_key, title, artist_credit')
+      .eq('status', 'visible')
+      .order('display_order', { ascending: true })
+      .order('created_at', { ascending: false })
+      .limit(10)
+
+    if (!error && artworksData) {
+      artworks = artworksData
+    }
+  } catch (err) {
+    console.error('Failed to fetch gallery artworks:', err)
   }
 
   return (
@@ -98,6 +117,10 @@ export default async function Home({ searchParams }: HomeProps) {
         </div>
       </div>
 
+      {/* 3. Rolling Art Gallery */}
+      <div className="w-screen relative left-1/2 -translate-x-1/2">
+        <RollingGallery artworks={artworks} />
+      </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch mt-16">
 

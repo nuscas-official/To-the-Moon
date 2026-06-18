@@ -2,7 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { getUserRole } from '@/lib/supabase/role'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
-import AdminInvitesClient from '@/components/features/AdminInvitesClient'
+import AdminInvitesClient from '@/components/features/admin/AdminInvitesClient'
 
 interface InviteToken {
   id: string

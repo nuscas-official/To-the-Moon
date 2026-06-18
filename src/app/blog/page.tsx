@@ -128,7 +128,7 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
             return (
               <article
                 key={post.id}
-                className="group flex flex-col justify-between overflow-hidden rounded-2xl border border-border bg-surface shadow-sm hover:shadow-md hover:border-accent/30 transition-all duration-300 chaos-card-active"
+                className="group flex flex-col justify-between overflow-hidden border border-border bg-surface shadow-sm hover:shadow-md hover:border-accent/30 transition-all duration-300 chaos-card-active"
               >
                 <div>
                   {/* Thumbnail / Header */}

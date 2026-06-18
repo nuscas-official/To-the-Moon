@@ -1,5 +1,5 @@
 import { createAdminClient } from '@/lib/supabase/admin'
-import JoinForm from '@/components/features/JoinForm'
+import JoinForm from '@/components/features/join/JoinForm'
 import Link from 'next/link'
 
 interface JoinPageProps {

@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react'
 
-type ThemeType = 'default' | 'spring' | 'summer' | 'autumn' | 'winter' | 'lumine' | 'aether'
+type ThemeType = 'default'
 
 interface ThemeContextType {
   theme: ThemeType;
@@ -18,64 +18,24 @@ export function useTheme() {
   return useContext(ThemeContext)
 }
 
-const THEME_CLASSES: Record<ThemeType, string> = {
-  default: '',
-  spring: 'theme-spring',
-  summer: 'theme-summer',
-  autumn: 'theme-autumn',
-  winter: 'theme-winter',
-  lumine: 'theme-lumine',
-  aether: 'theme-aether',
-}
-
 export default function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setThemeState] = useState<ThemeType>('default')
-  const [mounted, setMounted] = useState(false)
 
   // Initialize theme from localStorage on mount
   useEffect(() => {
-    const storedTheme = localStorage.getItem('theme') as ThemeType
-    if (storedTheme && Object.keys(THEME_CLASSES).includes(storedTheme)) {
-      setThemeState(storedTheme)
-      const html = document.documentElement
-      // Remove all theme classes first
-      Object.values(THEME_CLASSES).forEach((cls) => {
-        if (cls) html.classList.remove(cls)
-      })
-      // Add stored theme class
-      const cls = THEME_CLASSES[storedTheme]
-      if (cls) html.classList.add(cls)
-    }
-    setMounted(true)
+    // Clean up any old theme storage and document classes on mount since we are single-theme now
+    localStorage.removeItem('theme')
+    const html = document.documentElement
+    html.classList.remove('theme-winter')
+    html.classList.remove('theme-spring')
+    html.classList.remove('theme-summer')
+    html.classList.remove('theme-autumn')
+    html.classList.remove('theme-lumine')
+    html.classList.remove('theme-aether')
   }, [])
 
   const setTheme = (newTheme: ThemeType) => {
-    if (!mounted) return
-
-    const html = document.documentElement
-    
-    // Add transition styling helper class
-    html.classList.add('theme-transitioning')
-
-    // Remove all existing theme classes
-    Object.values(THEME_CLASSES).forEach((cls) => {
-      if (cls) html.classList.remove(cls)
-    })
-
-    // Add new theme class
-    const newCls = THEME_CLASSES[newTheme]
-    if (newCls) html.classList.add(newCls)
-
-    // Update state and localStorage
     setThemeState(newTheme)
-    localStorage.setItem('theme', newTheme)
-
-    // Remove transition class after the transition finishes (1800ms duration + some buffer)
-    const timer = setTimeout(() => {
-      html.classList.remove('theme-transitioning')
-    }, 2000)
-
-    return () => clearTimeout(timer)
   }
 
   return (

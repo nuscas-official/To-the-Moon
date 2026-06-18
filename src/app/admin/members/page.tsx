@@ -2,7 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { getUserRole } from '@/lib/supabase/role'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
-import AdminMembersClient from '@/components/features/AdminMembersClient'
+import AdminMembersClient from '@/components/features/admin/AdminMembersClient'
 
 interface UserProfile {
   id: string

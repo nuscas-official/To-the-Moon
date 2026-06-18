@@ -2,7 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { getUserRole } from '@/lib/supabase/role'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
-import MemberRatingsDashboard from '@/components/features/MemberRatingsDashboard'
+import MemberRatingsDashboard from '@/components/features/ratings/MemberRatingsDashboard'
 
 interface UserRating {
   id: string;

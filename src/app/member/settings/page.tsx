@@ -2,7 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { getUserRole } from '@/lib/supabase/role'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
-import MemberSettingsClient from '@/components/features/MemberSettingsClient'
+import MemberSettingsClient from '@/components/features/members/MemberSettingsClient'
 
 export const revalidate = 0 // Disable cache for real-time accuracy
 

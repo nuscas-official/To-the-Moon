@@ -2,8 +2,8 @@ import { createClient } from '@/lib/supabase/server'
 import { getUserRole } from '@/lib/supabase/role'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
-import EventForm from '@/components/features/EventForm'
-import EventPhotosManager from '@/components/features/EventPhotosManager'
+import EventForm from '@/components/features/events/EventForm'
+import EventPhotosManager from '@/components/features/events/EventPhotosManager'
 import { updateEventAction } from '@/server/actions/events'
 
 interface AdminEditEventPageProps {

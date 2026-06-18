@@ -5,9 +5,8 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { type User } from '@supabase/supabase-js'
 import { motion, AnimatePresence } from 'framer-motion'
-import AuthButton from '@/components/features/AuthButton'
+import AuthButton from '@/components/features/auth/AuthButton'
 import { HybridText } from '@/components/HybridText'
-import ThemePicker from '@/components/features/ThemePicker'
 
 interface HeaderProps {
   user: User | null
@@ -106,7 +105,7 @@ export default function Header({ user, showAdminLink }: HeaderProps) {
   return (
     <>
       {/* Top Sticky Header Bar */}
-      <header className="sticky top-0 z-[60] w-full transition-colors duration-300">
+      <header className="sticky top-0 z-[60] w-full bg-surface md:bg-transparent transition-colors duration-300">
         <div className="max-w-8xl mx-auto flex h-20 items-center justify-between px-4 sm:px-6 lg:px-8">
           {/* Logo & Menu Title on Left */}
           <div className="flex items-center gap-4 sm:gap-6">
@@ -137,7 +136,7 @@ export default function Header({ user, showAdminLink }: HeaderProps) {
               src="/images/hamburger_lines.webp"
               alt="Open Menu"
               className={`h-12 w-12 object-contain z-10 chaos-invert transition-all duration-500 absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 ${isOpen ? 'opacity-0 rotate-180 scale-50 pointer-events-none' : 'opacity-100 rotate-0 scale-100 group-hover:scale-90'
-                } ${isOverDark && !isOpen ? 'invert' : ''}`}
+                } ${isOverDark && !isOpen ? 'md:invert' : ''}`}
             />
 
             {/* Close Icon (SVG) */}
@@ -271,10 +270,7 @@ export default function Header({ user, showAdminLink }: HeaderProps) {
                     </div>
                   )}
 
-                  {/* Seasonal Themes Selection */}
-                  <motion.div variants={menuItemVariants} className="pt-2 border-t border-border/60">
-                    <ThemePicker />
-                  </motion.div>
+
                 </motion.div>
 
                 {/* Auth Section at the bottom */}

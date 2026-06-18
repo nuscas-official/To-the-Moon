@@ -1,5 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
-import PublicRatingsView from '@/components/features/PublicRatingsView'
+import PublicRatingsView from '@/components/features/ratings/PublicRatingsView'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {

@@ -2,7 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { getUserRole } from '@/lib/supabase/role'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
-import AdminEventList from '@/components/features/AdminEventList'
+import AdminEventList from '@/components/features/admin/AdminEventList'
 
 interface ClubEvent {
   id: string;

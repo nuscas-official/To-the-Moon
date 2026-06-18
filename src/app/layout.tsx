@@ -6,7 +6,7 @@ import Header from '@/components/layout/Header'
 import { getUserRole } from '@/lib/supabase/role'
 import ChaosProvider from '@/components/providers/ChaosProvider'
 import ThemeProvider from '@/components/providers/ThemeProvider'
-import RoleSyncListener from '@/components/features/RoleSyncListener'
+import RoleSyncListener from '@/components/features/auth/RoleSyncListener'
 import Footer from '@/components/layout/Footer'
 
 const quicksand = Quicksand({

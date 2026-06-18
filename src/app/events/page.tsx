@@ -1,5 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
-import EventsTabs from '@/components/features/EventsTabs'
+import EventsTabs from '@/components/features/events/EventsTabs'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {

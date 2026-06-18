@@ -2,7 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { getUserRole } from '@/lib/supabase/role'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
-import ArticleForm from '@/components/features/ArticleForm'
+import ArticleForm from '@/components/features/posts/ArticleForm'
 import { createArticleAction } from '@/server/actions/blog'
 
 export default async function AdminNewPostPage() {

@@ -59,10 +59,15 @@ const config: Config = {
         "pulse-glow": "pulseGlow 2s infinite ease-in-out",
         "float": "float 6s ease-in-out infinite",
         "chaos-vibe": "chaosVibe 0.5s infinite linear",
+        "slide-up": "slideUp var(--transition-normal) ease-out forwards",
       },
       keyframes: {
         fadeIn: {
           "0%": { opacity: "0", transform: "translateY(10px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
+        },
+        slideUp: {
+          "0%": { opacity: "0", transform: "translateY(20px)" },
           "100%": { opacity: "1", transform: "translateY(0)" },
         },
         pulseGlow: {

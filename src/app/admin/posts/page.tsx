@@ -2,7 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { getUserRole } from '@/lib/supabase/role'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
-import AdminPostTable from '@/components/features/AdminPostTable'
+import AdminPostTable from '@/components/features/admin/AdminPostTable'
 
 interface Post {
   id: string;
