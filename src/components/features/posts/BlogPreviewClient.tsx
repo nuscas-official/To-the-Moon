@@ -169,7 +169,7 @@ function BlogCard({ post }: { post: PostWithExcerpt }) {
 
 // ─── Placeholder Card ──────────────────────────────────────────────────────────
 
-function BlogPlaceholderCard({ index }: { index: number }) {
+function BlogPlaceholderCard() {
   return (
     <motion.div
       variants={cardVariants}
@@ -235,7 +235,7 @@ export default function BlogPreviewClient({ posts }: BlogPreviewClientProps) {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {hasPosts
           ? posts.map((post) => <BlogCard key={post.id} post={post} />)
-          : [1, 2, 3].map((i) => <BlogPlaceholderCard key={i} index={i} />)}
+          : [1, 2, 3].map((i) => <BlogPlaceholderCard key={i} />)}
       </div>
     </motion.div>
   )
