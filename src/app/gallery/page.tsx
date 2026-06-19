@@ -43,11 +43,11 @@ export default async function PublicGalleryPage() {
       
       {/* Header */}
       <div className="border-b border-border pb-6 mb-8">
-        <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-neutral-900">
+        <h1 className="text-2xl sm:text-4xl font-black tracking-tight text-neutral-900">
           Club Art Gallery
         </h1>
         <p className="text-sm sm:text-base text-text-muted mt-2">
-          An editorial showcase of creative illustrations, drawings, and digital art created by members of the NUSCAS community.
+          An editorial showcase of creative illustrations, drawings, and digital art created by members of NUSCAS.
         </p>
       </div>
 

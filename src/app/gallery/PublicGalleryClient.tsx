@@ -29,7 +29,7 @@ export default function PublicGalleryClient({ artworks }: PublicGalleryClientPro
   return (
     <div>
       {/* Masonry Columns Layout */}
-      <div className="columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-6 space-y-6">
+      <div className="columns-2 md:columns-3 lg:columns-3 gap-4 space-y-6">
         {artworks.map((art) => (
           <ArtworkCard
             key={art.id}

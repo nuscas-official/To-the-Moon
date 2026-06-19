@@ -1,7 +1,7 @@
 'use client'
 
-import React from 'react'
-import { motion } from 'framer-motion'
+import React, { useRef } from 'react'
+import { motion, useMotionValue, useSpring, useTransform, useMotionTemplate } from 'framer-motion'
 import Link from 'next/link'
 import Image from 'next/image'
 
@@ -36,6 +36,78 @@ const cardVariants = {
   },
 }
 
+interface TiltWrapperProps {
+  children: React.ReactNode
+  className?: string
+  variants?: typeof cardVariants
+}
+
+function TiltWrapper({ children, className = '', variants }: TiltWrapperProps) {
+  const cardRef = useRef<HTMLDivElement>(null)
+  
+  const x = useMotionValue(0)
+  const y = useMotionValue(0)
+
+  // Spring configuration for smooth motion
+  const springConfig = { damping: 25, stiffness: 180, mass: 0.5 }
+  const xSpring = useSpring(x, springConfig)
+  const ySpring = useSpring(y, springConfig)
+
+  // Transform values: map range -0.5 to 0.5 to rotation values
+  // Subtler tilt is usually better, say -12 to 12 degrees
+  const rotateX = useTransform(ySpring, [-0.5, 0.5], [12, -12])
+  const rotateY = useTransform(xSpring, [-0.5, 0.5], [-12, 12])
+
+  // Glow position
+  const glowX = useTransform(xSpring, [-0.5, 0.5], ["0%", "100%"])
+  const glowY = useTransform(ySpring, [-0.5, 0.5], ["0%", "100%"])
+  const glowBg = useMotionTemplate`radial-gradient(circle 250px at ${glowX} ${glowY}, rgba(255, 255, 255, 0.12), transparent 80%)`
+
+  const handleMouseMove = (event: React.MouseEvent<HTMLDivElement>) => {
+    if (!cardRef.current) return
+    const rect = cardRef.current.getBoundingClientRect()
+    const width = rect.width
+    const height = rect.height
+    const mouseX = event.clientX - rect.left - width / 2
+    const mouseY = event.clientY - rect.top - height / 2
+    
+    x.set(mouseX / width)
+    y.set(mouseY / height)
+  }
+
+  const handleMouseLeave = () => {
+    x.set(0)
+    y.set(0)
+  }
+
+  return (
+    <div style={{ perspective: 1000 }} className="h-full w-full">
+      <motion.div
+        ref={cardRef}
+        variants={variants}
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseLeave}
+        style={{
+          rotateX,
+          rotateY,
+          transformStyle: "preserve-3d",
+        }}
+        className={`relative h-full w-full ${className}`}
+      >
+        {/* Cursor-tracking glare overlay */}
+        <motion.div
+          style={{ background: glowBg }}
+          className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-30 rounded-[inherit]"
+        />
+        {/* Children content wrapper */}
+        <div style={{ transform: "translateZ(0px)" }} className="h-full w-full flex flex-col justify-between">
+          {children}
+        </div>
+      </motion.div>
+    </div>
+  )
+}
+
 export default function EventCard({ event, detailsLabel = 'View' }: EventCardProps) {
   const dateStr = new Date(event.starts_at).toLocaleDateString('en-SG', {
     weekday: 'short',
@@ -49,86 +121,85 @@ export default function EventCard({ event, detailsLabel = 'View' }: EventCardPro
   })
 
   return (
-    <motion.div
-      variants={cardVariants}
-      className="group flex flex-col justify-between overflow-hidden border-2 border-border bg-surface shadow-sm hover:shadow-md hover:border-accent/30 transition-all duration-300 chaos-card-active text-left"
-    >
-      {/* Cover Image */}
-      <div className="relative h-48 w-full bg-neutral-100 overflow-hidden border-b border-border">
-        {event.cover_image_key ? (
-          <Image
-            src={event.cover_image_key}
-            alt={event.title}
-            fill
-            unoptimized
-            className="object-cover group-hover:scale-105 transition-transform duration-500"
-          />
-        ) : (
-          <div className="w-full h-full bg-gradient-to-br from-accent-muted to-accent/20 flex items-center justify-center">
-            <svg className="w-12 h-12 text-accent/30" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-            </svg>
-          </div>
-        )}
-        {/* Status Badge */}
-        <span className="absolute top-3 right-3 text-[10px] uppercase font-extrabold tracking-wider bg-neutral-900/80 backdrop-blur text-white px-2.5 py-1 rounded-full border border-white/10">
-          {event.status}
-        </span>
-      </div>
-
-      {/* Card Content */}
-      <div className="p-5 flex-grow flex flex-col justify-between">
-        <div>
-          {/* Time Info */}
-          <div className="flex items-center gap-1.5 text-xs text-accent font-bold mb-2">
-            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-            </svg>
-            <span>{dateStr} &middot; {timeStr}</span>
-          </div>
-
-          <h3 className="text-lg font-black text-foreground line-clamp-1 group-hover:text-accent-hover transition-colors">
-            {event.title}
-          </h3>
-
-          {event.description && (
-            <p className="text-xs text-text-muted mt-2 line-clamp-3 leading-relaxed">
-              {event.description}
-            </p>
+    <Link href={`/events/${event.slug}`} className="block h-full w-full">
+      <TiltWrapper
+        variants={cardVariants}
+        className="group flex flex-col justify-between overflow-hidden border-2 border-border bg-surface shadow-sm hover:shadow-xl hover:shadow-accent/5 hover:border-accent/30 transition-[border-color,box-shadow,background-color] duration-300 chaos-card-active text-left cursor-pointer"
+      >
+        {/* Cover Image */}
+        <div className="relative h-48 w-full bg-neutral-100 overflow-hidden border-b border-border">
+          {event.cover_image_key ? (
+            <Image
+              src={event.cover_image_key}
+              alt={event.title}
+              fill
+              unoptimized
+              className="object-cover group-hover:scale-105 transition-transform duration-500"
+            />
+          ) : (
+            <div className="w-full h-full bg-gradient-to-br from-accent-muted to-accent/20 flex items-center justify-center">
+              <svg className="w-12 h-12 text-accent/30" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+            </div>
           )}
-        </div>
-
-        {/* Footer */}
-        <div className="mt-5 pt-4 border-t border-border flex items-center justify-between text-xs">
-          <span className="text-text-muted flex items-center gap-1">
-            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-            </svg>
-            <span className="line-clamp-1 max-w-[150px]">{event.location || 'Online'}</span>
+          {/* Status Badge */}
+          <span className="absolute top-3 right-3 text-[10px] uppercase font-extrabold tracking-wider bg-neutral-900/80 backdrop-blur text-white px-2.5 py-1 rounded-full border border-white/10">
+            {event.status}
           </span>
-
-          <Link
-            href={`/events/${event.slug}`}
-            className="font-extrabold text-accent group-hover:underline flex items-center gap-0.5"
-          >
-            <span>{detailsLabel}</span>
-            <svg className="w-3.5 h-3.5 font-bold" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
-            </svg>
-          </Link>
         </div>
-      </div>
-    </motion.div>
+
+        {/* Card Content */}
+        <div className="p-5 flex-grow flex flex-col justify-between">
+          <div>
+            {/* Time Info */}
+            <div className="flex items-center gap-1.5 text-xs text-accent font-bold mb-2">
+              <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+              <span>{dateStr} &middot; {timeStr}</span>
+            </div>
+
+            <h3 className="text-lg font-black text-foreground line-clamp-1 group-hover:text-accent-hover transition-colors">
+              {event.title}
+            </h3>
+
+            {event.description && (
+              <p className="text-xs text-text-muted mt-2 line-clamp-3 leading-relaxed">
+                {event.description}
+              </p>
+            )}
+          </div>
+
+          {/* Footer */}
+          <div className="mt-5 pt-4 border-t border-border flex items-center justify-between text-xs">
+            <span className="text-text-muted flex items-center gap-1">
+              <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+              <span className="line-clamp-1 max-w-[150px]">{event.location || 'Online'}</span>
+            </span>
+
+            <div className="font-extrabold text-accent group-hover:underline flex items-center gap-0.5">
+              <span>{detailsLabel}</span>
+              <svg className="w-3.5 h-3.5 font-bold" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
+              </svg>
+            </div>
+          </div>
+        </div>
+      </TiltWrapper>
+    </Link>
   )
 }
 
 // Reusable Placeholder / Empty State Card
 export function EventPlaceholderCard({ index }: { index: number }) {
   return (
-    <motion.div
+    <TiltWrapper
       variants={cardVariants}
-      className="group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-dashed border-border bg-surface/50 p-6 text-left min-h-[200px] transition-all hover:border-foreground/60 shadow-sm"
+      className="group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-dashed border-border bg-surface/50 p-6 text-left min-h-[200px] transition-[border-color,box-shadow,background-color] duration-300 hover:border-foreground/60 shadow-sm hover:shadow-lg cursor-pointer"
     >
       <div>
         <div className="w-8 h-8 rounded-lg bg-border/60 flex items-center justify-center text-text-muted mb-4">
@@ -146,6 +217,7 @@ export function EventPlaceholderCard({ index }: { index: number }) {
       <div className="text-[10px] uppercase tracking-wider font-black text-text-muted mt-4 border-t border-border pt-3">
         Status: Gated / Pending RLS
       </div>
-    </motion.div>
+    </TiltWrapper>
   )
 }
+

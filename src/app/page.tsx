@@ -6,9 +6,12 @@ import Link from 'next/link'
 import SeasonalBanner from '@/components/features/homepage/SeasonalBanner'
 import AbsurdReasons from '@/components/features/homepage/AbsurdReasons'
 import EventsPreview from '@/components/features/events/EventsPreview'
+import BlogPreview from '@/components/features/posts/BlogPreview'
 import ClubDepartments from '@/components/features/homepage/ClubDepartments'
 import RollingGallery from '@/components/features/homepage/RollingGallery'
 import type { Metadata } from 'next'
+import ParticleCanvas from '@/components/ParticleCanvas'
+
 
 export const metadata: Metadata = {
   title: "Home | NUSCAS",
@@ -97,32 +100,13 @@ export default async function Home({ searchParams }: HomeProps) {
       )}
 
       {/* 1. Hero Seasonal Banner */}
-      <div className="w-screen relative left-1/2 -translate-x-1/2 pb-10">
+      <div className="w-screen relative left-1/2 -translate-x-1/2">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <SeasonalBanner />
         </div>
       </div>
-
-      {/* Outer container remains full-bleed across all screen sizes */}
-      <div className="w-screen relative left-1/2 -translate-x-1/2 bg-background-dark text-text-dark border-y border-border-dark py-14 [--color-text:var(--color-text-dark)] [--color-foreground:var(--color-text-dark)] [--color-border:var(--color-border-dark)] [--color-surface:var(--color-surface-dark)] [--color-text-muted:var(--color-text-muted-dark)] transition-colors duration-300">
-        
-        {/* First Inner Div: Comfortable mobile padding (px-6) */}
-        <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-8">
-          <EventsPreview />
-        </div>
-
-        {/* Second Inner Div: Fixed by adding px-6 so it doesn't hug the screen edges */}
-        <div className="max-w-7xl mx-auto pt-12 pb-4 px-6 sm:px-8 lg:px-8">
-          <ClubDepartments />
-        </div>
-      </div>
-
-      {/* 3. Rolling Art Gallery */}
-      <div className="w-screen relative left-1/2 -translate-x-1/2">
-        <RollingGallery artworks={artworks} />
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch mt-16">
+      
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch my-8">
 
         {/* Welcome Panel / Auth Greeting Card (4 cols on lg) */}
         <div className="lg:col-span-5 flex flex-col justify-between p-6 sm:p-8 border border-border shadow-sm chaos-card-active relative overflow-hidden">
@@ -154,14 +138,14 @@ export default async function Home({ searchParams }: HomeProps) {
                 <div className="flex flex-wrap gap-3 pt-2">
                   <Link
                     href="/member/ratings"
-                    className="rounded-xl bg-accent hover:bg-accent-hover text-white font-bold text-xs uppercase tracking-wider px-4 py-2.5 shadow-sm active:scale-95 transition-all"
+                    className="rounded-xl bg-accent hover:bg-accent-hover text-white font-bold text-xs uppercase tracking-wider px-4 py-2.5 shadow-sm hover:scale-105 active:scale-95 transition-all duration-200"
                   >
                     Member Area
                   </Link>
                   {(role === 'committee' || role === 'admin') && (
                     <Link
                       href="/admin/posts"
-                      className="rounded-xl bg-neutral-900 hover:bg-neutral-800 text-white font-bold text-xs uppercase tracking-wider px-4 py-2.5 active:scale-95 transition-all"
+                      className="rounded-xl bg-neutral-500 hover:bg-neutral-900 text-white font-bold text-xs uppercase tracking-wider px-4 py-2.5 hover:scale-105 active:scale-95 transition-all duration-200"
                     >
                       Admin Area
                     </Link>
@@ -187,6 +171,41 @@ export default async function Home({ searchParams }: HomeProps) {
         </div>
 
       </div>
+
+      {/* Outer container remains full-bleed across all screen sizes */}
+      <div className="w-screen relative left-1/2 -translate-x-1/2 bg-background-dark text-text-dark border-y border-border-dark py-14 [--color-text:var(--color-text-dark)] [--color-foreground:var(--color-text-dark)] [--color-border:var(--color-border-dark)] [--color-surface:var(--color-surface-dark)] [--color-text-muted:var(--color-text-muted-dark)] transition-colors duration-300">
+        {/* Particle canvas sits as an absolute background behind all content */}
+        <ParticleCanvas
+          count={400}
+          magnetRadius={100}
+          ringRadius={70}
+          waveSpeed={0.6}
+          waveAmplitude={1}
+          particleSize={4}
+          lerpSpeed={0.055}
+          autoAnimate
+          pulseSpeed={2.5}
+          fieldStrength={15}
+        />
+
+        <div className="relative z-10 max-w-7xl mx-auto px-6 sm:px-8 lg:px-8">
+          <EventsPreview />
+        </div>
+
+        <div className="relative z-10 max-w-7xl mx-auto pt-12 pb-4 px-6 sm:px-8 lg:px-8">
+          <ClubDepartments />
+        </div>
+      </div>
+
+      <div className="w-screen relative left-1/2 -translate-x-1/2">
+        <RollingGallery artworks={artworks} />
+      </div>
+
+      <div className="relative z-10 max-w-7xl mx-auto pt-12 pb-4 px-6 sm:px-8 lg:px-8">
+        <BlogPreview />
+      </div>
+
+
     </div>
   )
 }

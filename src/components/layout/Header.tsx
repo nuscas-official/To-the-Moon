@@ -176,7 +176,7 @@ export default function Header({ user, showAdminLink }: HeaderProps) {
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ type: 'spring', damping: 26, stiffness: 220 }}
-              className="fixed top-0 right-0 z-50 h-full w-[340px] max-w-full bg-surface shadow-2xl flex flex-col pt-20"
+              className="fixed top-0 right-0 z-50 h-full w-[240px] md:w-[300px] max-w-full bg-surface shadow-2xl flex flex-col pt-20"
               role="dialog"
               aria-modal="true"
               aria-label="Navigation Menu"
@@ -199,7 +199,7 @@ export default function Header({ user, showAdminLink }: HeaderProps) {
                   <div>
                     <motion.p
                       variants={menuItemVariants}
-                      className="text-xs font-semibold text-text-muted uppercase tracking-wider mb-4 px-2"
+                      className="text-xs font-semibold text-text-muted uppercase tracking-wider mb-4 pr-2"
                     >
                       Explore
                     </motion.p>
@@ -216,9 +216,9 @@ export default function Header({ user, showAdminLink }: HeaderProps) {
                           <Link
                             href={item.href}
                             onClick={() => setIsOpen(false)}
-                            className="flex items-center gap-3 py-3 px-3.5 rounded-xl hover:color-accent hover:bg-accent-muted/50 border border-transparent hover:border-accent/15 transition-all duration-250 font-medium tracking-wide text-[15px] group"
+                            className="flex items-center gap-3 py-3 px-3.5 rounded-xl hover:text-accent hover:bg-accent-muted/50 border border-transparent hover:border-accent/15 transition-all duration-300 font-medium tracking-wide text-[15px] group"
                           >
-                            <span className="w-1.5 h-1.5 rounded-full bg-accent scale-0 group-hover:scale-100 transition-transform duration-250" />
+                            <span className="w-1.5 h-1.5 rounded-full bg-accent scale-0 group-hover:scale-100 transition-transform duration-300" />
                             <span className="transition-transform duration-250 group-hover:translate-x-1">
                               {item.label}
                             </span>

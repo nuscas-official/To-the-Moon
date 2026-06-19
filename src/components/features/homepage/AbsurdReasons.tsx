@@ -71,7 +71,7 @@ export default function AbsurdReasons({ initialReasons }: AbsurdReasonsProps) {
         <div className="mt-6 flex justify-center">
           <button
             onClick={handleNextReason}
-            className="group/btn relative px-5 py-2.5 rounded-xl bg-neutral-900 text-white font-bold text-xs uppercase tracking-wider hover:bg-neutral-800 active:scale-95 transition-all shadow-sm flex items-center gap-2 border border-neutral-800"
+            className="group/btn relative px-5 py-2.5 rounded-xl scale-95 hover:scale-105 bg-neutral-900 text-white font-bold text-xs uppercase tracking-wider hover:bg-neutral-800 active:scale-95 transition-all shadow-sm flex items-center gap-2 border border-neutral-800"
           >
             <span>Convince me</span>
             <svg 

@@ -75,7 +75,7 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
 
       {/* Title Header */}
       <div className="border-b border-border pb-6 mb-8 text-left">
-        <h1 className="text-4xl font-black tracking-tight text-neutral-900 sm:text-5xl">
+        <h1 className="text-2xl font-black tracking-tight text-neutral-900 sm:text-4xl">
           Club Blog & Reviews
         </h1>
         <p className="text-base text-text-muted mt-2 max-w-2xl leading-relaxed">
