@@ -1,17 +1,15 @@
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { getUserRole } from '@/lib/supabase/role'
-import AuthButton from '@/components/features/auth/AuthButton'
-import Link from 'next/link'
 import SeasonalBanner from '@/components/features/homepage/SeasonalBanner'
-import AbsurdReasons from '@/components/features/homepage/AbsurdReasons'
+import SocialLinks from '@/components/features/homepage/SocialLinks'
+import WelcomePanel from '@/components/features/homepage/WelcomePanel'
 import EventsPreview from '@/components/features/events/EventsPreview'
 import BlogPreview from '@/components/features/posts/BlogPreview'
 import ClubDepartments from '@/components/features/homepage/ClubDepartments'
 import RollingGallery from '@/components/features/homepage/RollingGallery'
 import type { Metadata } from 'next'
 import ParticleCanvas from '@/components/ParticleCanvas'
-
 
 export const metadata: Metadata = {
   title: "Home | NUSCAS",
@@ -99,81 +97,25 @@ export default async function Home({ searchParams }: HomeProps) {
         </div>
       )}
 
-      {/* 1. Hero Seasonal Banner */}
-      <div className="w-screen relative left-1/2 -translate-x-1/2">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <SeasonalBanner />
+      {/* Hero Section: Unified Grid Layout */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 items-stretch mb-4 gap-2">
+        {/* Left: Seasonal Banner (7 cols on lg) */}
+        <div className="lg:col-span-8 flex">
+          <SeasonalBanner className="h-full min-h-[350px] lg:min-h-[480px]" />
         </div>
-      </div>
-      
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch my-8">
 
-        {/* Welcome Panel / Auth Greeting Card (4 cols on lg) */}
-        <div className="lg:col-span-5 flex flex-col justify-between p-6 sm:p-8 border border-border shadow-sm chaos-card-active relative overflow-hidden">
-          <div>
-            <h2 className="text-xl sm:text-2xl font-black text-neutral-900 tracking-tight flex items-center gap-2">
-              <span className="w-3 h-3 rounded-full bg-accent" />
-              NUS Comics and Animation Society
-            </h2>
-            <p className="text-sm text-text-muted mt-2 leading-relaxed">
-              We are a community of creatives, artists, gamers, and enthusiasts at the National University of Singapore.
-            </p>
-          </div>
+        <div className="lg:col-span-4 flex flex-col gap-2 justify-between">
 
-          <div className="mt-8 pt-6 border-t border-border/80">
-            {user ? (
-              <div className="space-y-4">
-                <div>
-                  <div className="text-[10px] uppercase tracking-wider font-extrabold text-accent">Active Session</div>
-                  <p className="text-xl font-black text-neutral-900 mt-1">
-                    Welcome back, <span className="text-accent">{displayName}</span>!
-                  </p>
-                  <p className="text-xs text-text-muted mt-0.5">{user.email}</p>
-                </div>
+          <WelcomePanel user={user} role={role} displayName={displayName} className="flex-grow" texts={joinReasons} />
 
-                <div className="inline-flex items-center gap-2 rounded-lg bg-accent/10 px-3 py-1 text-xs font-bold text-accent border border-accent/20">
-                  Role: <span className="uppercase">{role || 'member'}</span>
-                </div>
-
-                <div className="flex flex-wrap gap-3 pt-2">
-                  <Link
-                    href="/member/ratings"
-                    className="rounded-xl bg-accent hover:bg-accent-hover text-white font-bold text-xs uppercase tracking-wider px-4 py-2.5 shadow-sm hover:scale-105 active:scale-95 transition-all duration-200"
-                  >
-                    Member Area
-                  </Link>
-                  {(role === 'committee' || role === 'admin') && (
-                    <Link
-                      href="/admin/posts"
-                      className="rounded-xl bg-neutral-500 hover:bg-neutral-900 text-white font-bold text-xs uppercase tracking-wider px-4 py-2.5 hover:scale-105 active:scale-95 transition-all duration-200"
-                    >
-                      Admin Area
-                    </Link>
-                  )}
-                </div>
-              </div>
-            ) : (
-              <div className="space-y-4">
-                <p className="text-sm font-semibold text-neutral-700">
-                  Access is restricted to club members. Sign in with Google to join the portal:
-                </p>
-                <div className="flex">
-                  <AuthButton user={user} />
-                </div>
-              </div>
-            )}
+          <div className="flex-shrink-0">
+            <SocialLinks className="py-0" />
           </div>
         </div>
-
-        {/* 2. Absurd Reasons Card (7 cols on lg) */}
-        <div className="lg:col-span-7 flex items-center justify-center">
-          <AbsurdReasons initialReasons={joinReasons} />
-        </div>
-
       </div>
 
       {/* Outer container remains full-bleed across all screen sizes */}
-      <div className="w-screen relative left-1/2 -translate-x-1/2 bg-background-dark text-text-dark border-y border-border-dark py-14 [--color-text:var(--color-text-dark)] [--color-foreground:var(--color-text-dark)] [--color-border:var(--color-border-dark)] [--color-surface:var(--color-surface-dark)] [--color-text-muted:var(--color-text-muted-dark)] transition-colors duration-300">
+      <div className="theme-crimson w-screen relative left-1/2 -translate-x-1/2 bg-background-dark text-text-dark border-y border-border-dark py-14 [--color-text:var(--color-text-dark)] [--color-foreground:var(--color-text-dark)] [--color-border:var(--color-border-dark)] [--color-surface:var(--color-surface-dark)] [--color-text-muted:var(--color-text-muted-dark)] transition-colors duration-300">
         {/* Particle canvas sits as an absolute background behind all content */}
         <ParticleCanvas
           count={400}
@@ -188,20 +130,20 @@ export default async function Home({ searchParams }: HomeProps) {
           fieldStrength={15}
         />
 
-        <div className="relative z-10 max-w-7xl mx-auto px-6 sm:px-8 lg:px-8">
+        <div id="events-section" className="relative z-10 max-w-7xl mx-auto px-6 sm:px-8 lg:px-8">
           <EventsPreview />
         </div>
 
-        <div className="relative z-10 max-w-7xl mx-auto pt-12 pb-4 px-6 sm:px-8 lg:px-8">
+        <div id="departments-section" className="relative z-10 max-w-7xl mx-auto pt-12 pb-4 px-6 sm:px-8 lg:px-8">
           <ClubDepartments />
         </div>
       </div>
 
-      <div className="w-screen relative left-1/2 -translate-x-1/2">
+      <div id="gallery-section" className="w-screen relative left-1/2 -translate-x-1/2">
         <RollingGallery artworks={artworks} />
       </div>
 
-      <div className="relative z-10 max-w-7xl mx-auto pt-12 pb-4 px-6 sm:px-8 lg:px-8">
+      <div id="blog-section" className="relative z-10 max-w-7xl mx-auto pt-12 pb-4 px-6 sm:px-8 lg:px-8">
         <BlogPreview />
       </div>
 

@@ -91,7 +91,7 @@ export default async function RootLayout({
             <Header user={user} showAdminLink={showAdminLink} />
 
             {/* Main Content Area */}
-            <main id="main-content" className="flex-grow max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 pb-8 outline-none">
+            <main id="main-content" className="flex-grow max-w-[85rem] mx-auto w-full px-4 sm:px-6 lg:px-8 pb-8 outline-none">
               {children}
             </main>
 

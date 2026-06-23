@@ -29,12 +29,6 @@
   }
 }
 
-/* Premium Visual Elements */
-.fanzine-dot-grid {
-  background-image: radial-gradient(var(--color-border) 1.5px, transparent 1.5px);
-  background-size: 24px 24px;
-}
-
 .glass-panel {
   background: rgba(255, 255, 255, 0.7);
   backdrop-filter: blur(12px);
@@ -245,5 +239,4 @@
   width: max-content;
   animation: marquee var(--marquee-duration, 35s) linear infinite reverse;
 }
-
 

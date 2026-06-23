@@ -2,15 +2,7 @@
 
 import { useState, useMemo } from 'react'
 import Image from 'next/image'
-
-interface RatingAggregate {
-  anilist_id: number;
-  media_type: 'anime' | 'manga' | 'other';
-  title_en: string;
-  cover_image_url: string | null;
-  average_score: number;
-  rating_count: number;
-}
+import type { RatingAggregate } from '@/types/ratings'
 
 interface PublicRatingsViewProps {
   initialAggregates: RatingAggregate[];

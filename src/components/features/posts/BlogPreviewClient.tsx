@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useRef } from 'react'
-import { motion, useMotionValue, useSpring, useTransform, useMotionTemplate } from 'framer-motion'
+import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion'
 import Link from 'next/link'
 import Image from 'next/image'
 import type { BlogPost } from './BlogPreview'
@@ -64,9 +64,6 @@ function TiltCard({ children, className = '' }: { children: React.ReactNode; cla
   const yS = useSpring(y, spring)
   const rotateX = useTransform(yS, [-0.5, 0.5], [10, -10])
   const rotateY = useTransform(xS, [-0.5, 0.5], [-10, 10])
-  const glowX = useTransform(xS, [-0.5, 0.5], ['0%', '100%'])
-  const glowY = useTransform(yS, [-0.5, 0.5], ['0%', '100%'])
-  const glowBg = useMotionTemplate`radial-gradient(circle 220px at ${glowX} ${glowY}, rgba(237,71,91,0.15), transparent 80%)`
 
   const onMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!cardRef.current) return
@@ -86,11 +83,6 @@ function TiltCard({ children, className = '' }: { children: React.ReactNode; cla
         style={{ rotateX, rotateY, transformStyle: 'preserve-3d' }}
         className={`relative h-full w-full ${className}`}
       >
-        {/* Glare overlay */}
-        <motion.div
-          style={{ background: glowBg }}
-          className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-30 rounded-[inherit]"
-        />
         <div style={{ transform: 'translateZ(0px)' }} className="h-full w-full flex flex-col">
           {children}
         </div>
@@ -111,7 +103,7 @@ function BlogCard({ post }: { post: PostWithExcerpt }) {
 
   return (
     <Link href={`/blog/${post.slug}`} className="block h-full w-full group">
-      <TiltCard className="group flex flex-col overflow-hidden border border-border bg-surface hover:border-accent/40 shadow-md hover:shadow-xl hover:shadow-accent/10 transition-[border-color,box-shadow] duration-300 chaos-card-active cursor-pointer">
+      <TiltCard className="club-card group flex flex-col chaos-card-active cursor-pointer">
 
         {/* ── Cover Image ── */}
         <div className="relative h-48 w-full overflow-hidden border-b border-border flex-shrink-0">
@@ -146,10 +138,10 @@ function BlogCard({ post }: { post: PostWithExcerpt }) {
 
         {/* ── Body ── */}
         <div className="flex flex-col flex-grow p-5">
-          {/* Excerpt */}
-          <p className="text-xs text-text-muted leading-relaxed line-clamp-3">
-            {post.excerpt}
-          </p>
+          {/* Title */}
+          <h3 className="text-lg font-black text-foreground line-clamp-2 group-hover:text-accent transition-colors mb-2">
+            {post.title}
+          </h3>
 
           {/* Footer: badge + date */}
           <div className="mt-auto pt-4 flex items-center justify-between text-[10px]">

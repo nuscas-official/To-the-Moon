@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useRef } from 'react'
-import { motion, useMotionValue, useSpring, useTransform, useMotionTemplate } from 'framer-motion'
+import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion'
 import Link from 'next/link'
 import Image from 'next/image'
 
@@ -58,11 +58,6 @@ function TiltWrapper({ children, className = '', variants }: TiltWrapperProps) {
   const rotateX = useTransform(ySpring, [-0.5, 0.5], [12, -12])
   const rotateY = useTransform(xSpring, [-0.5, 0.5], [-12, 12])
 
-  // Glow position
-  const glowX = useTransform(xSpring, [-0.5, 0.5], ["0%", "100%"])
-  const glowY = useTransform(ySpring, [-0.5, 0.5], ["0%", "100%"])
-  const glowBg = useMotionTemplate`radial-gradient(circle 250px at ${glowX} ${glowY}, rgba(255, 255, 255, 0.12), transparent 80%)`
-
   const handleMouseMove = (event: React.MouseEvent<HTMLDivElement>) => {
     if (!cardRef.current) return
     const rect = cardRef.current.getBoundingClientRect()
@@ -94,11 +89,6 @@ function TiltWrapper({ children, className = '', variants }: TiltWrapperProps) {
         }}
         className={`relative h-full w-full ${className}`}
       >
-        {/* Cursor-tracking glare overlay */}
-        <motion.div
-          style={{ background: glowBg }}
-          className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-30 rounded-[inherit]"
-        />
         {/* Children content wrapper */}
         <div style={{ transform: "translateZ(0px)" }} className="h-full w-full flex flex-col justify-between">
           {children}

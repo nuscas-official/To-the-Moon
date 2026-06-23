@@ -115,7 +115,7 @@ export async function updateSeasonalPickAction(data: SeasonalPickInput) {
 }
 
 /**
- * Server Action to update the Absurd Join Reasons array.
+ * Server Action to update the Rotating Join Reasons array.
  * Enforces admin or committee role.
  */
 export async function updateJoinReasonsAction(reasons: string[]) {

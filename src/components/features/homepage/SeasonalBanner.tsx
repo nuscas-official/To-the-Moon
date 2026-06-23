@@ -18,7 +18,11 @@ const FALLBACK_PICK: SeasonalPick = {
   type: "Featured Anime"
 }
 
-export default async function SeasonalBanner() {
+interface SeasonalBannerProps {
+  className?: string
+}
+
+export default async function SeasonalBanner({ className = "aspect-video" }: SeasonalBannerProps) {
   let seasonalPick = FALLBACK_PICK
 
   try {
@@ -51,7 +55,7 @@ export default async function SeasonalBanner() {
   return (
     <section 
       style={componentStyles}
-      className="relative w-full aspect-video overflow-hidden border border-border shadow-xl group flex items-end animate-fade-in"
+      className={`relative w-full overflow-hidden border border-border shadow-xl group flex items-end animate-fade-in ${className}`}
     >
       {/* Background Image Container */}
       <div className="absolute inset-0 z-0">

@@ -114,7 +114,7 @@ export default function AdminSettingsClient({
     try {
       const res = await updateJoinReasonsAction(joinReasons)
       if (res.success) {
-        showFeedback('success', 'Absurd join reasons saved successfully!')
+        showFeedback('success', 'Join reasons saved successfully!')
       } else {
         showFeedback('error', res.error || 'Failed to save join reasons.')
       }
@@ -339,16 +339,16 @@ export default function AdminSettingsClient({
           </form>
         </div>
 
-        {/* Editor 2: Absurd reasons (7 columns) */}
+        {/* Editor 2: Join reasons (7 columns) */}
         <div className="lg:col-span-7 space-y-4">
           <h2 className="text-lg font-black text-neutral-900 uppercase tracking-wider">
-            Absurd Reasons Manager
+            Join Reasons Manager
           </h2>
 
           <div className="border border-border bg-surface rounded-2xl p-6 shadow-sm space-y-6">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <p className="text-xs text-text-muted">
-                Manage the random absurd quotes and reasons displayed to guest users on the homepage.
+                Manage the dynamic quotes and reasons displayed to guest users on the homepage.
               </p>
               <button
                 type="button"
@@ -367,7 +367,7 @@ export default function AdminSettingsClient({
             <form onSubmit={handleAddReason} className="flex gap-2">
               <input
                 type="text"
-                placeholder="Enter a new absurd reason..."
+                placeholder="Enter a new join reason..."
                 value={newReason}
                 onChange={(e) => setNewReason(e.target.value)}
                 className="flex-grow px-4 py-2.5 bg-neutral-50 border border-neutral-200 rounded-xl focus:outline-none focus:border-accent text-sm font-bold text-neutral-800"

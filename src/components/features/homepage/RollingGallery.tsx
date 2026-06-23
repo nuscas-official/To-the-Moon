@@ -40,18 +40,29 @@ export default function RollingGallery({ artworks }: RollingGalleryProps) {
     return null
   }
 
-  // To ensure a seamless infinite scroll loop, the marquee track must have identical halves.
-  // We repeat the artworks array an even number of times so that the first 50% matches the last 50% exactly.
-  const repeatedArtworks: Artwork[] = []
-  let repeatCount = Math.ceil(16 / artworks.length)
-  if (repeatCount % 2 !== 0) {
-    repeatCount += 1
-  }
-  repeatCount = Math.max(2, repeatCount)
+  // Helper to calculate duplication for smooth infinite scrolling
+  const getRepeatedArtworks = (items: Artwork[]) => {
+    const repeated: Artwork[] = []
+    let repeatCount = Math.ceil(16 / items.length)
+    if (repeatCount % 2 !== 0) {
+      repeatCount += 1
+    }
+    repeatCount = Math.max(2, repeatCount)
 
-  for (let i = 0; i < repeatCount; i++) {
-    repeatedArtworks.push(...artworks)
+    for (let i = 0; i < repeatCount; i++) {
+      repeated.push(...items)
+    }
+    return repeated
   }
+
+  // Splitting items into two distinct arrays so both rows feature different pieces
+  const half = Math.ceil(artworks.length / 2)
+  const firstRowArtworks = artworks.slice(0, half)
+  const secondRowArtworks = artworks.slice(half)
+
+  // Fallback if odd item count makes second row too sparse to loop smoothly
+  const row1Items = getRepeatedArtworks(firstRowArtworks)
+  const row2Items = getRepeatedArtworks(secondRowArtworks.length > 0 ? secondRowArtworks : firstRowArtworks)
 
   return (
     <section className="w-full py-16 border-t border-border/60 relative overflow-hidden bg-background transition-colors duration-300">
@@ -77,12 +88,12 @@ export default function RollingGallery({ artworks }: RollingGalleryProps) {
       </div>
 
       {/* Marquee Track Container */}
-      <div className="relative w-full overflow-hidden py-4 select-none">
-        {/* Soft fading edges */}
+      <div className="relative w-full overflow-hidden py-4 select-none flex flex-col gap-6">
+        {/* Soft fading edges layer across both rows */}
         <div className="absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-background to-transparent z-10 pointer-events-none" />
         <div className="absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-background to-transparent z-10 pointer-events-none" />
 
-        {/* Scrolling Strip */}
+        {/* Row 1: Forward Direction */}
         <div className="flex w-max relative">
           <div 
             className="animate-marquee flex gap-6 px-3"
@@ -90,9 +101,29 @@ export default function RollingGallery({ artworks }: RollingGalleryProps) {
               animationPlayState: isMarqueePaused ? 'paused' : 'running'
             }}
           >
-            {repeatedArtworks.map((art, idx) => (
+            {row1Items.map((art, idx) => (
               <ArtworkCard
-                key={`${art.id}-${idx}`}
+                key={`r1-${art.id}-${idx}`}
+                artwork={art}
+                variant="marquee"
+                onZoomToggle={setIsMarqueePaused}
+              />
+            ))}
+          </div>
+        </div>
+
+        {/* Row 2: Reverse Direction */}
+        <div className="flex w-max relative">
+          <div 
+            className="animate-marquee flex gap-6 px-3"
+            style={{
+              animationPlayState: isMarqueePaused ? 'paused' : 'running',
+              animationDirection: 'reverse'
+            }}
+          >
+            {row2Items.map((art, idx) => (
+              <ArtworkCard
+                key={`r2-${art.id}-${idx}`}
                 artwork={art}
                 variant="marquee"
                 onZoomToggle={setIsMarqueePaused}
