@@ -88,7 +88,7 @@ export default function WelcomePanel({
   const displayText = items[reasonIndex]
 
   return (
-    <div className={`club-card flex flex-col justify-between p-6 sm:p-8 border border-border shadow-sm chaos-card-active relative overflow-hidden ${className}`}>
+    <div className={`club-card flex flex-col justify-between px-6 py-4 sm:px-8 border border-border shadow-sm chaos-card-active relative overflow-hidden ${className}`}>
       <div>
         {/* Dynamic Header: Highlighted changing text */}
         <div className="flex flex-col">
@@ -131,7 +131,7 @@ export default function WelcomePanel({
           </div>
         </div>
 
-        <p className="text-sm text-text-muted leading-relaxed mt-4">
+        <p className="text-sm text-text-muted leading-relaxed">
           We are a group of friends passionate about all sorts of Japanese Animation, Comics, Events and Games. From a small club founded in 1999, we now possess hundreds of members, a dedicated committee, robust alumni network and a budding social media presence.
         </p>
       </div>
@@ -146,11 +146,7 @@ export default function WelcomePanel({
               <p className="text-xs text-text-muted mt-0.5">{user.email}</p>
             </div>
 
-            <div className="inline-flex items-center gap-2 rounded-lg bg-accent/10 px-3 py-1 text-xs font-bold text-accent border border-accent/20">
-              Role: <span>{role || 'member'}</span>
-            </div>
-
-            <div className="flex flex-wrap gap-3 pt-2">
+            <div className="flex flex-wrap gap-3">
               <Link
                 href="/member/ratings"
                 className="rounded-xl bg-accent hover:bg-accent-hover text-white font-bold text-xs tracking-wider px-4 py-2.5 shadow-sm hover:scale-105 active:scale-95 transition-all duration-200"
@@ -170,7 +166,7 @@ export default function WelcomePanel({
         ) : (
           <div className="space-y-4">
             <p className="text-sm font-semibold text-neutral-700">
-              Access to the portal is restricted to club members. Get an invite link from an administrator to sign in with Google: 
+              Access to the portal is restricted to members. Get an invite link from an administrator to sign in. 
             </p>
             <div className="flex">
               <AuthButton user={user} />

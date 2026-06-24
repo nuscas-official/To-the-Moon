@@ -106,15 +106,15 @@ export default function Header({ user, showAdminLink }: HeaderProps) {
     <>
       {/* Top Sticky Header Bar */}
       <header className="sticky top-0 z-[60] w-full bg-surface md:bg-transparent transition-colors duration-300">
-        <div className="max-w-8xl mx-auto flex h-20 items-center justify-between px-4 sm:px-6 lg:px-8">
+        <div className="max-w-8xl mx-auto flex h-20 items-center justify-between px-6">
           {/* Logo & Menu Title on Left */}
-          <div className="flex items-center gap-4 sm:gap-6">
+          <div className="flex items-center">
             <Link href="/" className="flex items-center hover:opacity-80 transition-opacity">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src="/images/nuscas_logo.webp"
                 alt="NUSCAS Logo"
-                className="h-10 w-auto object-contain"
+                className="h-7 w-auto object-contain"
               />
             </Link>
           </div>

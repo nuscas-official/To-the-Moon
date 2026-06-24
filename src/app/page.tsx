@@ -99,7 +99,6 @@ export default async function Home({ searchParams }: HomeProps) {
 
       {/* Hero Section: Unified Grid Layout */}
       <div className="grid grid-cols-1 lg:grid-cols-12 items-stretch mb-4 gap-2">
-        {/* Left: Seasonal Banner (7 cols on lg) */}
         <div className="lg:col-span-8 flex">
           <SeasonalBanner className="h-full min-h-[350px] lg:min-h-[480px]" />
         </div>
@@ -112,6 +111,7 @@ export default async function Home({ searchParams }: HomeProps) {
             <SocialLinks className="py-0" />
           </div>
         </div>
+
       </div>
 
       {/* Outer container remains full-bleed across all screen sizes */}
