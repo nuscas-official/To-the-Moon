@@ -7,6 +7,7 @@ import { type User } from '@supabase/supabase-js'
 import { motion, AnimatePresence } from 'framer-motion'
 import AuthButton from '@/components/features/auth/AuthButton'
 import { HybridText } from '@/components/HybridText'
+import { NavLabel } from './NavLabel'
 
 interface HeaderProps {
   user: User | null
@@ -38,14 +39,26 @@ const menuItemVariants = {
   }
 }
 
+const navItems = [
+  { label: 'Home', href: '/' },
+  { label: 'Blog', href: '/blog' },
+  { label: 'Events', href: '/events' },
+  { label: 'Gallery', href: '/gallery' },
+  { label: 'Ratings', href: '/ratings' },
+  { label: 'VNs', href: '/vn' },
+];
+
 export default function Header({ user, showAdminLink }: HeaderProps) {
   const [isOpen, setIsOpen] = useState(false)
   const pathname = usePathname()
   const [isOverDark, setIsOverDark] = useState(false)
+  const [isScrolled, setIsScrolled] = useState(false)
 
-  // Detect if header is scrolled over a dark section
+  // Detect if header is scrolled over a dark section and check if scrolled down
   useEffect(() => {
     const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20)
+      
       const darkSections = document.querySelectorAll('.bg-background-dark')
       let overDark = false
       
@@ -105,8 +118,12 @@ export default function Header({ user, showAdminLink }: HeaderProps) {
   return (
     <>
       {/* Top Sticky Header Bar */}
-      <header className="sticky top-0 z-[60] w-full bg-surface md:bg-transparent transition-colors duration-300">
-        <div className="max-w-8xl mx-auto flex h-20 items-center justify-between px-6">
+      <header className={`sticky top-0 z-[60] w-full transition-all duration-300 ${
+        isScrolled 
+          ? 'bg-surface/85 shadow-sm' 
+          : 'bg-surface md:bg-transparent border-b border-transparent'
+      }`}>
+        <div className="max-w-8xl mx-auto flex h-20 items-center justify-between px-6 relative">
           {/* Logo & Menu Title on Left */}
           <div className="flex items-center">
             <Link href="/" className="flex items-center hover:opacity-80 transition-opacity">
@@ -114,15 +131,80 @@ export default function Header({ user, showAdminLink }: HeaderProps) {
               <img
                 src="/images/nuscas_logo.webp"
                 alt="NUSCAS Logo"
-                className="h-7 w-auto object-contain"
+                className={`w-auto object-contain transition-all duration-350 ease-in-out ${
+                  isScrolled 
+                    ? 'h-7'
+                    : 'h-10'
+                }`}
               />
             </Link>
           </div>
 
+          {/* Desktop Horizontal Navigation Bar */}
+          <nav className={`hidden md:flex items-center gap-8 transition-all duration-300 ${
+            (isScrolled || isOpen) 
+              ? 'opacity-0 -translate-y-2 pointer-events-none' 
+              : 'opacity-100 translate-y-0 pointer-events-auto'
+          }`}>
+            <div className="flex items-center gap-8">
+              {/* Main Loop Links */}
+              {navItems.map((item) => {
+                const isActive = pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href))
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className={`group relative py-2 text-sm font-medium tracking-wide transition-colors duration-250 ${
+                      isActive ? 'text-accent font-semibold' : 'text-text hover:text-accent'
+                    }`}
+                  >
+                    <NavLabel label={item.label} isActive={isActive} />
+                  </Link>
+                )
+              })}
+              
+              {/* Member Link */}
+              {user && (
+                <Link
+                  href="/member/articles"
+                  className={`group relative py-2 text-sm font-medium tracking-wide transition-colors duration-250 ${
+                    pathname.startsWith('/member') ? 'text-accent font-semibold' : 'text-text hover:text-accent'
+                  }`}
+                >
+                  <NavLabel label="Member" isActive={pathname.startsWith('/member')} />
+                </Link>
+              )}
+
+              {/* Admin Link */}
+              {showAdminLink && (
+                <Link
+                  href="/admin/posts"
+                  className={`group relative py-2 text-sm font-medium tracking-wide transition-colors duration-250 ${
+                    pathname.startsWith('/admin') ? 'text-accent font-semibold' : 'text-text hover:text-accent'
+                  }`}
+                >
+                  <NavLabel label="Admin" isActive={pathname.startsWith('/admin')} />
+                </Link>
+              )}
+            </div>
+  
+            {/* Divider */}
+            <div className="h-4 w-[1px] bg-border" />
+            
+            {/* Auth Button */}
+            <div className="flex items-center">
+              <AuthButton user={user} />
+            </div>
+          </nav>
+
           {/* Unified Hamburger / Close Menu Trigger Button */}
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="relative flex items-center justify-center w-16 h-16 rounded-full overflow-hidden group focus:outline-none transition-all duration-300 z-[60]"
+            className={`flex items-center justify-center w-16 h-16 rounded-full overflow-hidden group focus:outline-none transition-all duration-300 z-[60] absolute right-6 top-1/2 -translate-y-1/2 md:right-8 ${
+              (!isScrolled && !isOpen) 
+                ? 'md:opacity-0 md:pointer-events-none md:scale-95' 
+                : 'md:opacity-100 md:pointer-events-auto md:scale-100'
+            }`}
             aria-label={isOpen ? "Close navigation menu" : "Open navigation menu"}
             aria-expanded={isOpen}
             aria-controls="sidebar-navigation"
@@ -204,14 +286,7 @@ export default function Header({ user, showAdminLink }: HeaderProps) {
                       Explore
                     </motion.p>
                     <nav className="space-y-1">
-                      {[
-                        { label: 'Home', href: '/' },
-                        { label: 'Blog', href: '/blog' },
-                        { label: 'Events', href: '/events' },
-                        { label: 'Gallery', href: '/gallery' },
-                        { label: 'Ratings', href: '/ratings' },
-                        { label: 'Visual Novels', href: '/vn' },
-                      ].map((item) => (
+                      {navItems.map((item) => (
                         <motion.div key={item.href} variants={menuItemVariants}>
                           <Link
                             href={item.href}
@@ -235,7 +310,7 @@ export default function Header({ user, showAdminLink }: HeaderProps) {
                         variants={menuItemVariants}
                         className="text-xs font-semibold text-text-muted uppercase tracking-wider mb-4 px-2"
                       >
-                        Member Portal
+                        Member&apos;s Portal
                       </motion.p>
                       <nav className="space-y-1">
                         {user && (
@@ -247,7 +322,7 @@ export default function Header({ user, showAdminLink }: HeaderProps) {
                             >
                               <span className="w-1.5 h-1.5 rounded-full bg-accent scale-0 group-hover:scale-100 transition-transform duration-250" />
                               <span className="transition-transform duration-250 group-hover:translate-x-1">
-                                Member Area
+                                Member
                               </span>
                             </Link>
                           </motion.div>
@@ -261,7 +336,7 @@ export default function Header({ user, showAdminLink }: HeaderProps) {
                             >
                               <span className="w-1.5 h-1.5 rounded-full bg-accent scale-0 group-hover:scale-100 transition-transform duration-250" />
                               <span className="transition-transform duration-250 group-hover:translate-x-1">
-                                Admin Area
+                                Admin
                               </span>
                             </Link>
                           </motion.div>

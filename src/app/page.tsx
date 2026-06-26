@@ -107,8 +107,9 @@ export default async function Home({ searchParams }: HomeProps) {
 
           <WelcomePanel user={user} role={role} displayName={displayName} className="flex-grow" texts={joinReasons} />
 
-          <div className="flex-shrink-0">
-            <SocialLinks className="py-0" />
+          <div className="flex-shrink-0 grid grid-cols-2 gap-2">
+            <SocialLinks className="py-0 h-full" />
+            <SeasonalBanner className="h-full min-h-[220px]" isMini={true} />
           </div>
         </div>
 
