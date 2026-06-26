@@ -58,10 +58,9 @@ export default function ClubDepartments() {
     <section className="w-full space-y-8 animate-fade-in">
       {/* Section Header */}
       <div className="text-left md:text-center space-y-2">
-        <h2 className="text-m uppercase tracking-widest font-black text-accent flex items-center md:justify-center gap-2">
-          <span className="w-4 h-4 rounded-full bg-accent" />
+        <p className="font-display text-6xl  tracking-widest text-accent flex items-center md:justify-center gap-2">
           Our Departments
-        </h2>
+        </p>
       </div>
 
       {/* Grid of Departments */}

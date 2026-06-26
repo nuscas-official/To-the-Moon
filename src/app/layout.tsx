@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Quicksand, Spectral, Josefin_Sans, Azeret_Mono } from "next/font/google";
+import { Manrope, Birthstone, Cormorant_Garamond, Azeret_Mono } from "next/font/google";
 import "./globals.css";
 import { createClient } from '@/lib/supabase/server'
 import Header from '@/components/layout/Header'
@@ -9,20 +9,21 @@ import ThemeProvider from '@/components/providers/ThemeProvider'
 import RoleSyncListener from '@/components/features/auth/RoleSyncListener'
 import Footer from '@/components/layout/Footer'
 
-const quicksand = Quicksand({
+const quicksand = Manrope({
   subsets: ["latin"],
-  variable: "--font-quicksand",
+  variable: "--font-manrope",
 });
 
-const spectral = Spectral({
+const cormorantGaramond = Cormorant_Garamond({
   subsets: ["latin"],
-  weight: ["200", "300", "400", "500", "600", "700", "800"],
-  variable: "--font-spectral",
+  weight: ["300", "400", "500", "600", "700"],
+  variable: "--font-cormorant-garamond",
 });
 
-const josefinSans = Josefin_Sans({
+const birthstone = Birthstone({
   subsets: ["latin"],
-  variable: "--font-josefin-sans",
+  weight: ["400"],
+  variable: "--font-birthstone",
 });
 
 const azeretMono = Azeret_Mono({
@@ -72,7 +73,7 @@ export default async function RootLayout({
   const showAdminLink = !!(user && (role === 'committee' || role === 'admin'))
 
   return (
-    <html lang="en" className={`h-full ${quicksand.variable} ${spectral.variable} ${josefinSans.variable} ${azeretMono.variable}`}>
+    <html lang="en" className={`h-full ${quicksand.variable} ${birthstone.variable} ${cormorantGaramond.variable} ${azeretMono.variable}`}>
       <body
         className="antialiased min-h-full flex flex-col bg-background text-foreground transition-colors duration-300 overflow-x-hidden"
       >

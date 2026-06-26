@@ -72,15 +72,15 @@ export default async function SeasonalBanner({ className = "aspect-video" }: Sea
       {/* Content Section */}
       <div className="relative z-20 p-5 sm:p-10 lg:p-12 max-w-xl text-left w-full">
         {/* Badge */}
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider text-white border border-white/20 backdrop-blur mb-3 sm:mb-4">
+        <div className="inline-flex items-center gap-2 px-3 text-xs font-bold uppercase tracking-wider text-white backdrop-blur mb-1.5 sm:mb-2">
           <span className="w-2 h-2 rounded-full bg-accent animate-pulse" />
           {seasonalPick.type}
         </div>
 
         {/* Title */}
-        <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-white leading-tight tracking-tight drop-shadow-md">
+        <p className="md:text-7xl text-4xl font-display text-white leading-tight tracking-tight">
           {seasonalPick.title}
-        </h1>
+        </p>
 
         {/* Description */}
         {seasonalPick.description && (
@@ -90,10 +90,10 @@ export default async function SeasonalBanner({ className = "aspect-video" }: Sea
         )}
 
         {/* Action Buttons */}
-        <div className="mt-4 sm:mt-8 flex flex-wrap gap-3 sm:gap-4">
+        <div className="mt-2 sm:mt-4 flex flex-wrap gap-3 sm:gap-4">
           <Link
             href="/ratings"
-            className="px-5 py-2.5 sm:px-6 sm:py-3 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold text-xs sm:text-sm backdrop-blur border border-white/20 active:scale-95 transition-all"
+            className="px-2 py-2 sm:px-4 sm:py-2 rounded-sm bg-white/10 hover:bg-white/20 text-white font-bold text-xs sm:text-sm backdrop-blur border border-white/20 active:scale-95 transition-all"
           >
             See Club Ratings
           </Link>

@@ -134,7 +134,7 @@ export default async function Home({ searchParams }: HomeProps) {
           <EventsPreview />
         </div>
 
-        <div id="departments-section" className="relative z-10 max-w-7xl mx-auto pt-12 pb-4 px-6 sm:px-8 lg:px-8">
+        <div id="departments-section" className="relative z-10 max-w-7xl mx-auto mt-20 pb-4 px-6 sm:px-8 lg:px-8">
           <ClubDepartments />
         </div>
       </div>
@@ -143,7 +143,7 @@ export default async function Home({ searchParams }: HomeProps) {
         <RollingGallery artworks={artworks} />
       </div>
 
-      <div id="blog-section" className="relative z-10 max-w-7xl mx-auto pt-12 pb-4 px-6 sm:px-8 lg:px-8">
+      <div id="blog-section" className="relative z-10 max-w-7xl mx-auto pt-8 pb-4 px-6 sm:px-8 lg:px-8">
         <BlogPreview />
       </div>
 

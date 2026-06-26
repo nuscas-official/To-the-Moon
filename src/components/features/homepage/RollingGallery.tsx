@@ -3,24 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import ArtworkCard from '@/components/features/gallery/ArtworkCard'
-
-function ArrowRightIcon(props: React.SVGProps<SVGSVGElement>) {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      {...props}
-    >
-      <path d="M5 12h14" />
-      <path d="m12 5 7 7-7 7" />
-    </svg>
-  )
-}
+import { ArrowRightIcon } from '@/components/icons/ArrowRightIcon';
 
 interface Artwork {
   id: string
@@ -68,14 +51,14 @@ export default function RollingGallery({ artworks }: RollingGalleryProps) {
     <section className="w-full py-16 border-t border-border/60 relative overflow-hidden bg-background transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-8 mb-8 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
-          <span className="text-xs uppercase font-extrabold tracking-widest text-accent">
-            Member Art Showcase
+          <span className="text-xl font-display tracking-widest text-accent">
+            Member Palette
           </span>
-          <h2 className="text-2xl sm:text-4xl font-black text-text tracking-tight mt-1">
-            Club Art Gallery
-          </h2>
-          <p className="text-sm text-text-muted mt-2 max-w-xl leading-relaxed">
-            A continuous loop of amazing fanart, sketches, and digital illustrations crafted by the talented members of our community.
+          <p className="text-4xl md:text-5xl font-serif text-text tracking-tight py-2">
+            Art Gallery
+          </p>
+          <p className="text-sm text-text-muted mt-2 max-w-xl font-sans leading-relaxed">
+            A collection of amazing fanart, sketches, and digital illustrations crafted by the talented members of our community.
           </p>
         </div>
         <Link

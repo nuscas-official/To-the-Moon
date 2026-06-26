@@ -150,9 +150,9 @@ export default function EventCard({ event, detailsLabel = 'View' }: EventCardPro
               <span>{dateStr} &middot; {timeStr}</span>
             </div>
 
-            <h3 className="text-lg font-black text-foreground line-clamp-1 group-hover:text-accent-hover transition-colors">
+            <p className="text-md font-sans font-extrabold text-foreground line-clamp-1 group-hover:text-accent-hover transition-colors">
               {event.title}
-            </h3>
+            </p>
 
             {event.description && (
               <p className="text-xs text-text-muted mt-2 line-clamp-3 leading-relaxed">

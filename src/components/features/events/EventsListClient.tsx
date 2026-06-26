@@ -4,6 +4,7 @@ import React from 'react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import EventCard, { EventPlaceholderCard } from './EventCard'
+import { ArrowRightIcon } from '@/components/icons/ArrowRightIcon';
 
 interface ClubEvent {
   id: string;
@@ -61,19 +62,23 @@ export default function EventsListClient({ events }: EventsListClientProps) {
         className="flex flex-col sm:flex-row items-baseline justify-between border-b border-border pb-4 mb-8"
       >
         <div>
-          <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-foreground">
+          <span className="text-xl font-display tracking-widest text-accent">
+            Our Activities
+          </span>
+          <p className="text-4xl md:text-5xl tracking-tight text-foreground font-serif py-2">
             Events
-          </h2>
-          <p className="text-sm text-text-muted mt-1">
+          </p>
+          <p className="text-sm text-text-muted mt-2">
             Don&apos;t miss out on what we have planned for the semester
           </p>
         </div>
         {hasEvents && (
-          <Link 
+          <Link
             href="/events"
-            className="text-xs uppercase tracking-wider font-extrabold text-accent hover:text-accent-hover transition-colors mt-2 sm:mt-0"
+            className="group inline-flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-wider text-accent hover:text-accent/80 transition-colors self-start sm:self-end"
           >
-            All Events &rarr;
+            All Events
+            <ArrowRightIcon className="w-4 h-4 transition-transform group-hover:translate-x-1" />
           </Link>
         )}
       </motion.div>

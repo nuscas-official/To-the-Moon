@@ -5,6 +5,8 @@ import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion'
 import Link from 'next/link'
 import Image from 'next/image'
 import type { BlogPost } from './BlogPreview'
+import { ArrowRightIcon } from '@/components/icons/ArrowRightIcon';
+
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -206,9 +208,12 @@ export default function BlogPreviewClient({ posts }: BlogPreviewClientProps) {
         className="flex flex-col sm:flex-row items-baseline justify-between border-b border-border pb-4 mb-8"
       >
         <div>
-          <h2 className="text-2xl sm:text-3xl tracking-tight text-text">
-            Latest Articles
-          </h2>
+          <span className="text-xl font-display tracking-widest text-accent">
+            Archive of NUSCAS
+          </span>
+          <p className="text-4xl md:text-5xl tracking-tight text-text font-serif py-2">
+            Articles
+          </p>
           <p className="text-sm text-text-muted mt-1">
             News, reviews, essays and interviews from our members
           </p>
@@ -216,9 +221,10 @@ export default function BlogPreviewClient({ posts }: BlogPreviewClientProps) {
         {hasPosts && (
           <Link
             href="/blog"
-            className="text-xs uppercase tracking-wider font-extrabold text-accent hover:text-accent-hover transition-colors mt-2 sm:mt-0"
+            className="group inline-flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-wider text-accent hover:text-accent/80 transition-colors self-start sm:self-end"
           >
-            All Articles &rarr;
+            All Articles
+            <ArrowRightIcon className="w-4 h-4 transition-transform group-hover:translate-x-1" />
           </Link>
         )}
       </motion.div>

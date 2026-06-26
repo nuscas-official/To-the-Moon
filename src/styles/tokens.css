@@ -52,10 +52,10 @@
   --radius-2xl: 1.5rem;
   --radius-full: 9999px;
 
-  --font-sans: var(--font-quicksand), "Quicksand", ui-sans-serif, system-ui, sans-serif;
-  --font-serif: var(--font-spectral), "Spectral", serif;
-  --font-display: var(--font-josefin-sans), "Josefin Sans", sans-serif;
-  --font-mono: var(--font-azeret-mono), "Azeret Mono", monospace;
+  --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-cormorant-garamond), serif;
+  --font-display: var(--font-birthstone), cursive;
+  --font-mono: var(--font-azeret-mono), monospace;
 
   --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
