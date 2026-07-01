@@ -22,6 +22,7 @@ export interface UserProfile {
   display_name: string;
   is_active: boolean;
   telegram_id: number | null;
+  role: string;
 }
 
 export type BotContext = Context & SessionFlavor<SessionData> & {
@@ -52,14 +53,17 @@ export function getBotInstance(): Bot<BotContext> {
     if (!telegramId) return
 
     const messageText = (ctx.message?.text || '').trim()
-    const isLinkCommand = messageText.startsWith('/link') || messageText.startsWith('/start')
+    const isBypassCommand = 
+      messageText.startsWith('/link') || 
+      messageText.startsWith('/start') || 
+      messageText.startsWith('/whoami')
 
     const adminSupabase = createAdminClient()
 
     // Query DB for user with this telegram_id
     const { data: userProfile, error } = await adminSupabase
       .from('users')
-      .select('id, display_name, is_active, telegram_id')
+      .select('id, display_name, is_active, telegram_id, role')
       .eq('telegram_id', telegramId)
       .maybeSingle()
 
@@ -71,8 +75,8 @@ export function getBotInstance(): Bot<BotContext> {
 
     // If no active member profile is linked to this telegram_id
     if (!userProfile || !userProfile.is_active) {
-      if (isLinkCommand) {
-        // Let user link their account
+      if (isBypassCommand) {
+        // Let user link their account or check connection status
         return await next()
       } else {
         await ctx.reply(
@@ -103,10 +107,13 @@ export function getBotInstance(): Bot<BotContext> {
     } else {
       await ctx.reply(
         `👋 *Welcome to the NUSCAS Member Bot!*\n\n` +
-        `NUSCAS is the NUS Anime Society member portal bot. You can search, rate anime/manga, and view your reviews.\n\n` +
+        `To the Moon is the NUS Comics and Animation Socity member portal bot. You can search, rate anime/manga, and view your reviews.\n\n` +
         `Use these commands:\n` +
         `/rate — Search and rate an anime or manga\n` +
         `/myratings — View your 5 most recent ratings\n` +
+        `/trending — View the top 5 highest-rated titles\n` +
+        `/events — View upcoming club events\n` +
+        `/whoami — Show your profile and link status\n` +
         `/unlink — Unlink your Telegram account\n` +
         `/help — Show all commands`,
         { parse_mode: 'Markdown' }
@@ -200,12 +207,114 @@ export function getBotInstance(): Bot<BotContext> {
       `🤖 *NUSCAS Bot Commands:*\n\n` +
       `/rate — Search and submit a score for a title\n` +
       `/myratings — Show your 5 most recent ratings\n` +
+      `/trending — Show the top 5 highest-rated titles\n` +
+      `/events — Show upcoming club events\n` +
+      `/whoami — Show your profile and link status\n` +
       `/unlink — Unlink your Telegram account from the portal\n` +
       `/help — Show this menu\n\n` +
       `*Linking commands:*\n` +
       `/link <CODE> — Link account using settings page code`,
       { parse_mode: 'Markdown' }
     )
+  })
+
+  // Command: /trending
+  botInstance.command('trending', async (ctx) => {
+    const adminSupabase = createAdminClient()
+    const { data: trending, error } = await adminSupabase
+      .from('public_rating_aggregates')
+      .select('title_en, average_score, media_type, rating_count')
+      .order('average_score', { ascending: false })
+      .limit(5)
+
+    if (error) {
+      console.error('Error fetching trending ratings in bot:', error)
+      await ctx.reply('An error occurred fetching trending titles.')
+      return
+    }
+
+    if (!trending || trending.length === 0) {
+      await ctx.reply('📈 No trending titles with sufficient reviews found yet.')
+      return
+    }
+
+    let text = '📈 *Top 5 Highest-Rated Titles:*\n\n'
+    trending.forEach((t, idx) => {
+      const typeIcon = t.media_type === 'anime' ? '📺' : '📖'
+      text += `${idx + 1}. ${typeIcon} *${t.title_en}* — *${t.average_score}/10* (${t.rating_count} ratings)\n`
+    })
+
+    await ctx.reply(text, { parse_mode: 'Markdown' })
+  })
+
+  // Command: /events
+  botInstance.command('events', async (ctx) => {
+    const adminSupabase = createAdminClient()
+    const { data: events, error } = await adminSupabase
+      .from('events')
+      .select('title, starts_at, location, description')
+      .eq('status', 'upcoming')
+      .gte('starts_at', new Date().toISOString())
+      .order('starts_at', { ascending: true })
+      .limit(3)
+
+    if (error) {
+      console.error('Error fetching events in bot:', error)
+      await ctx.reply('An error occurred fetching upcoming events.')
+      return
+    }
+
+    if (!events || events.length === 0) {
+      await ctx.reply('📅 No upcoming events scheduled at the moment.')
+      return
+    }
+
+    let text = '📅 *Upcoming NUSCAS Events:*\n\n'
+    events.forEach((event) => {
+      const dateStr = new Date(event.starts_at).toLocaleDateString('en-SG', {
+        weekday: 'short',
+        day: 'numeric',
+        month: 'short',
+        hour: '2-digit',
+        minute: '2-digit',
+        timeZone: 'Asia/Singapore'
+      })
+      text += `🔹 *${event.title}*\n`
+      text += `⏰ ${dateStr}\n`
+      if (event.location) {
+        text += `📍 ${event.location}\n`
+      }
+      if (event.description) {
+        text += `📝 _${event.description.length > 100 ? event.description.substring(0, 100) + '...' : event.description}_\n`
+      }
+      text += '\n'
+    })
+
+    await ctx.reply(text, { parse_mode: 'Markdown' })
+  })
+
+  // Command: /whoami
+  botInstance.command('whoami', async (ctx) => {
+    const telegramId = ctx.from?.id
+    const userProfile = ctx.userProfile
+
+    if (userProfile) {
+      await ctx.reply(
+        `👤 *NUSCAS Profile Info*\n\n` +
+        `• *Display Name:* ${userProfile.display_name}\n` +
+        `• *Role:* ${userProfile.role.charAt(0).toUpperCase() + userProfile.role.slice(1)}\n` +
+        `• *Telegram ID:* \`${telegramId}\`\n` +
+        `• *Status:* 🔗 Linked`,
+        { parse_mode: 'Markdown' }
+      )
+    } else {
+      await ctx.reply(
+        `👤 *Telegram ID:* \`${telegramId}\`\n` +
+        `• *Status:* ❌ Unlinked to any NUSCAS profile.\n\n` +
+        `Use \`/link <CODE>\` to pair your account.`,
+        { parse_mode: 'Markdown' }
+      )
+    }
   })
 
   // 9. Callback Query Handler (for keyboard button clicks)
@@ -467,5 +576,15 @@ async function handleLink(ctx: BotContext, codeParam: string) {
     .update({ used: true })
     .eq('code', code)
 
-  await ctx.reply(`🎉 *Success!*\n\nYour Telegram account has been linked to *${updatedUser.display_name}*.`, { parse_mode: 'Markdown' })
+  await ctx.reply(
+    `🎉 *Success!*\n\n` +
+    `Your Telegram account has been linked to *${updatedUser.display_name}*.\n\n` +
+    `🚀 *Get Started:*\n` +
+    `• Use \`/rate\` to search and rate an anime or manga title.\n` +
+    `• Use \`/myratings\` to see your recent ratings.\n` +
+    `• Use \`/events\` to see upcoming club events.\n` +
+    `• Use \`/trending\` to see top-rated titles.\n` +
+    `• Use \`/whoami\` to view your status.`,
+    { parse_mode: 'Markdown' }
+  )
 }
