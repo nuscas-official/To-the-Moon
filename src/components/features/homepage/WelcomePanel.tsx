@@ -5,6 +5,7 @@ import Link from 'next/link'
 import AuthButton from '@/components/features/auth/AuthButton'
 import { type User } from '@supabase/supabase-js'
 import { motion, AnimatePresence } from 'framer-motion'
+import Image from 'next/image'
 
 interface WelcomePanelProps {
   user: User | null
@@ -15,7 +16,7 @@ interface WelcomePanelProps {
 }
 
 const FALLBACK_REASONS = [
-  "NUS Comics & Animation Society", // Moved default text here so it sits in the loop naturally
+  "NUS Comics & Animation Society",
   "Free instant ramen during weekly screenings (if you can beat the president in rock-paper-scissors)",
   "We have a dedicated server to argue about whether subs or dubs are superior",
   "To fulfill your lifelong dream of running like Naruto down the university corridors",
@@ -88,9 +89,19 @@ export default function WelcomePanel({
   const displayText = items[reasonIndex]
 
   return (
-    <div className={`club-card flex flex-col justify-between px-6 py-4 sm:px-8 border border-border shadow-sm chaos-card-active relative overflow-hidden ${className}`}>
-      <div>
-        {/* Dynamic Header: Highlighted changing text */}
+    <div className={`club-card flex flex-col justify-between px-6 py-4 sm:px-8 border border-border shadow-sm chaos-card-active relative !overflow-visible ${className}`}>
+      <div className="absolute md:-top-8 md:-right-12 -top-4 -right-4 md:w-24 md:h-24 w-20 h-20 pointer-events-none select-none z-10">
+        <Image
+          src="/images/anitan-thumbs-up.webp"
+          alt="Anitan"
+          fill
+          sizes="(max-w-800px) 128px, 160px"
+          className="object-right-top"
+          priority
+        />
+      </div>
+
+      <div className="relative z-0">
         <div className="flex flex-col">
           <div className="min-h-[52px] sm:min-h-[64px] flex items-center relative isolation-auto">
             {/* The persistent background box that stretches dynamically */}
@@ -149,14 +160,14 @@ export default function WelcomePanel({
             <div className="flex flex-wrap gap-3">
               <Link
                 href="/member/ratings"
-                className="rounded-xl bg-accent hover:bg-accent-hover text-white font-bold text-xs tracking-wider px-4 py-2.5 shadow-sm hover:scale-105 active:scale-95 transition-all duration-200"
+                className="rounded-2xl bg-accent hover:bg-accent-hover text-white font-bold text-xs tracking-wider px-4 py-2.5 shadow-sm hover:scale-105 active:scale-95 transition-all duration-200"
               >
                 Member Area
               </Link>
               {(role === 'committee' || role === 'admin') && (
                 <Link
                   href="/admin/posts"
-                  className="rounded-xl bg-neutral-500 hover:bg-neutral-900 text-white font-bold text-xs tracking-wider px-4 py-2.5 hover:scale-105 active:scale-95 transition-all duration-200"
+                  className="rounded-2xl bg-neutral-500 hover:bg-neutral-900 text-white font-bold text-xs tracking-wider px-4 py-2.5 hover:scale-105 active:scale-95 transition-all duration-200"
                 >
                   Admin Area
                 </Link>

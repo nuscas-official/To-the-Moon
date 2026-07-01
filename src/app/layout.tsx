@@ -59,7 +59,10 @@ export const metadata: Metadata = {
     title: "NUSCAS | University Anime Club",
     description: "The official website and member portal of NUSCAS.",
     images: ["/og-image.png"],
-  }
+  },
+  icons: {
+    icon: "/images/nuscas-favicon.webp"
+  },
 };
 
 export default async function RootLayout({

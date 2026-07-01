@@ -121,7 +121,7 @@ export default function Header({ user, showAdminLink }: HeaderProps) {
       <header className={`sticky top-0 z-[60] w-full transition-all duration-300 ${
         isScrolled 
           ? 'bg-surface/85 shadow-sm' 
-          : 'bg-surface md:bg-transparent border-b border-transparent'
+          : 'bg-surface md:bg-transparent'
       }`}>
         <div className="max-w-8xl mx-auto flex h-20 items-center justify-between px-6 relative">
           {/* Logo & Menu Title on Left */}
@@ -189,7 +189,7 @@ export default function Header({ user, showAdminLink }: HeaderProps) {
             </div>
   
             {/* Divider */}
-            <div className="h-4 w-[1px] bg-border" />
+            <div className="h-4 w-[1px] borderbg-" />
             
             {/* Auth Button */}
             <div className="flex items-center">
@@ -291,7 +291,7 @@ export default function Header({ user, showAdminLink }: HeaderProps) {
                           <Link
                             href={item.href}
                             onClick={() => setIsOpen(false)}
-                            className="flex items-center gap-3 py-3 px-3.5 rounded-xl hover:text-accent hover:bg-accent-muted/50 border border-transparent hover:border-accent/15 transition-all duration-300 font-medium tracking-wide text-[15px] group"
+                            className="flex items-center gap-3 py-3 px-3.5 rounded-xl hover:text-accent hover:bg-accent-muted/50 transition-all duration-300 font-medium tracking-wide text-[15px] group"
                           >
                             <span className="w-1.5 h-1.5 rounded-full bg-accent scale-0 group-hover:scale-100 transition-transform duration-300" />
                             <span className="transition-transform duration-250 group-hover:translate-x-1">

@@ -9,7 +9,7 @@ interface SocialLinksProps {
 const socialChannels = [
   {
     name: 'Instagram',
-    handle: '@nuscas',
+    handle: 'nuscomicsoc',
     url: 'https://www.instagram.com/nuscomicsoc/',
     bgColor: 'hover:bg-gradient-to-r hover:from-pink-500/10 hover:to-orange-500/10',
     borderColor: 'hover:border-pink-500/30',
@@ -24,7 +24,7 @@ const socialChannels = [
   },
   {
     name: 'YouTube',
-    handle: 'NUSCAS',
+    handle: 'NUSCAS Productions',
     url: 'https://www.youtube.com/channel/UCKkESIjFh--HD5yOpGmm_JA',
     bgColor: 'hover:bg-red-500/10',
     borderColor: 'hover:border-red-500/30',
@@ -78,7 +78,7 @@ export default function SocialLinks({ className = '' }: SocialLinksProps) {
                   <div className="text-xs font-black text-foreground group-hover/link:text-accent transition-colors">
                     {channel.name}
                   </div>
-                  <div className="text-[10px] text-text-muted font-mono">
+                  <div className="text-[8px] text-text-muted font-mono pt-1">
                     {channel.handle}
                   </div>
                 </div>

@@ -128,7 +128,7 @@ export default async function PostDetailPage({ params }: PostDetailPageProps) {
 
       {/* Large Featured Image */}
       {post.cover_image_key && (
-        <div className="relative w-full h-64 sm:h-[400px] rounded-2xl overflow-hidden border border-border shadow-sm mb-10">
+        <div className="relative w-full h-64 sm:h-[400px] overflow-hidden border border-border shadow-sm mb-10">
           <Image 
             src={post.cover_image_key} 
             alt={post.title}

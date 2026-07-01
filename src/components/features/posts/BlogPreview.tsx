@@ -14,15 +14,32 @@ export interface BlogPost {
   }
 }
 
-// Simple MDX/Markdown stripper for excerpt generation
-function getExcerpt(content: string, length = 110): string {
-  const clean = content
-    .replace(/<\/?[^>]+(>|$)/g, '')
-    .replace(/[#*`_\[\]()]/g, '')
-    .replace(/\s+/g, ' ')
-    .trim()
-  return clean.length <= length ? clean : clean.slice(0, length) + '…'
+// Helper to extract a structured markdown excerpt
+function getExcerpt(content: string, length = 500): string {
+  // 1. Remove markdown images: ![alt](url)
+  let clean = content.replace(/!\[.*?\]\(.*?\)/g, '')
+  
+  // 2. Remove block code blocks: ```...```
+  clean = clean.replace(/```[\s\S]*?```/g, '')
+
+  // 3. Remove HTML tags
+  clean = clean.replace(/<\/?[^>]+(>|$)/g, '')
+
+  clean = clean.trim()
+
+  if (clean.length <= length) {
+    return clean
+  }
+
+  // Slice to length, try to cut at a word boundary
+  const sliced = clean.slice(0, length)
+  const lastSpace = sliced.lastIndexOf(' ')
+  if (lastSpace > length * 0.8) {
+    return sliced.slice(0, lastSpace) + '…'
+  }
+  return sliced + '…'
 }
+
 
 export default async function BlogPreview() {
   let posts: BlogPost[] = []
@@ -34,7 +51,7 @@ export default async function BlogPreview() {
       .select('id, title, slug, content_mdx, type, cover_image_key, published_at, author:users(display_name)')
       .eq('status', 'published')
       .order('published_at', { ascending: false })
-      .limit(3)
+      .limit(5)
 
     if (!error && data) {
       // Supabase returns joined relations as arrays; normalise author to a single object
@@ -47,10 +64,10 @@ export default async function BlogPreview() {
     console.error('BlogPreview: failed to fetch posts:', err)
   }
 
-  // Pre-compute excerpts on the server
-  const postsWithExcerpts = posts.map((p) => ({
+  // Pre-compute excerpts on the server (only needed for the featured post at index 0)
+  const postsWithExcerpts = posts.map((p, index) => ({
     ...p,
-    excerpt: getExcerpt(p.content_mdx),
+    excerpt: index === 0 ? getExcerpt(p.content_mdx) : '',
   }))
 
   return (

@@ -10,6 +10,7 @@ import ClubDepartments from '@/components/features/homepage/ClubDepartments'
 import RollingGallery from '@/components/features/homepage/RollingGallery'
 import type { Metadata } from 'next'
 import ParticleCanvas from '@/components/ParticleCanvas'
+import InteractiveFlipbook from '@/components/features/homepage/InteractiveFlipbook'
 
 export const metadata: Metadata = {
   title: "Home | NUSCAS",
@@ -98,9 +99,9 @@ export default async function Home({ searchParams }: HomeProps) {
       )}
 
       {/* Hero Section: Unified Grid Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 items-stretch mb-4 gap-2">
+      <div className="grid grid-cols-1 lg:grid-cols-12 items-stretch my-4 gap-2">
         <div className="lg:col-span-8 flex">
-          <SeasonalBanner className="h-full min-h-[350px] lg:min-h-[480px]" />
+          <InteractiveFlipbook className="h-full min-h-[350px] lg:min-h-[480px]" />
         </div>
 
         <div className="lg:col-span-4 flex flex-col gap-2 justify-between">
@@ -109,7 +110,7 @@ export default async function Home({ searchParams }: HomeProps) {
 
           <div className="flex-shrink-0 grid grid-cols-2 gap-2">
             <SocialLinks className="py-0 h-full" />
-            <SeasonalBanner className="h-full min-h-[220px]" isMini={true} />
+            <SeasonalBanner className="h-full min-h-[220px]" />
           </div>
         </div>
 
@@ -117,7 +118,6 @@ export default async function Home({ searchParams }: HomeProps) {
 
       {/* Outer container remains full-bleed across all screen sizes */}
       <div className="theme-crimson w-screen relative left-1/2 -translate-x-1/2 bg-background-dark text-text-dark border-y border-border-dark py-14 [--color-text:var(--color-text-dark)] [--color-foreground:var(--color-text-dark)] [--color-border:var(--color-border-dark)] [--color-surface:var(--color-surface-dark)] [--color-text-muted:var(--color-text-muted-dark)] transition-colors duration-300">
-        {/* Particle canvas sits as an absolute background behind all content */}
         <ParticleCanvas
           count={400}
           magnetRadius={100}
