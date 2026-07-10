@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import Image from 'next/image'
 import { updateSeasonalPickAction, updateJoinReasonsAction } from '@/server/actions/settings'
+import { Reorder } from 'framer-motion'
 
 interface SeasonalPick {
   title: string
@@ -128,8 +129,13 @@ export default function AdminSettingsClient({
   // Add reason to local list
   const handleAddReason = (e: React.FormEvent) => {
     e.preventDefault()
-    if (!newReason.trim()) return
-    setJoinReasons([...joinReasons, newReason.trim()])
+    const trimmed = newReason.trim()
+    if (!trimmed) return
+    if (joinReasons.includes(trimmed)) {
+      showFeedback('error', 'This reason already exists in the list.')
+      return
+    }
+    setJoinReasons([...joinReasons, trimmed])
     setNewReason('')
   }
 
@@ -138,31 +144,11 @@ export default function AdminSettingsClient({
     setJoinReasons(joinReasons.filter((_, idx) => idx !== index))
   }
 
-  // Move reason up in order
-  const handleMoveUp = (index: number) => {
-    if (index === 0) return
-    const updated = [...joinReasons]
-    const temp = updated[index]
-    updated[index] = updated[index - 1]
-    updated[index - 1] = temp
-    setJoinReasons(updated)
-  }
-
-  // Move reason down in order
-  const handleMoveDown = (index: number) => {
-    if (index === joinReasons.length - 1) return
-    const updated = [...joinReasons]
-    const temp = updated[index]
-    updated[index] = updated[index + 1]
-    updated[index + 1] = temp
-    setJoinReasons(updated)
-  }
-
   return (
     <div className="space-y-8 animate-fade-in text-left">
       {/* Toast Feedback */}
       {feedback && (
-        <div className={`fixed top-4 right-4 z-50 p-4 rounded-xl shadow-lg border text-sm font-bold animate-fade-in flex items-center gap-2 ${
+        <div className={`fixed top-4 right-4 z-50 p-4 shadow-lg border text-sm font-bold animate-fade-in flex items-center gap-2 ${
           feedback.type === 'success'
             ? 'bg-emerald-50 border-emerald-200 text-emerald-800'
             : 'bg-red-50 border-red-200 text-red-800'
@@ -191,7 +177,7 @@ export default function AdminSettingsClient({
             Seasonal Highlight Pick
           </h2>
           
-          <form onSubmit={handleSaveSeasonal} className="border border-border bg-surface rounded-2xl p-6 shadow-sm space-y-6">
+          <form onSubmit={handleSaveSeasonal} className="border border-border bg-surface p-6 shadow-sm space-y-6">
             <p className="text-xs text-text-muted">
               Configure the anime highlight displayed in the giant hero card on the landing page.
             </p>
@@ -292,13 +278,13 @@ export default function AdminSettingsClient({
                   placeholder="e.g. https://images.unsplash.com/... or any HTTPS url"
                   value={seasonalPick.image_url}
                   onChange={(e) => setSeasonalPick({ ...seasonalPick, image_url: e.target.value })}
-                  className="w-full px-4 py-2.5 bg-neutral-50 border border-neutral-200 rounded-xl focus:outline-none focus:border-accent text-sm font-bold text-neutral-800"
+                  className="w-full px-4 py-2.5 bg-neutral-50 border border-neutral-200 focus:outline-none focus:border-accent text-sm font-bold text-neutral-800"
                 />
               )}
 
               {/* Image Live Preview */}
               {seasonalPick.image_url && /^(https?:\/\/|\/).+/.test(seasonalPick.image_url) && (
-                <div className="mt-3 rounded-xl border border-neutral-200 overflow-hidden bg-neutral-100 aspect-video relative">
+                <div className="mt-3 border border-neutral-200 overflow-hidden bg-neutral-100 aspect-video relative">
                   <Image
                     src={seasonalPick.image_url}
                     alt="Live preview"
@@ -345,7 +331,7 @@ export default function AdminSettingsClient({
             Join Reasons Manager
           </h2>
 
-          <div className="border border-border bg-surface rounded-2xl p-6 shadow-sm space-y-6">
+          <div className="border border-border bg-surface p-6 shadow-sm space-y-6">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <p className="text-xs text-text-muted">
                 Manage the dynamic quotes and reasons displayed to guest users on the homepage.
@@ -384,62 +370,50 @@ export default function AdminSettingsClient({
             </form>
 
             {/* Reasons list */}
-            <div className="space-y-2 max-h-[350px] overflow-y-auto pr-1">
+            <div className="max-h-[350px] overflow-y-auto pr-1">
               {joinReasons.length === 0 ? (
                 <div className="text-center py-10 text-xs text-text-muted border border-dashed border-border rounded-xl">
                   No reasons defined yet. Add one above!
                 </div>
               ) : (
-                joinReasons.map((reason, idx) => (
-                  <div
-                    key={idx}
-                    className="p-3.5 flex items-center justify-between gap-4 bg-neutral-50 border border-neutral-200/60 rounded-xl hover:bg-neutral-100/40 transition-colors group/item"
-                  >
-                    <div className="flex items-center gap-2.5 min-w-0">
-                      <span className="w-5 h-5 rounded-full bg-neutral-200 flex items-center justify-center text-[10px] font-black text-neutral-500 flex-shrink-0">
-                        {idx + 1}
-                      </span>
-                      <p className="text-xs font-semibold text-neutral-800 truncate" title={reason}>
-                        {reason}
-                      </p>
-                    </div>
+                <Reorder.Group
+                  axis="y"
+                  values={joinReasons}
+                  onReorder={setJoinReasons}
+                  className="space-y-2"
+                >
+                  {joinReasons.map((reason, idx) => (
+                    <Reorder.Item
+                      key={reason}
+                      value={reason}
+                      className="p-3.5 flex items-center justify-between gap-4 bg-neutral-50 border border-neutral-200/60 rounded-xl hover:bg-neutral-100/40 transition-colors group/item cursor-grab active:cursor-grabbing flex-shrink-0"
+                    >
+                      <div className="flex items-center gap-2.5 min-w-0">
+                        {/* Drag Handle Icon */}
+                        <div className="text-neutral-400 group-hover/item:text-neutral-600 transition-colors flex-shrink-0">
+                          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8h16M4 16h16" />
+                          </svg>
+                        </div>
 
-                    <div className="flex gap-1 items-center flex-shrink-0">
-                      {/* Move Up */}
-                      <button
-                        type="button"
-                        disabled={idx === 0}
-                        onClick={() => handleMoveUp(idx)}
-                        className="p-1 rounded text-neutral-400 hover:text-neutral-700 hover:bg-neutral-200 disabled:opacity-30 disabled:hover:bg-transparent transition-all"
-                        title="Move Up"
-                      >
-                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 15l7-7 7 7" />
-                        </svg>
-                      </button>
-                      {/* Move Down */}
-                      <button
-                        type="button"
-                        disabled={idx === joinReasons.length - 1}
-                        onClick={() => handleMoveDown(idx)}
-                        className="p-1 rounded text-neutral-400 hover:text-neutral-700 hover:bg-neutral-200 disabled:opacity-30 disabled:hover:bg-transparent transition-all"
-                        title="Move Down"
-                      >
-                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" />
-                        </svg>
-                      </button>
-                      {/* Delete */}
-                      <button
-                        type="button"
-                        onClick={() => handleDeleteReason(idx)}
-                        className="px-2 py-1 rounded bg-red-100 text-red-700 text-xs font-bold"
-                      >
-                        Delete
-                      </button>
-                    </div>
-                  </div>
-                ))
+                        <p className="text-xs font-semibold text-neutral-800 truncate" title={reason}>
+                          {reason}
+                        </p>
+                      </div>
+
+                      <div className="flex gap-1 items-center flex-shrink-0">
+                        {/* Delete */}
+                        <button
+                          type="button"
+                          onClick={() => handleDeleteReason(idx)}
+                          className="px-2 py-1 rounded bg-red-100 hover:bg-red-200 text-red-700 text-xs font-bold transition-colors"
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    </Reorder.Item>
+                  ))}
+                </Reorder.Group>
               )}
             </div>
           </div>

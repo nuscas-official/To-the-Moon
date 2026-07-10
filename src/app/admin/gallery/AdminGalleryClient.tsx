@@ -179,30 +179,30 @@ export default function AdminGalleryClient({ initialArtworks }: AdminGalleryClie
       
       {/* Upload Panel */}
       <div className="lg:col-span-1">
-        <div className="rounded-2xl border border-border bg-surface p-6 shadow-sm sticky top-20">
+        <div className="border border-border bg-surface p-6 shadow-sm sticky top-20">
           <h2 className="text-lg font-black tracking-tight text-neutral-900 mb-4">
             Curate New Artwork
           </h2>
 
           {error && (
-            <div className="rounded-xl border border-red-200 bg-red-50 p-4 text-xs font-bold text-red-700 mb-4">
+            <div className="border border-red-200 bg-red-50 p-4 text-xs font-bold text-red-700 mb-4">
               {error}
             </div>
           )}
 
           {success && (
-            <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-xs font-bold text-emerald-700 mb-4">
+            <div className="border border-emerald-200 bg-emerald-50 p-4 text-xs font-bold text-emerald-700 mb-4">
               {success}
             </div>
           )}
 
           <form onSubmit={handleUploadArtwork} className="space-y-4">
             {/* Image Source Selection */}
-            <div className="flex rounded-xl bg-neutral-100 p-1 border border-border">
+            <div className="flex bg-neutral-100 p-1 border border-border">
               <button
                 type="button"
                 onClick={() => setImageSource('upload')}
-                className={`flex-1 py-1.5 text-[10px] font-black uppercase tracking-wider rounded-lg transition-all ${
+                className={`flex-1 py-1.5 text-[10px] font-black uppercase tracking-wider transition-all ${
                   imageSource === 'upload'
                     ? 'bg-white text-neutral-900 shadow-sm'
                     : 'text-neutral-500 hover:text-neutral-900'
@@ -235,7 +235,7 @@ export default function AdminGalleryClient({ initialArtworks }: AdminGalleryClie
                   accept="image/*"
                   onChange={(e) => setFile(e.target.files?.[0] || null)}
                   disabled={processing}
-                  className="w-full rounded-xl border border-border bg-neutral-50 px-3 py-2 text-xs text-neutral-800 focus:border-accent focus:ring-1 focus:ring-accent outline-none cursor-pointer disabled:cursor-not-allowed"
+                  className="w-full border border-border bg-neutral-50 px-3 py-2 text-xs text-neutral-800 focus:border-accent focus:ring-1 focus:ring-accent outline-none cursor-pointer disabled:cursor-not-allowed"
                   required={imageSource === 'upload'}
                 />
               </div>
@@ -251,11 +251,11 @@ export default function AdminGalleryClient({ initialArtworks }: AdminGalleryClie
                   onChange={(e) => setImageUrl(e.target.value)}
                   placeholder="https://example.com/my-art.jpg"
                   disabled={processing}
-                  className="w-full rounded-xl border border-border bg-surface px-4 py-2 text-xs text-neutral-800 placeholder-neutral-400 focus:border-accent focus:ring-1 focus:ring-accent outline-none"
+                  className="w-full border border-border bg-surface px-4 py-2 text-xs text-neutral-800 placeholder-neutral-400 focus:border-accent focus:ring-1 focus:ring-accent outline-none"
                   required={imageSource === 'url'}
                 />
                 {imageUrl && /^(https?:\/\/|\/).+/.test(imageUrl) && (
-                  <div className="mt-2 relative h-32 w-full rounded-xl border border-border bg-neutral-50 overflow-hidden">
+                  <div className="mt-2 relative h-32 w-full border border-border bg-neutral-50 overflow-hidden">
                     <img
                       src={imageUrl}
                       alt="Artwork URL Preview"
@@ -279,9 +279,9 @@ export default function AdminGalleryClient({ initialArtworks }: AdminGalleryClie
                 type="text"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                placeholder="e.g. Neon Tokyo Nights"
+                placeholder="e.g. Anikun's Flower"
                 disabled={processing}
-                className="w-full rounded-xl border border-border bg-surface px-4 py-2 text-xs text-neutral-800 placeholder-neutral-400 focus:border-accent focus:ring-1 focus:ring-accent outline-none"
+                className="w-full rounded-md border border-border bg-surface px-4 py-2 text-xs text-neutral-800 placeholder-neutral-400 focus:border-accent focus:ring-1 focus:ring-accent outline-none"
               />
             </div>
 
@@ -295,9 +295,9 @@ export default function AdminGalleryClient({ initialArtworks }: AdminGalleryClie
                 type="text"
                 value={artistCredit}
                 onChange={(e) => setArtistCredit(e.target.value)}
-                placeholder="e.g. @artist_hand / John Doe"
+                placeholder="e.g. @artist_hand / John NUSCAS"
                 disabled={processing}
-                className="w-full rounded-xl border border-border bg-surface px-4 py-2 text-xs text-neutral-800 placeholder-neutral-400 focus:border-accent focus:ring-1 focus:ring-accent outline-none"
+                className="w-full rounded-md border border-border bg-surface px-4 py-2 text-xs text-neutral-800 placeholder-neutral-400 focus:border-accent focus:ring-1 focus:ring-accent outline-none"
                 required
               />
             </div>
@@ -318,7 +318,7 @@ export default function AdminGalleryClient({ initialArtworks }: AdminGalleryClie
                     value={consentMethod}
                     onChange={(e) => setConsentMethod(e.target.value as 'telegram_message' | 'in_person' | 'email')}
                     disabled={processing}
-                    className="w-full rounded-xl border border-border bg-surface px-4 py-2 text-xs text-neutral-800 focus:border-accent focus:ring-1 focus:ring-accent outline-none"
+                    className="w-full rounded-md border border-border bg-surface px-4 py-2 text-xs text-neutral-800 focus:border-accent focus:ring-1 focus:ring-accent outline-none"
                   >
                     <option value="telegram_message">Telegram Message</option>
                     <option value="in_person">In Person</option>
@@ -337,7 +337,7 @@ export default function AdminGalleryClient({ initialArtworks }: AdminGalleryClie
                     value={consentedAt}
                     onChange={(e) => setConsentedAt(e.target.value)}
                     disabled={processing}
-                    className="w-full rounded-xl border border-border bg-surface px-4 py-2 text-xs text-neutral-800 focus:border-accent focus:ring-1 focus:ring-accent outline-none"
+                    className="w-full rounded-md border border-border bg-surface px-4 py-2 text-xs text-neutral-800 focus:border-accent focus:ring-1 focus:ring-accent outline-none"
                     required
                   />
                 </div>
@@ -354,7 +354,7 @@ export default function AdminGalleryClient({ initialArtworks }: AdminGalleryClie
                     placeholder="e.g. Telegram message log ID, email thread ref, or signature context"
                     rows={3}
                     disabled={processing}
-                    className="w-full rounded-xl border border-border bg-surface px-4 py-2 text-xs text-neutral-800 placeholder-neutral-400 focus:border-accent focus:ring-1 focus:ring-accent outline-none resize-none"
+                    className="w-full rounded-md border border-border bg-surface px-4 py-2 text-xs text-neutral-800 placeholder-neutral-400 focus:border-accent focus:ring-1 focus:ring-accent outline-none resize-none"
                   />
                 </div>
               </div>
@@ -373,13 +373,13 @@ export default function AdminGalleryClient({ initialArtworks }: AdminGalleryClie
 
       {/* Artworks List */}
       <div className="lg:col-span-2">
-        <div className="rounded-2xl border border-border bg-surface p-6 shadow-sm">
+        <div className="border border-border bg-surface p-6 shadow-sm">
           <h2 className="text-lg font-black tracking-tight text-neutral-900 mb-6">
             Curated Gallery Artworks ({artworks.length})
           </h2>
 
           {artworks.length === 0 ? (
-            <div className="text-center py-12 border border-dashed border-border rounded-xl">
+            <div className="text-center py-12 border border-dashed border-border">
               <svg className="w-12 h-12 text-neutral-300 mx-auto mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
               </svg>
@@ -391,7 +391,7 @@ export default function AdminGalleryClient({ initialArtworks }: AdminGalleryClie
               {artworks.map((art) => (
                 <div 
                   key={art.id}
-                  className={`rounded-xl border bg-neutral-50 overflow-hidden flex flex-col transition-all duration-300 ${
+                  className={`border bg-neutral-50 overflow-hidden flex flex-col transition-all duration-300 ${
                     art.status === 'removed' ? 'opacity-60 border-neutral-200' : 'border-border shadow-sm hover:shadow-md'
                   }`}
                 >

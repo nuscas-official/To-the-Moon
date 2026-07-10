@@ -48,7 +48,7 @@ export default async function MemberArticlesPage() {
   const archived = articles.filter(p => p.status === 'archived')
 
   return (
-    <div className="w-full max-w-5xl mx-auto py-6 animate-fade-in text-left">
+    <div className="w-full max-w-7xl mx-auto py-6 animate-fade-in text-left">
       
       {/* Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between border-b border-border pb-6 mb-8 gap-4">
@@ -73,19 +73,19 @@ export default async function MemberArticlesPage() {
       <div className="flex border-b border-border mb-6">
         <Link
           href="/member/articles"
-          className="pb-3 px-4 text-xs uppercase tracking-wider font-extrabold border-b-2 transition-all border-accent text-accent"
+          className="pb-3 px-4 text-xs uppercase tracking-wider font-extrabold border-b-2 transition-all border-accent text-accent bg-accent/[0.04] rounded-t-lg"
         >
           My Articles
         </Link>
         <Link
           href="/member/ratings"
-          className="pb-3 px-4 text-xs uppercase tracking-wider font-extrabold border-b-2 transition-all border-transparent text-text-muted hover:text-neutral-700"
+          className="pb-3 px-4 text-xs uppercase tracking-wider font-extrabold border-b-2 transition-all border-transparent text-text-muted hover:text-accent hover:border-accent/30 hover:bg-accent/[0.02] rounded-t-lg"
         >
           My Ratings
         </Link>
         <Link
           href="/member/settings"
-          className="pb-3 px-4 text-xs uppercase tracking-wider font-extrabold border-b-2 transition-all border-transparent text-text-muted hover:text-neutral-700"
+          className="pb-3 px-4 text-xs uppercase tracking-wider font-extrabold border-b-2 transition-all border-transparent text-text-muted hover:text-accent hover:border-accent/30 hover:bg-accent/[0.02] rounded-t-lg"
         >
           Settings
         </Link>
@@ -99,11 +99,11 @@ export default async function MemberArticlesPage() {
             Drafts ({drafts.length})
           </h2>
           {drafts.length === 0 ? (
-            <div className="p-6 text-center rounded-xl border border-dashed border-neutral-300 text-xs text-text-muted bg-neutral-50/50">
+            <div className="p-6 text-center = border border-dashed border-neutral-300 text-xs text-text-muted bg-neutral-50/50">
               No drafts. Click the button above to start writing.
             </div>
           ) : (
-            <div className="overflow-hidden rounded-xl border border-border bg-surface shadow-sm">
+            <div className="overflow-hidden border border-border bg-surface shadow-sm">
               <div className="divide-y divide-border">
                 {drafts.map(post => (
                   <div key={post.id} className="p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
@@ -139,11 +139,11 @@ export default async function MemberArticlesPage() {
             Pending Review ({pending.length})
           </h2>
           {pending.length === 0 ? (
-            <div className="p-6 text-center rounded-xl border border-dashed border-neutral-200 text-xs text-text-muted bg-neutral-50/50">
+            <div className="p-6 text-center border border-dashed border-neutral-200 text-xs text-text-muted bg-neutral-50/50">
               No articles currently pending review.
             </div>
           ) : (
-            <div className="overflow-hidden rounded-xl border border-border bg-surface shadow-sm opacity-90">
+            <div className="overflow-hidden border border-border bg-surface shadow-sm opacity-90">
               <div className="divide-y divide-border">
                 {pending.map(post => (
                   <div key={post.id} className="p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
@@ -173,11 +173,11 @@ export default async function MemberArticlesPage() {
             Published Articles ({published.length})
           </h2>
           {published.length === 0 ? (
-            <div className="p-6 text-center rounded-xl border border-dashed border-neutral-200 text-xs text-text-muted bg-neutral-50/50">
+            <div className="p-6 text-center border border-dashed border-neutral-200 text-xs text-text-muted bg-neutral-50/50">
               No published articles yet.
             </div>
           ) : (
-            <div className="overflow-hidden rounded-xl border border-border bg-surface shadow-sm">
+            <div className="overflow-hidden border border-border bg-surface shadow-sm">
               <div className="divide-y divide-border">
                 {published.map(post => {
                   const pDate = post.published_at ? new Date(post.published_at).toLocaleDateString('en-SG') : 'Unknown'

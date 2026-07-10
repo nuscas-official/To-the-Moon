@@ -99,11 +99,11 @@ export default function MemberSettingsClient({
   }
 
   return (
-    <div className="w-full max-w-2xl bg-surface border border-border rounded-2xl shadow-xl overflow-hidden p-6 sm:p-8 relative transition-all duration-300 hover:shadow-2xl">
+    <div className="w-full max-w-2xl bg-surface border border-border shadow-xl overflow-hidden p-6 sm:p-8 relative transition-all duration-300 hover:shadow-2xl">
       {/* Feedback Toast */}
       {feedback && (
         <div
-          className={`absolute top-4 right-4 z-50 p-4 rounded-xl shadow-lg border text-sm font-bold animate-fade-in flex items-center gap-2 transition-all ${
+          className={`absolute top-4 right-4 z-50 p-4 shadow-lg border text-sm font-bold animate-fade-in flex items-center gap-2 transition-all ${
             feedback.type === 'success'
               ? 'bg-emerald-50 border-emerald-200 text-emerald-800 dark:bg-emerald-950/20 dark:border-emerald-800/30 dark:text-emerald-400'
               : 'bg-red-50 border-red-200 text-red-800 dark:bg-red-950/20 dark:border-red-800/30 dark:text-red-400'
@@ -123,7 +123,7 @@ export default function MemberSettingsClient({
 
         {/* Current status display */}
         {telegramId ? (
-          <div className="p-6 rounded-2xl border border-emerald-500/20 bg-emerald-50/30 dark:bg-emerald-950/5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 relative overflow-hidden group">
+          <div className="p-6 border border-emerald-500/20 bg-emerald-50/30 dark:bg-emerald-950/5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 relative overflow-hidden group">
             <div className="absolute top-0 right-0 w-24 h-24 bg-emerald-500/10 rounded-full blur-2xl group-hover:scale-125 transition-transform duration-500" />
             <div className="flex items-center gap-4 z-10">
               <span className="relative flex h-3 w-3">

@@ -3,6 +3,8 @@
 import { useState } from 'react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
+import DatePicker from '@/components/ui/DatePicker'
+import TimePicker from '@/components/ui/TimePicker'
 
 interface EventInput {
   title: string;
@@ -28,25 +30,6 @@ interface EventFormProps {
   onSave: (input: EventInput) => Promise<{ success: boolean; error?: string; id?: string }>;
 }
 
-// Helper to convert ISO string to YYYY-MM-DDTHH:MM for datetime-local input
-function formatToDateTimeLocal(isoString: string | null | undefined): string {
-  if (!isoString) return ''
-  try {
-    const d = new Date(isoString)
-    if (isNaN(d.getTime())) return ''
-    
-    // Format as YYYY-MM-DDTHH:MM in local timezone
-    const year = d.getFullYear()
-    const month = String(d.getMonth() + 1).padStart(2, '0')
-    const day = String(d.getDate()).padStart(2, '0')
-    const hours = String(d.getHours()).padStart(2, '0')
-    const minutes = String(d.getMinutes()).padStart(2, '0')
-    
-    return `${year}-${month}-${day}T${hours}:${minutes}`
-  } catch {
-    return ''
-  }
-}
 
 export default function EventForm({ initialData, onSave }: EventFormProps) {
   const router = useRouter()
@@ -55,9 +38,71 @@ export default function EventForm({ initialData, onSave }: EventFormProps) {
   // Form states
   const [title, setTitle] = useState(initialData?.title || '')
   const [description, setDescription] = useState(initialData?.description || '')
-  const [startsAt, setStartsAt] = useState(formatToDateTimeLocal(initialData?.starts_at))
-  const [endsAt, setEndsAt] = useState(formatToDateTimeLocal(initialData?.ends_at))
+  
+  const [startsAt, setStartsAt] = useState<Date>(() => {
+    if (initialData?.starts_at) {
+      return new Date(initialData.starts_at)
+    }
+    const d = new Date()
+    d.setMinutes(0)
+    d.setSeconds(0)
+    d.setMilliseconds(0)
+    d.setHours(d.getHours() + 1)
+    return d
+  })
+
+  const [endsAt, setEndsAt] = useState<Date | null>(() => {
+    if (initialData?.ends_at) {
+      return new Date(initialData.ends_at)
+    }
+    return null
+  })
+
   const [location, setLocation] = useState(initialData?.location || '')
+
+  // Handlers for smart duration sync and date/time manipulation
+  const handleStartsAtChange = (newStarts: Date) => {
+    const duration = endsAt ? endsAt.getTime() - startsAt.getTime() : null
+    setStartsAt(newStarts)
+    if (endsAt && duration !== null) {
+      setEndsAt(new Date(newStarts.getTime() + duration))
+    }
+  }
+
+  const handleStartsAtDateChange = (date: Date | null) => {
+    if (!date) return
+    const next = new Date(startsAt)
+    next.setFullYear(date.getFullYear())
+    next.setMonth(date.getMonth())
+    next.setDate(date.getDate())
+    handleStartsAtChange(next)
+  }
+
+  const handleStartsAtTimeChange = (time: Date | null) => {
+    if (!time) return
+    const next = new Date(startsAt)
+    next.setHours(time.getHours())
+    next.setMinutes(time.getMinutes())
+    next.setSeconds(0)
+    next.setMilliseconds(0)
+    handleStartsAtChange(next)
+  }
+
+  const handleEndsAtDateChange = (date: Date | null) => {
+    if (!date) {
+      setEndsAt(null)
+      return
+    }
+    const base = endsAt ? new Date(endsAt) : new Date(startsAt.getTime() + 60 * 60 * 1000)
+    base.setFullYear(date.getFullYear())
+    base.setMonth(date.getMonth())
+    base.setDate(date.getDate())
+    setEndsAt(base)
+  }
+
+  const handleEndsAtTimeChange = (time: Date | null) => {
+    setEndsAt(time)
+  }
   const [status, setStatus] = useState<'upcoming' | 'past' | 'cancelled'>(initialData?.status || 'upcoming')
   const [coverImageKey, setCoverImageKey] = useState(initialData?.cover_image_key || '')
   const [error, setError] = useState<string | null>(null)
@@ -123,11 +168,16 @@ export default function EventForm({ initialData, onSave }: EventFormProps) {
       return
     }
 
+    if (endsAt && endsAt.getTime() <= startsAt.getTime()) {
+      setError('End date and time must be after the start date and time.')
+      return
+    }
+
     setLoading(true)
 
     try {
-      const startsAtISO = new Date(startsAt).toISOString()
-      const endsAtISO = endsAt ? new Date(endsAt).toISOString() : null
+      const startsAtISO = startsAt.toISOString()
+      const endsAtISO = endsAt ? endsAt.toISOString() : null
 
       const result = await onSave({
         title,
@@ -200,31 +250,41 @@ export default function EventForm({ initialData, onSave }: EventFormProps) {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Starts At */}
         <div className="flex flex-col space-y-1.5">
-          <label htmlFor="starts_at" className="text-xs uppercase font-extrabold tracking-wider text-neutral-500">
+          <span className="text-xs uppercase font-extrabold tracking-wider text-neutral-500">
             Starts At <span className="text-red-500">*</span>
-          </label>
-          <input
-            id="starts_at"
-            type="datetime-local"
-            value={startsAt}
-            onChange={(e) => setStartsAt(e.target.value)}
-            className="w-full rounded-xl border border-border bg-surface px-4 py-3 text-sm text-neutral-800 focus:border-accent focus:ring-1 focus:ring-accent outline-none transition-colors"
-            required
-          />
+          </span>
+          <div className="grid grid-cols-2 gap-3">
+            <DatePicker
+              value={startsAt}
+              onChange={handleStartsAtDateChange}
+              required
+            />
+            <TimePicker
+              value={startsAt}
+              onChange={handleStartsAtTimeChange}
+              required
+            />
+          </div>
         </div>
 
         {/* Ends At */}
         <div className="flex flex-col space-y-1.5">
-          <label htmlFor="ends_at" className="text-xs uppercase font-extrabold tracking-wider text-neutral-500">
+          <span className="text-xs uppercase font-extrabold tracking-wider text-neutral-500">
             Ends At (Optional)
-          </label>
-          <input
-            id="ends_at"
-            type="datetime-local"
-            value={endsAt}
-            onChange={(e) => setEndsAt(e.target.value)}
-            className="w-full rounded-xl border border-border bg-surface px-4 py-3 text-sm text-neutral-800 focus:border-accent focus:ring-1 focus:ring-accent outline-none transition-colors"
-          />
+          </span>
+          <div className="grid grid-cols-2 gap-3">
+            <DatePicker
+              value={endsAt}
+              onChange={handleEndsAtDateChange}
+              placeholder="Add end date"
+            />
+            <TimePicker
+              value={endsAt}
+              onChange={handleEndsAtTimeChange}
+              relativeTo={startsAt}
+              placeholder="Add end time"
+            />
+          </div>
         </div>
       </div>
 

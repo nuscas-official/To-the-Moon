@@ -4,6 +4,7 @@ import React, { useRef } from 'react'
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion'
 import Link from 'next/link'
 import Image from 'next/image'
+import { usePathname, useSearchParams } from 'next/navigation'
 
 interface ClubEvent {
   id: string;
@@ -99,6 +100,9 @@ function TiltWrapper({ children, className = '', variants }: TiltWrapperProps) {
 }
 
 export default function EventCard({ event, detailsLabel = 'View' }: EventCardProps) {
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
+
   const dateStr = new Date(event.starts_at).toLocaleDateString('en-SG', {
     weekday: 'short',
     day: 'numeric',
@@ -110,8 +114,12 @@ export default function EventCard({ event, detailsLabel = 'View' }: EventCardPro
     minute: '2-digit',
   })
 
+  const params = new URLSearchParams(searchParams.toString())
+  params.set('event', event.slug)
+  const targetHref = `${pathname}?${params.toString()}`
+
   return (
-    <Link href={`/events/${event.slug}`} className="block h-full w-full">
+    <Link href={targetHref} scroll={false} className="block h-full w-full">
       <TiltWrapper
         variants={cardVariants}
         className="group flex flex-col justify-between overflow-hidden border-2 border-border bg-surface shadow-sm hover:shadow-xl hover:shadow-accent/5 hover:border-accent/30 transition-[border-color,box-shadow,background-color] duration-300 chaos-card-active text-left cursor-pointer"

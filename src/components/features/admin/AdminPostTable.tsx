@@ -1,6 +1,7 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { createPortal } from 'react-dom'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { moderateArticleAction } from '@/server/actions/blog'
@@ -28,6 +29,11 @@ export default function AdminPostTable({ initialPosts }: AdminPostTableProps) {
   const [filterStatus, setFilterStatus] = useState<string>('all')
   const [rejectId, setRejectId] = useState<string | null>(null)
   const [rejectReason, setRejectReason] = useState('')
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   const handleAction = async (id: string, action: 'publish' | 'reject' | 'archive' | 'delete') => {
     setLoadingId(id)
@@ -102,9 +108,9 @@ export default function AdminPostTable({ initialPosts }: AdminPostTableProps) {
       </div>
 
       {/* Reject Reason Dialog Modal Popup */}
-      {rejectId && (
+      {rejectId && mounted && createPortal(
         <div className="fixed inset-0 z-[9999] bg-neutral-950/40 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-surface border border-border p-6 rounded-2xl max-w-md w-full space-y-4 shadow-xl">
+          <div className="bg-surface border border-border p-6 max-w-md w-full space-y-4 shadow-xl">
             <h3 className="text-lg font-black text-neutral-900">Reject Article Submission</h3>
             <p className="text-xs text-text-muted leading-relaxed">
               Provide a constructive reason for rejecting this draft. The article status will revert to &ldquo;Draft&rdquo; so the member can revise and re-submit.
@@ -114,7 +120,7 @@ export default function AdminPostTable({ initialPosts }: AdminPostTableProps) {
               onChange={(e) => setRejectReason(e.target.value)}
               placeholder="e.g. Please revise your review format to separate visual novel descriptions from character ratings..."
               rows={4}
-              className="w-full p-3 rounded-xl border border-border text-sm focus:outline-none focus:border-accent text-neutral-800"
+              className="w-full p-3 border border-border text-sm focus:outline-none focus:border-accent text-neutral-800"
             />
             <div className="flex justify-end gap-2 pt-2">
               <button
@@ -128,22 +134,23 @@ export default function AdminPostTable({ initialPosts }: AdminPostTableProps) {
                 type="button"
                 onClick={() => handleAction(rejectId, 'reject')}
                 disabled={!rejectReason.trim()}
-                className="px-4 py-2 rounded-lg bg-red-650 hover:bg-red-700 text-white font-bold text-xs uppercase tracking-wider disabled:opacity-50"
+                className="px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white font-bold text-xs uppercase tracking-wider disabled:opacity-50 disabled:pointer-events-none disabled:cursor-not-allowed"
               >
                 Reject Draft
               </button>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
 
       {/* Table */}
       {filteredPosts.length === 0 ? (
-        <div className="text-center py-12 rounded-2xl border border-dashed border-neutral-300 bg-neutral-50/50">
+        <div className="text-center py-12 border border-dashed border-neutral-300 bg-neutral-50/50">
           <p className="text-sm text-text-muted font-medium">No posts found matching this status.</p>
         </div>
       ) : (
-        <div className="overflow-x-auto rounded-2xl border border-border bg-surface shadow-sm">
+        <div className="overflow-x-auto border border-border bg-surface shadow-sm">
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="bg-neutral-50 text-[10px] uppercase font-black tracking-widest text-text-muted border-b border-border">
@@ -204,7 +211,7 @@ export default function AdminPostTable({ initialPosts }: AdminPostTableProps) {
                             type="button"
                             disabled={isActionLoading}
                             onClick={() => handleAction(post.id, 'publish')}
-                            className="px-2.5 py-1.5 rounded bg-emerald-600 hover:bg-emerald-505 hover:bg-emerald-700 text-white font-bold text-[10px] uppercase tracking-wider disabled:opacity-50"
+                            className="px-2.5 py-1.5 rounded-md bg-emerald-600 hover:bg-emerald-505 hover:bg-emerald-700 text-white font-bold text-[10px] uppercase tracking-wider disabled:opacity-50"
                           >
                             Approve
                           </button>
@@ -212,7 +219,7 @@ export default function AdminPostTable({ initialPosts }: AdminPostTableProps) {
                             type="button"
                             disabled={isActionLoading}
                             onClick={() => setRejectId(post.id)}
-                            className="px-2.5 py-1.5 rounded bg-red-650 hover:bg-red-700 text-white font-bold text-[10px] uppercase tracking-wider disabled:opacity-50"
+                            className="px-2.5 py-1.5 rounded-md bg-red-600 hover:bg-red-700 text-white font-bold text-[10px] uppercase tracking-wider opacity-60 hover:opacity-100 transition-opacity disabled:opacity-50 disabled:pointer-events-none"
                           >
                             Reject
                           </button>

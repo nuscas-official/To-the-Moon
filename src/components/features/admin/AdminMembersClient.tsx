@@ -66,13 +66,13 @@ export default function AdminMembersClient({ initialUsers, currentUserId }: Admi
       {(error || success) && (
         <div className="flex flex-col gap-2 animate-fade-in">
           {error && (
-            <div className="rounded-xl bg-red-50 border border-red-200 p-4 text-xs font-semibold text-red-600 flex items-center justify-between">
+            <div className="bg-red-50 border border-red-200 p-4 text-xs font-semibold text-red-600 flex items-center justify-between">
               <span>{error}</span>
               <button onClick={() => setError(null)} className="text-red-400 hover:text-red-600">×</button>
             </div>
           )}
           {success && (
-            <div className="rounded-xl bg-emerald-50 border border-emerald-200 p-4 text-xs font-semibold text-emerald-700 flex items-center justify-between">
+            <div className="bg-emerald-50 border border-emerald-200 p-4 text-xs font-semibold text-emerald-700 flex items-center justify-between">
               <span>{success}</span>
               <button onClick={() => setSuccess(null)} className="text-emerald-400 hover:text-emerald-600">×</button>
             </div>
@@ -81,7 +81,7 @@ export default function AdminMembersClient({ initialUsers, currentUserId }: Admi
       )}
 
       {/* Members Table */}
-      <div className="rounded-2xl border border-border bg-surface shadow-sm overflow-hidden fanzine-dot-grid">
+      <div className="border border-border bg-surface shadow-sm overflow-hidden fanzine-dot-grid">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>

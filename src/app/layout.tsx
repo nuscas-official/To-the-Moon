@@ -1,3 +1,4 @@
+import { Suspense } from 'react'
 import type { Metadata } from "next";
 import { Manrope, Birthstone, Cormorant_Garamond, Azeret_Mono } from "next/font/google";
 import "./globals.css";
@@ -8,6 +9,7 @@ import ChaosProvider from '@/components/providers/ChaosProvider'
 import ThemeProvider from '@/components/providers/ThemeProvider'
 import RoleSyncListener from '@/components/features/auth/RoleSyncListener'
 import Footer from '@/components/layout/Footer'
+import EventDetailModal from '@/components/features/events/EventDetailModal'
 
 const quicksand = Manrope({
   subsets: ["latin"],
@@ -98,6 +100,11 @@ export default async function RootLayout({
             <main id="main-content" className="flex-grow max-w-[90rem] mx-auto w-full px-4 sm:px-6 lg:px-8 pb-8 outline-none">
               {children}
             </main>
+
+            {/* Event Lightbox Details Modal */}
+            <Suspense fallback={null}>
+              <EventDetailModal />
+            </Suspense>
 
             {/* Interactive Footer */}
             <Footer />

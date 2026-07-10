@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { createPortal } from 'react-dom'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { searchAniList, type AniListResult } from '@/lib/anilist'
@@ -50,6 +51,11 @@ export default function MemberRatingsDashboard({ initialRatings }: MemberRatings
   const [activeRating, setActiveRating] = useState<ActiveRatingState | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitError, setSubmitError] = useState<string | null>(null)
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   // Debounced search logic (400ms)
   useEffect(() => {
@@ -162,7 +168,7 @@ export default function MemberRatingsDashboard({ initialRatings }: MemberRatings
     <div className="w-full space-y-10">
       
       {/* 1. AniList Search Panel */}
-      <div className="rounded-2xl border border-border bg-surface p-6 shadow-sm">
+      <div className="border border-border bg-surface p-6 shadow-sm">
         <div className="max-w-xl space-y-4">
           <div>
             <h2 className="text-sm uppercase tracking-wider font-extrabold text-neutral-500">
@@ -179,7 +185,7 @@ export default function MemberRatingsDashboard({ initialRatings }: MemberRatings
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search by title (e.g. Frieren, One Piece)..."
-              className="w-full rounded-xl border border-border bg-surface pl-10 pr-4 py-3 text-sm text-neutral-800 placeholder-neutral-400 focus:border-accent focus:ring-1 focus:ring-accent outline-none"
+              className="w-full border border-border bg-surface pl-10 pr-4 py-3 text-sm text-neutral-800 placeholder-neutral-400 focus:border-accent focus:ring-1 focus:ring-accent outline-none"
             />
             <div className="absolute left-3.5 top-3.5">
               {searching ? (
@@ -207,9 +213,9 @@ export default function MemberRatingsDashboard({ initialRatings }: MemberRatings
                   key={item.id}
                   type="button"
                   onClick={() => handleOpenForSearchResult(item)}
-                  className="flex flex-col items-center p-3 rounded-xl border border-border hover:border-accent bg-surface hover:bg-neutral-50/50 shadow-sm transition-all text-center group cursor-pointer"
+                  className="flex flex-col items-center p-3 border border-border hover:border-accent bg-surface hover:bg-neutral-50/50 shadow-sm transition-all text-center group cursor-pointer"
                 >
-                  <div className="relative h-28 w-20 overflow-hidden rounded-md border border-border bg-neutral-100 mb-3 shrink-0">
+                  <div className="relative h-28 w-20 overflow-hidden border border-border bg-neutral-100 mb-3 shrink-0">
                     {item.coverImage.medium ? (
                       <Image fill unoptimized src={item.coverImage.medium} alt={item.title.english || item.title.romaji || 'Cover image'} className="object-cover" />
                     ) : (
@@ -257,11 +263,11 @@ export default function MemberRatingsDashboard({ initialRatings }: MemberRatings
         </div>
 
         {ratings.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-12 text-center border border-dashed border-neutral-300 rounded-2xl bg-neutral-50/50 p-6">
+          <div className="flex flex-col items-center justify-center py-12 text-center border border-dashed border-neutral-300 bg-neutral-50/50 p-6">
             <p className="text-xs text-text-muted">You haven&apos;t rated any titles yet. Search above to get started!</p>
           </div>
         ) : (
-          <div className="overflow-x-auto rounded-2xl border border-border bg-surface shadow-sm">
+          <div className="overflow-x-auto border border-border bg-surface shadow-sm">
             <table className="w-full border-collapse text-left text-sm text-neutral-500">
               <thead className="bg-neutral-50 text-[10px] uppercase font-black tracking-wider text-neutral-400 border-b border-border">
                 <tr>
@@ -279,7 +285,7 @@ export default function MemberRatingsDashboard({ initialRatings }: MemberRatings
                     {/* Cover & Title */}
                     <td className="px-6 py-4 font-normal text-neutral-900">
                       <div className="flex items-center gap-3">
-                        <div className="relative h-10 w-7 flex-shrink-0 overflow-hidden rounded border border-border bg-neutral-100">
+                        <div className="relative h-10 w-7 flex-shrink-0 overflow-hidden bg-neutral-100">
                           {rating.cover_image_url ? (
                             <Image fill unoptimized src={rating.cover_image_url} alt={rating.title_en} className="object-cover" />
                           ) : (
@@ -347,9 +353,9 @@ export default function MemberRatingsDashboard({ initialRatings }: MemberRatings
       </div>
 
       {/* 3. Rating Dialog Modal */}
-      {isModalOpen && activeRating && (
-        <div className="fixed inset-0 bg-neutral-950/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-surface border border-border rounded-2xl max-w-md w-full p-6 shadow-xl animate-fade-in text-left flex flex-col gap-5">
+      {isModalOpen && activeRating && mounted && createPortal(
+        <div className="fixed inset-0 bg-neutral-950/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-surface border border-border max-w-md w-full p-6 shadow-xl animate-fade-in text-left flex flex-col gap-5">
             {/* Modal Header */}
             <div className="flex items-center justify-between border-b border-border pb-3">
               <h3 className="font-black text-lg text-neutral-900 truncate pr-6">
@@ -368,7 +374,7 @@ export default function MemberRatingsDashboard({ initialRatings }: MemberRatings
 
             {/* Error Message */}
             {submitError && (
-              <div className="rounded-xl border border-red-200 bg-red-50 p-3 text-xs font-bold text-red-700">
+              <div className="border border-red-200 bg-red-50 p-3 text-xs font-bold text-red-700">
                 {submitError}
               </div>
             )}
@@ -376,8 +382,8 @@ export default function MemberRatingsDashboard({ initialRatings }: MemberRatings
             {/* Modal Body / Form */}
             <form onSubmit={handleSaveRating} className="space-y-5">
               {/* Media Card Details */}
-              <div className="flex gap-3 items-center bg-neutral-50 p-3 rounded-xl border border-border/80">
-                <div className="relative h-14 w-10 overflow-hidden rounded border border-border bg-neutral-100 shrink-0">
+              <div className="flex gap-3 items-center bg-neutral-50 p-3 border border-border/80">
+                <div className="relative h-14 w-10 overflow-hidden bg-neutral-100 shrink-0">
                   {activeRating.cover_image_url ? (
                     <Image fill unoptimized src={activeRating.cover_image_url} alt={activeRating.title_en} className="object-cover" />
                   ) : (
@@ -440,21 +446,22 @@ export default function MemberRatingsDashboard({ initialRatings }: MemberRatings
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="px-4 py-2 rounded-xl bg-neutral-100 hover:bg-neutral-200 text-neutral-700 font-bold text-[10px] uppercase tracking-wider transition-colors active:scale-95"
+                  className="rounded-lg px-4 py-2 bg-neutral-100 hover:bg-neutral-200 text-neutral-700 font-bold text-[10px] uppercase tracking-wider transition-colors active:scale-95"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="px-5 py-2 rounded-xl bg-accent hover:bg-accent-hover text-white font-bold text-[10px] uppercase tracking-wider transition-colors shadow-sm active:scale-95 disabled:opacity-50"
+                  className="px-5 py-2 bg-accent hover:bg-accent-hover rounded-lg text-white font-bold text-[10px] uppercase tracking-wider transition-colors shadow-sm active:scale-95 disabled:opacity-50"
                 >
                   {isSubmitting ? 'Saving...' : activeRating.id ? 'Save Changes' : 'Submit Rating'}
                 </button>
               </div>
             </form>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
 
     </div>

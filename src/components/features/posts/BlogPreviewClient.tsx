@@ -77,7 +77,7 @@ function BlogCard({ post, featured = false }: BlogCardProps) {
     : false
 
   return (
-    <Link href={`/blog/${post.slug}`} className="block h-full w-full group">
+    <div className="block h-full w-full group">
       <div className="club-card card--variant-gold flex flex-col chaos-card-active h-full">
 
         {/* Adjust visual balance if the card is featured */}
@@ -110,7 +110,7 @@ function BlogCard({ post, featured = false }: BlogCardProps) {
         </div>
 
         <div className="flex flex-col flex-grow p-5">
-          <h3 className={`font-black text-foreground group-hover:text-accent transition-colors mb-2 line-clamp-2 ${featured ? 'text-xl lg:text-2xl' : 'text-lg'}`}>
+          <h3 className={`font-black text-foreground mb-2 line-clamp-2 ${featured ? 'text-xl lg:text-2xl' : 'text-lg'}`}>
             {post.title}
           </h3>
           
@@ -141,19 +141,32 @@ function BlogCard({ post, featured = false }: BlogCardProps) {
               {date}
             </span>
 
-            <span
-              className="font-bold text-accent group-hover:underline flex items-center gap-0.5"
+            <Link
+              href={`/blog/${post.slug}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-bold text-accent hover:underline flex items-center gap-0.5"
             >
               <span>Read More</span>
-              <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              <svg 
+                className="w-3.5 h-3.5" 
+                fill="none" 
+                viewBox="0 0 24 24" 
+                stroke="currentColor" 
+                strokeWidth={2}
+              >
+                <path 
+                  strokeLinecap="round" 
+                  strokeLinejoin="round" 
+                  d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" 
+                />
               </svg>
-            </span>
+            </Link>
           </div>
         </div>
 
       </div>
-    </Link>
+    </div>
   )
 }
 

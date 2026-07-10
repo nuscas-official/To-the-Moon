@@ -87,11 +87,11 @@ export default function AdminEventList({ initialEvents }: AdminEventListProps) {
 
       {/* Events Table / List */}
       {filteredEvents.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-12 text-center border border-dashed border-neutral-300 rounded-2xl bg-neutral-50/50 p-6">
+        <div className="flex flex-col items-center justify-center py-12 text-center border border-dashed border-neutral-300 bg-neutral-50/50 p-6">
           <p className="text-xs text-text-muted font-bold">No events found matching this filter.</p>
         </div>
       ) : (
-        <div className="overflow-x-auto rounded-2xl border border-border bg-surface shadow-sm">
+        <div className="overflow-x-auto border border-border bg-surface shadow-sm">
           <table className="w-full border-collapse text-left text-sm text-neutral-500">
             <thead className="bg-neutral-50 text-[10px] uppercase font-black tracking-wider text-neutral-400 border-b border-border">
               <tr>
@@ -121,7 +121,7 @@ export default function AdminEventList({ initialEvents }: AdminEventListProps) {
                     <td className="px-6 py-4 font-normal text-neutral-900">
                       <div className="flex items-center gap-3">
                         {/* Cover Image Thumbnail */}
-                        <div className="relative h-12 w-20 flex-shrink-0 overflow-hidden rounded-lg border border-border bg-neutral-100">
+                        <div className="relative h-12 w-20 flex-shrink-0 overflow-hidden border border-border bg-neutral-100">
                           {event.cover_image_key ? (
                             <Image 
                               src={event.cover_image_key} 
@@ -176,7 +176,7 @@ export default function AdminEventList({ initialEvents }: AdminEventListProps) {
                           href={`/admin/events/edit/${event.id}`}
                           className="text-xs uppercase font-extrabold tracking-wider text-neutral-600 hover:text-accent transition-colors"
                         >
-                          Edit / Photos
+                          Edit
                         </Link>
                         <button
                           type="button"

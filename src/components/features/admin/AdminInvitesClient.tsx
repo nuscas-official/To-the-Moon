@@ -90,14 +90,14 @@ export default function AdminInvitesClient({ initialInvites }: AdminInvitesClien
   return (
     <div className="space-y-6">
       {error && (
-        <div className="rounded-xl bg-red-50 border border-red-200 p-4 text-xs font-semibold text-red-600 animate-fade-in flex items-center justify-between">
+        <div className="bg-red-50 border border-red-200 p-4 text-xs font-semibold text-red-600 animate-fade-in flex items-center justify-between">
           <span>{error}</span>
           <button onClick={() => setError(null)} className="text-red-400 hover:text-red-600">×</button>
         </div>
       )}
 
       {/* Action panel to generate invites */}
-      <div className="p-6 rounded-2xl border border-border bg-surface shadow-sm fanzine-dot-grid relative overflow-hidden">
+      <div className="p-6 border border-border bg-surface shadow-sm fanzine-dot-grid relative overflow-hidden">
         <div className="absolute top-0 left-0 w-full h-1 bg-accent" />
         
         <h3 className="text-lg font-black text-neutral-900 tracking-tight">Generate Registration Invitation</h3>
@@ -148,7 +148,7 @@ export default function AdminInvitesClient({ initialInvites }: AdminInvitesClien
       </div>
 
       {/* Invite Links Table */}
-      <div className="rounded-2xl border border-border bg-surface shadow-sm overflow-hidden fanzine-dot-grid">
+      <div className="border border-border bg-surface shadow-sm overflow-hidden fanzine-dot-grid">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>

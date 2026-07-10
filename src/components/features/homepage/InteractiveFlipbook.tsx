@@ -189,32 +189,30 @@ const skewYVal = useTransform(
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#c5a059] opacity-75"></span>
               <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[#c5a059]"></span>
             </span>
-            <span>NUSCAS // VOL. 27</span>
+            <span>NUSCAS VOL.1</span>
           </div>
           
           <h2 className="text-4xl font-serif italic font-black leading-none tracking-tight text-[#f7f4eb]">
             NUS<br />
-            <span className="text-[#c5a059] font-sans not-italic font-black text-5xl tracking-normal">COMIC</span><br />
-            ARTS
+            Comics
+            <span className="text-[#c5a059] font-sans not-italic font-black text-4xl tracking-normal"> & </span><br />
+            Animation Society
           </h2>
           <p className="text-[10px] text-neutral-300 font-mono tracking-wider">
-            SOCIETY // MEMBER PORTAL
+            About Us
           </p>
         </div>
 
         <div className="relative pl-4 flex items-center justify-between border-t border-[#c5a059]/25 pt-4 z-10">
           <div>
             <div className="text-[9px] font-mono text-[#c5a059] tracking-wider uppercase">
-              EST. 1999 // ROS 0233
-            </div>
-            <div className="text-[10px] font-serif italic text-neutral-300 mt-0.5">
-              &quot;We take fun seriously.&quot;
+              EST. 1999
             </div>
           </div>
           
           {/* Issue sticker badge */}
           <div className="px-2 py-1 bg-[#c5a059] text-[#1a1616] text-[8px] font-mono font-bold tracking-widest leading-none">
-            ISSUE 27
+            Every Friday
           </div>
         </div>
       </div>
@@ -255,8 +253,8 @@ const skewYVal = useTransform(
             <p className="text-xs font-mono text-[#685f5d]">
               MEET ANIKUN
             </p>
-            <p className="text-[11px] text-[#685f5d] max-w-[200px] leading-relaxed">
-              Welcome to our pocket universe. A space dedicated to comic creators, appreciators, and everyone in between.
+            <p className="text-[11px] text-[#685f5d] max-w-[280px] leading-relaxed">
+              We are a group of friends passionate about all sorts of Japanese Animation, Comics, Events and Games. From a small club founded in 1999, we now possess hundreds of members, a dedicated committee, robust alumni network and a budding social media presence.
             </p>
           </div>
         </div>
@@ -314,7 +312,7 @@ const skewYVal = useTransform(
     // Page 3: Spread 2 Left (Palette Dept)
     USE_SLIDE_IMAGES ? (
       <div key="p3" className="w-full h-full relative overflow-hidden border-y border-l border-neutral-800">
-        <Image src="/images/slides/slide3.webp" alt="Palette Department" fill className="object-cover" />
+        <Image src="/images/slides/slide3.webp" alt="Palette" fill className="object-cover" />
       </div>
     ) : (
       <div key="p3" className="w-full h-full flex flex-col justify-between p-6 bg-[#f7f4eb] text-[#1a1616] relative overflow-hidden border-y border-l border-neutral-800">
@@ -332,7 +330,7 @@ const skewYVal = useTransform(
             DIVISION 02 / ART & CREATION
           </span>
           <h3 className="text-xl font-serif italic font-black text-[#1a1616] leading-none">
-            Palette Department
+            Palette
           </h3>
         </div>
 
@@ -363,10 +361,10 @@ const skewYVal = useTransform(
         </div>
       </div>
     ),
-    // Page 4: Spread 2 Right (Ramen Challenge)
+    // Page 4: Spread 2 Right
     USE_SLIDE_IMAGES ? (
       <div key="p4" className="w-full h-full relative overflow-hidden border-y border-r border-neutral-800">
-        <Image src="/images/slides/slide4.webp" alt="Ramen Challenge" fill className="object-cover" />
+        <Image src="/images/slides/slide4.webp" alt="Not Ramen Challenge" fill className="object-cover" />
         {/* Transparent Rock Paper Scissors Overlay Buttons */}
         <div className="absolute bottom-[18%] left-[8%] right-[8%] h-[24%] grid grid-cols-3 gap-2 z-10">
           <button 
@@ -399,16 +397,16 @@ const skewYVal = useTransform(
 
         <div className="relative pr-4">
           <span className="text-[9px] font-mono text-accent uppercase tracking-widest block mb-1">
-            THE SACRED TRADITION
+            PLACEHOLDER TEXT
           </span>
           <h3 className="text-xl font-serif italic font-black text-[#1a1616] leading-none">
-            The Ramen Challenge
+            Placeholder Text
           </h3>
         </div>
 
         <div className="relative pr-4 my-auto space-y-3">
           <p className="text-[10px] text-[#685f5d] leading-relaxed">
-            Every weekly screening comes with a catch. To claim the legendary **Free Instant Ramen**, you must challenge the reigning President to an intense Rock-Paper-Scissors duel.
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
           </p>
 
           <div className="grid grid-cols-3 gap-2 text-center pt-2">
@@ -460,10 +458,10 @@ const skewYVal = useTransform(
 
         <div className="relative pl-4">
           <span className="text-[9px] font-mono text-accent uppercase tracking-widest block mb-1">
-            ENGINEERING MARVELS
+            OUR MEMBERS&apos; WORK
           </span>
           <h3 className="text-xl font-serif italic font-black text-[#1a1616] leading-none">
-            PowerPoint VNs
+            Animatic
           </h3>
         </div>
 
@@ -595,10 +593,10 @@ const skewYVal = useTransform(
 
         <div className="relative pr-4 text-right">
           <span className="text-[9px] font-mono text-[#c5a059] uppercase tracking-widest block mb-1">
-            MEMBER LOG SYSTEM
+            MEMBER PORTAL
           </span>
           <h3 className="text-xl font-serif italic font-black text-[#f7f4eb] leading-none">
-            NUSCAS Portal
+            NUSCAS Website
           </h3>
         </div>
 

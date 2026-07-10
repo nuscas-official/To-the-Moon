@@ -174,9 +174,9 @@ export default function PendingModerationFeed({ initialPosts }: PendingModeratio
                         Cancel
                       </button>
                       <button
-                        disabled={loadingId !== null}
+                        disabled={loadingId !== null || !rejectReason.trim()}
                         onClick={() => handleRejectSubmit(post.id)}
-                        className="px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white rounded-lg text-xs font-black uppercase tracking-wider flex items-center gap-1 shadow-sm active:scale-95 transition-all"
+                        className="px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white rounded-lg text-xs font-black uppercase tracking-wider flex items-center gap-1 shadow-sm active:scale-95 transition-all disabled:opacity-50 disabled:pointer-events-none disabled:cursor-not-allowed"
                       >
                         {loadingId === post.id && (
                           <span className="w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin" />

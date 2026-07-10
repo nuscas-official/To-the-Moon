@@ -48,7 +48,7 @@ export default function AuthButton({ user }: AuthButtonProps) {
       <button
         onClick={handleSignOut}
         disabled={isLoading}
-        className="rounded-xl border border-slate-200 bg-white hover:bg-slate-50 active:scale-[0.98] px-5 py-2.5 text-sm font-medium text-slate-700 shadow-sm transition-all disabled:opacity-50"
+        className="border border-slate-200 bg-white hover:bg-slate-50 active:scale-[0.98] px-5 py-2.5 text-sm font-medium text-slate-700 shadow-sm transition-all disabled:opacity-50"
       >
         {isLoading ? 'Signing Out...' : 'Sign Out'}
       </button>
