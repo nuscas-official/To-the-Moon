@@ -21,11 +21,24 @@ export default async function EventsPreview() {
     const { data, error } = await supabase
       .from('events')
       .select('*')
-      .order('starts_at', { ascending: true })
-      .limit(3)
+      .neq('status', 'cancelled')
 
     if (!error && data) {
-      events = data as ClubEvent[]
+      const allEvents = data as ClubEvent[]
+      const now = new Date()
+
+      // Sort upcoming events: soonest first
+      const upcoming = allEvents
+        .filter(e => e.status === 'upcoming' && new Date(e.starts_at) >= now)
+        .sort((a, b) => new Date(a.starts_at).getTime() - new Date(b.starts_at).getTime())
+
+      // Sort past events: most recent first
+      const past = allEvents
+        .filter(e => e.status === 'past' || (e.status === 'upcoming' && new Date(e.starts_at) < now))
+        .sort((a, b) => new Date(b.starts_at).getTime() - new Date(a.starts_at).getTime())
+
+      // Prioritize upcoming events first, then fill with past events, limit to 3
+      events = [...upcoming, ...past].slice(0, 3)
     }
   } catch (err) {
     console.error('Failed to query events table:', err)

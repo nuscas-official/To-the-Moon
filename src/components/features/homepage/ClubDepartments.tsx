@@ -14,19 +14,19 @@ const DEPARTMENTS: Department[] = [
   {
     id: 'casuals',
     name: 'CASuals',
-    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-    imageSrc: '/images/silksong_placeholder.webp'
+    description: "Gaming Gauntlets, Cosplay, Concert Watchalongs, Japan Tips, Escape Room, Game Shows, Beyblade, Anime Debates and the Anime Awards, everything ACG-adjacent is under CASuals. With practically no restrictions, CASuals is where 'Wouldn't it be funny if...' becomes 'We're doing this.'",
+    imageSrc: '/images/silksong_placeholder.webp',
   },
   {
     id: 'topics',
     name: 'TOPICS',
-    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+    description: "Explore the finer points of writing and storytelling through Media Analysis, Reviews and Fanfiction in NUSCAS' writing-focused department. Beyond writing, TOPICS is also responsible for running the NUSCAS Instagram and keeping the club's online presence alive. Also, look forward to the annual TOPICS D&D!",
     imageSrc: '/images/silksong_placeholder.webp'
   },
   {
     id: 'palette',
     name: 'Palette',
-    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+    description: "Nurture your artistic flair with lessons on art and graphic design. Palette is the art-focused department of NUSCAS and the beating heart behind everything booth-related. With a vibrant community of artists from all walks of life, Palette offers activities beyond drawing, including crochet, Gunpla, bookbinding, and much more.",
     imageSrc: '/images/silksong_placeholder.webp'
   }
 ]

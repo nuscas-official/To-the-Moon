@@ -24,30 +24,27 @@ export const revalidate = 0 // Disable cache for real-time accuracy
 export default async function EventsPage() {
   const supabase = createClient()
 
-  // 1. Fetch upcoming events: soonest first
-  const { data: upcomingData, error: upcomingError } = await supabase
+  // Fetch all active (non-cancelled) events: most recent starts_at first
+  const { data: eventsData, error: eventsError } = await supabase
     .from('events')
     .select('*')
-    .eq('status', 'upcoming')
-    .order('starts_at', { ascending: true })
-
-  if (upcomingError) {
-    console.error('Error fetching upcoming events:', upcomingError)
-  }
-
-  // 2. Fetch past events: most recent first
-  const { data: pastData, error: pastError } = await supabase
-    .from('events')
-    .select('*')
-    .eq('status', 'past')
+    .neq('status', 'cancelled')
     .order('starts_at', { ascending: false })
 
-  if (pastError) {
-    console.error('Error fetching past events:', pastError)
+  if (eventsError) {
+    console.error('Error fetching events:', eventsError)
   }
 
-  const upcomingEvents = (upcomingData as ClubEvent[]) || []
-  const pastEvents = (pastData as ClubEvent[]) || []
+  const allEvents = (eventsData as ClubEvent[]) || []
+  const now = new Date()
+
+  // Dynamically filter upcoming and past events based on time
+  const upcomingEvents = allEvents.filter(
+    (event) => event.status === 'upcoming' && new Date(event.starts_at) >= now
+  )
+  const pastEvents = allEvents.filter(
+    (event) => event.status === 'past' || (event.status === 'upcoming' && new Date(event.starts_at) < now)
+  )
 
   return (
     <div className="w-full max-w-7xl mx-auto py-6 animate-fade-in text-left">

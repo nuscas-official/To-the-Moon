@@ -32,6 +32,21 @@ export default async function AdminEventsDashboard() {
     redirect('/')
   }
 
+  // Self-healing: Update past upcoming events to status = 'past' in the database
+  try {
+    const { error: syncError } = await supabase
+      .from('events')
+      .update({ status: 'past' })
+      .eq('status', 'upcoming')
+      .lt('starts_at', new Date().toISOString())
+
+    if (syncError) {
+      console.error('Failed to auto-sync past events:', syncError)
+    }
+  } catch (err) {
+    console.error('Error in self-healing event status sync:', err)
+  }
+
   // 3. Fetch all events (including cancelled)
   const { data: events, error: fetchError } = await supabase
     .from('events')

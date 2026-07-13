@@ -254,7 +254,7 @@ const skewYVal = useTransform(
               MEET ANIKUN
             </p>
             <p className="text-[11px] text-[#685f5d] max-w-[280px] leading-relaxed">
-              We are a group of friends passionate about all sorts of Japanese Animation, Comics, Events and Games. From a small club founded in 1999, we now possess hundreds of members, a dedicated committee, robust alumni network and a budding social media presence.
+              Our Male Mascot. [Insert Anikun Lore]
             </p>
           </div>
         </div>
@@ -282,25 +282,30 @@ const skewYVal = useTransform(
 
         <div className="relative pr-4">
           <span className="text-[9px] font-mono text-accent uppercase tracking-widest block mb-1">
-            DIVISION 01 / SCREENING & TALKS
+            About Us
           </span>
           <h3 className="text-xl font-serif italic font-black text-[#1a1616] leading-none">
-            CASuals & TOPICS
+            Our Departments
           </h3>
         </div>
 
         <div className="relative pr-4 space-y-3 my-auto">
           <div className="p-3 bg-white border border-[#dcd1ba] rounded-none space-y-1.5">
-            <h4 className="text-xs font-mono text-accent font-bold">CASuals: Weekly Screenings</h4>
+            <h4 className="text-xs font-mono text-accent font-bold">CASuals</h4>
             <p className="text-[10px] text-[#685f5d] leading-relaxed">
-              Every Friday, we host casual screenings of hidden masterpieces, seasonal favorites, and legendary animation classics. Complete with snacks and community vibes.
+              Gaming Gauntlets, Cosplay, Concert Watchalongs, Japan Tips, Escape Room, Game Shows, Beyblade, Anime Debates and the Anime Awards, everything ACG-adjacent is under CASuals. With practically no restrictions, CASuals is where &quot;Wouldn&apos;t it be funny if...&quot; often becomes &quot;We&apos;re actually doing this.&quot; 
             </p>
           </div>
           <div className="p-3 bg-white border border-[#dcd1ba] rounded-none space-y-1.5">
-            <h4 className="text-xs font-mono text-accent font-bold">TOPICS: Discussion Panels</h4>
+            <h4 className="text-xs font-mono text-accent font-bold">TOPICS</h4>
             <p className="text-[10px] text-[#685f5d] leading-relaxed">
-              Deep dive panel presentations on history, scriptwriting, voice acting, and industry analysis. We take anime seriously.
+              Explore the finer points of writing and storytelling through Media Analysis, Reviews and Fanfiction in NUSCAS&apos; writing-focused department. Beyond writing, TOPICS is also responsible for running the NUSCAS&apos; Instagram and keeping the club&apos;s online presence alive. And last but not least, look forward to the annual TOPICS D&amp;D!
             </p>
+          </div>
+          <div className="p-3 bg-white border border-[#dcd1ba] rounded-none space-y-1.5">
+            <h4 className="text-xs font-mono text-accent font-bold">Palette</h4>
+            <p className="text-[10px] text-[#685f5d] leading-relaxed">
+              Nurture your artistic flair with lessons on art and graphic design. Palette is the art-focused department of NUSCAS and the beating heart behind everything booth-related. With a vibrant community of artists from all walks of life, Palette offers activities beyond drawing, including crochet, Gunpla, bookbinding, and much more.            </p>
           </div>
         </div>
 

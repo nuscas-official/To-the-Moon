@@ -114,6 +114,9 @@ export default function EventCard({ event, detailsLabel = 'View' }: EventCardPro
     minute: '2-digit',
   })
 
+  const isPast = new Date(event.starts_at) < new Date()
+  const displayStatus = event.status === 'cancelled' ? 'cancelled' : (isPast ? 'past' : 'upcoming')
+
   const params = new URLSearchParams(searchParams.toString())
   params.set('event', event.slug)
   const targetHref = `${pathname}?${params.toString()}`
@@ -143,7 +146,7 @@ export default function EventCard({ event, detailsLabel = 'View' }: EventCardPro
           )}
           {/* Status Badge */}
           <span className="absolute top-3 right-3 text-[10px] uppercase font-extrabold tracking-wider bg-neutral-900/80 backdrop-blur text-white px-2.5 py-1 rounded-full border border-white/10">
-            {event.status}
+            {displayStatus}
           </span>
         </div>
 
