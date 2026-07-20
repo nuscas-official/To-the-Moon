@@ -20,7 +20,16 @@ interface BlogPreviewClientProps {
 interface BlogCardProps {
   post: PostWithExcerpt
   featured?: boolean
+  rotation?: number
+  scale?: number
 }
+
+// Small per-card tilt angles (deg) to give the grid a looser, less-ordered feel
+const CARD_ROTATIONS = [-1.2, 1.8, -2, 1.4, -1.6]
+
+// Per-card scale so cards sit smaller than their grid cell, with gentle size
+// variety among the non-featured posts (index 0 is the featured card)
+const CARD_SCALES = [0.97, 0.9, 0.93, 0.87, 0.91]
 
 const containerVariants = {
   hidden: {},
@@ -55,7 +64,7 @@ const TYPE_STYLES: Record<string, { label: string; classes: string }> = {
   interview: { label: 'Interview', classes: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30' },
 }
 
-function BlogCard({ post, featured = false }: BlogCardProps) {
+function BlogCard({ post, featured = false, rotation = 0, scale = 1 }: BlogCardProps) {
   const [isMounted, setIsMounted] = useState(false)
   const typeStyle = TYPE_STYLES[post.type] ?? TYPE_STYLES.news
 
@@ -77,7 +86,13 @@ function BlogCard({ post, featured = false }: BlogCardProps) {
     : false
 
   return (
-    <div className="block h-full w-full group">
+    <div
+      className="block h-full w-full group origin-center transition-transform duration-300 ease-out lg:hover:z-10 lg:[transform:rotate(var(--card-rot))_scale(var(--card-scale))] lg:hover:[transform:rotate(0deg)_scale(1)]"
+      style={{
+        ['--card-rot' as string]: `${rotation}deg`,
+        ['--card-scale' as string]: `${scale}`,
+      }}
+    >
       <div className="club-card card--variant-gold flex flex-col chaos-card-active h-full">
 
         {/* Adjust visual balance if the card is featured */}
@@ -223,6 +238,8 @@ export default function BlogPreviewClient({ posts }: BlogPreviewClientProps) {
             <BlogCard
               post={post}
               featured={index === 0}
+              rotation={CARD_ROTATIONS[index % CARD_ROTATIONS.length]}
+              scale={CARD_SCALES[index % CARD_SCALES.length]}
             />
           </motion.div>
         ))}

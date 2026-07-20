@@ -10,6 +10,7 @@ import ClubDepartments from '@/components/features/homepage/ClubDepartments'
 import RollingGallery from '@/components/features/homepage/RollingGallery'
 import type { Metadata } from 'next'
 import ParticleCanvas from '@/components/ParticleCanvas'
+import WordFieldCanvas from '@/components/WordFieldCanvas'
 import InteractiveFlipbook from '@/components/features/homepage/InteractiveFlipbook'
 
 export const metadata: Metadata = {
@@ -144,8 +145,12 @@ export default async function Home({ searchParams }: HomeProps) {
         <RollingGallery artworks={artworks} />
       </div>
 
-      <div id="blog-section" className="relative z-10 max-w-7xl mx-auto pt-8 pb-4 px-6 sm:px-8 lg:px-8">
-        <BlogPreview />
+      <div id="blog-section" className="w-screen relative left-1/2 -translate-x-1/2 pt-20 pb-40 bg-white">
+        <WordFieldCanvas fontSize={12} rowGap={40} wordGap={40} skipChance={0.12} color="#000000" />
+
+        <div className="relative z-10 max-w-7xl mx-auto pt-8 pb-4 px-6 sm:px-8 lg:px-8">
+          <BlogPreview />
+        </div>
       </div>
 
 
