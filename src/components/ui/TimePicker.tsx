@@ -353,8 +353,8 @@ export default function TimePicker({
                   isSelected
                     ? 'bg-accent text-accent-foreground font-bold hover:bg-accent-hover'
                     : isFocused
-                    ? 'bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 font-bold'
-                    : 'text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:text-neutral-900 dark:hover:text-neutral-100'
+                    ? 'bg-surface-hover text-neutral-900 font-bold'
+                    : 'text-neutral-800 hover:bg-surface-hover hover:text-neutral-900'
                 }`}
               >
                 {opt.label}

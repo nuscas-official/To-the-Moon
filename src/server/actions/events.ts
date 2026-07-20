@@ -14,6 +14,7 @@ interface EventInput {
   location: string | null;
   status: 'upcoming' | 'past' | 'cancelled';
   cover_image_key: string | null;
+  departments: string[];
 }
 
 /**
@@ -60,6 +61,7 @@ export async function createEventAction(input: EventInput) {
         location: input.location || null,
         status: input.status,
         cover_image_key: input.cover_image_key || null,
+        departments: input.departments || [],
       })
       .select('id, slug')
       .single()

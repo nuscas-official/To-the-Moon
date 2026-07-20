@@ -91,7 +91,8 @@ async function seed() {
       starts_at: "2026-06-20T10:00:00Z",
       ends_at: "2026-06-20T13:00:00Z",
       location: "LT19, Faculty of Science",
-      status: "upcoming"
+      status: "upcoming",
+      departments: ["CASuals", "TOPICS", "Palette"]
     },
     {
       title: "Anime Art & Cosplay Workshop",
@@ -100,7 +101,8 @@ async function seed() {
       starts_at: "2026-06-27T14:00:00Z",
       ends_at: "2026-06-27T17:00:00Z",
       location: "UTown SR3, Stephen Riady Centre",
-      status: "upcoming"
+      status: "upcoming",
+      departments: ["Palette", "CASuals"]
     },
     {
       title: "Vocaloid Night & Karaoke Session",
@@ -109,7 +111,8 @@ async function seed() {
       starts_at: "2026-07-04T18:00:00Z",
       ends_at: "2026-07-04T22:00:00Z",
       location: "Yusof Ishak House (YIH) Student Lounge",
-      status: "upcoming"
+      status: "upcoming",
+      departments: ["CASuals"]
     }
   ]
 

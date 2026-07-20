@@ -16,6 +16,7 @@ interface ClubEvent {
   location: string | null;
   status: 'upcoming' | 'past' | 'cancelled';
   cover_image_key: string | null;
+  departments: string[];
 }
 
 interface EventsListClientProps {

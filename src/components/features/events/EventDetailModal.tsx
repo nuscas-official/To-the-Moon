@@ -23,6 +23,7 @@ interface ClubEvent {
   location: string | null;
   status: 'upcoming' | 'past' | 'cancelled';
   cover_image_key: string | null;
+  departments: string[];
 }
 
 export default function EventDetailModal() {
@@ -285,7 +286,7 @@ export default function EventDetailModal() {
                       {event.title}
                     </h1>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6 pt-6 border-t border-border/80">
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-6 pt-6 border-t border-border/80">
                       {/* Date & Time Column */}
                       <div className="flex gap-3 items-start">
                         <div className="w-8 h-8 bg-accent/10 flex items-center justify-center text-accent shrink-0">
@@ -311,6 +312,45 @@ export default function EventDetailModal() {
                         <div>
                           <div className="text-[10px] uppercase font-black tracking-wider text-text-muted">Location</div>
                           <div className="text-sm font-bold text-neutral-800 dark:text-neutral-200 mt-0.5">{event.location || 'Online / Discord'}</div>
+                        </div>
+                      </div>
+
+                      {/* Organizing Department Column */}
+                      <div className="flex gap-3 items-start">
+                        <div className="w-8 h-8 bg-accent/10 flex items-center justify-center text-accent shrink-0">
+                          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                          </svg>
+                        </div>
+                        <div>
+                          <div className="text-[10px] uppercase font-black tracking-wider text-text-muted">Organizers</div>
+                          <div className="flex flex-wrap gap-1.5 mt-1.5">
+                            {event.departments && event.departments.length > 0 ? (
+                              event.departments.length === 3 ? (
+                                <span className="text-[10px] px-2 py-0.5 font-extrabold uppercase tracking-wider rounded border bg-amber-50 text-amber-700 border-amber-200 shadow-sm">
+                                  Joint Department
+                                </span>
+                              ) : (
+                                event.departments.map((dept) => {
+                                  let classes = "";
+                                  if (dept === 'CASuals') {
+                                    classes = "bg-sky-50 text-sky-700 border-sky-100";
+                                  } else if (dept === 'TOPICS') {
+                                    classes = "bg-emerald-50 text-emerald-700 border-emerald-100";
+                                  } else if (dept === 'Palette') {
+                                    classes = "bg-pink-50 text-pink-700 border-pink-100";
+                                  }
+                                  return (
+                                    <span key={dept} className={`text-[10px] px-2 py-0.5 font-extrabold uppercase tracking-wider rounded border ${classes}`}>
+                                      {dept}
+                                    </span>
+                                  );
+                                })
+                              )
+                            ) : (
+                              <span className="text-sm font-bold text-neutral-800 dark:text-neutral-200">General Club</span>
+                            )}
+                          </div>
                         </div>
                       </div>
                     </div>

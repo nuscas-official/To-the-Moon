@@ -15,6 +15,7 @@ interface ClubEvent {
   location: string | null;
   status: 'upcoming' | 'past' | 'cancelled';
   cover_image_key: string | null;
+  departments: string[];
 }
 
 interface AdminEventListProps {
@@ -26,6 +27,7 @@ export default function AdminEventList({ initialEvents }: AdminEventListProps) {
   const [events, setEvents] = useState<ClubEvent[]>(initialEvents)
   const [loadingId, setLoadingId] = useState<string | null>(null)
   const [filterStatus, setFilterStatus] = useState<string>('all')
+  const [filterDept, setFilterDept] = useState<string | null>(null)
 
   const handleDelete = async (id: string, title: string) => {
     if (!confirm(`Are you sure you want to delete the event "${title}"? This action cannot be undone.`)) {
@@ -49,37 +51,76 @@ export default function AdminEventList({ initialEvents }: AdminEventListProps) {
   }
 
   const filteredEvents = events.filter(event => {
-    if (filterStatus === 'all') return true
-    return event.status === filterStatus
+    const statusMatch = filterStatus === 'all' || event.status === filterStatus
+    const deptMatch = filterDept === null || event.departments?.includes(filterDept)
+    return statusMatch && deptMatch
   })
 
   return (
     <div className="w-full space-y-6">
       
       {/* Filtering and Create Button */}
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 border-b border-border pb-4">
+      <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4 border-b border-border pb-4">
         
-        {/* Status Filters */}
-        <div className="flex flex-wrap items-center gap-1.5">
-          {['all', 'upcoming', 'past', 'cancelled'].map((status) => (
+        {/* Filter Groups */}
+        <div className="flex flex-col gap-3">
+          {/* Status Filters */}
+          <div className="flex flex-wrap items-center gap-1.5">
+            <span className="text-[10px] uppercase font-black tracking-wider text-text-muted mr-1.5">Status:</span>
+            {['all', 'upcoming', 'past', 'cancelled'].map((status) => (
+              <button
+                key={status}
+                type="button"
+                onClick={() => setFilterStatus(status)}
+                className={`px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all ${
+                  filterStatus === status 
+                    ? 'bg-neutral-900 text-white' 
+                    : 'bg-neutral-100 hover:bg-neutral-200 text-text-muted'
+                }`}
+              >
+                {status}
+              </button>
+            ))}
+          </div>
+
+          {/* Department Filters */}
+          <div className="flex flex-wrap items-center gap-1.5">
+            <span className="text-[10px] uppercase font-black tracking-wider text-text-muted mr-1.5">Dept:</span>
             <button
-              key={status}
               type="button"
-              onClick={() => setFilterStatus(status)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all ${
-                filterStatus === status 
-                  ? 'bg-neutral-900 text-white' 
+              onClick={() => setFilterDept(null)}
+              className={`px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all ${
+                filterDept === null
+                  ? 'bg-neutral-900 text-white'
                   : 'bg-neutral-100 hover:bg-neutral-200 text-text-muted'
               }`}
             >
-              {status}
+              All
             </button>
-          ))}
+            {[
+              { name: 'CASuals', activeClass: 'bg-sky-50 border-sky-300 text-sky-800 ring-1 ring-sky-300' },
+              { name: 'TOPICS', activeClass: 'bg-emerald-50 border-emerald-300 text-emerald-800 ring-1 ring-emerald-300' },
+              { name: 'Palette', activeClass: 'bg-pink-50 border-pink-300 text-pink-800 ring-1 ring-pink-300' }
+            ].map((dept) => (
+              <button
+                key={dept.name}
+                type="button"
+                onClick={() => setFilterDept(dept.name)}
+                className={`px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all border ${
+                  filterDept === dept.name
+                    ? dept.activeClass
+                    : 'bg-surface border-border text-text-muted hover:bg-neutral-100 hover:text-neutral-900'
+                }`}
+              >
+                {dept.name}
+              </button>
+            ))}
+          </div>
         </div>
 
         <Link
           href="/admin/events/new"
-          className="px-5 py-2.5 rounded-xl bg-accent hover:bg-accent-hover text-white font-bold text-xs uppercase tracking-wider transition-colors shadow-sm active:scale-95 text-center"
+          className="px-5 py-2.5 rounded-xl bg-accent hover:bg-accent-hover text-white font-bold text-xs uppercase tracking-wider transition-colors shadow-sm active:scale-95 text-center self-start md:self-center"
         >
           + Create New Event
         </Link>
@@ -141,6 +182,31 @@ export default function AdminEventList({ initialEvents }: AdminEventListProps) {
                         <div>
                           <div className="font-extrabold text-neutral-800">{event.title}</div>
                           <div className="text-xs text-text-muted font-mono mt-0.5">/{event.slug}</div>
+                          {event.departments && event.departments.length > 0 && (
+                            <div className="flex flex-wrap gap-1 mt-1">
+                              {event.departments.length === 3 ? (
+                                <span className="text-[9px] px-1.5 py-0.5 font-extrabold uppercase tracking-wider rounded border bg-amber-50 text-amber-700 border-amber-200 shadow-sm">
+                                  Joint
+                                </span>
+                              ) : (
+                                event.departments.map((dept) => {
+                                  let classes = "";
+                                  if (dept === 'CASuals') {
+                                    classes = "bg-sky-50 text-sky-700 border-sky-100";
+                                  } else if (dept === 'TOPICS') {
+                                    classes = "bg-emerald-50 text-emerald-700 border-emerald-100";
+                                  } else if (dept === 'Palette') {
+                                    classes = "bg-pink-50 text-pink-700 border-pink-100";
+                                  }
+                                  return (
+                                    <span key={dept} className={`text-[9px] px-1.5 py-0.5 font-extrabold uppercase tracking-wider rounded border ${classes}`}>
+                                      {dept}
+                                    </span>
+                                  );
+                                })
+                              )}
+                            </div>
+                          )}
                         </div>
                       </div>
                     </td>

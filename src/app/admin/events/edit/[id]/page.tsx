@@ -21,6 +21,7 @@ interface ClubEvent {
   location: string | null;
   status: 'upcoming' | 'past' | 'cancelled';
   cover_image_key: string | null;
+  departments: string[];
 }
 
 interface EventPhoto {
@@ -85,6 +86,7 @@ export default async function AdminEditEventPage({ params }: AdminEditEventPageP
     location: event.location,
     status: event.status,
     cover_image_key: event.cover_image_key,
+    departments: event.departments || [],
   }
 
   return (

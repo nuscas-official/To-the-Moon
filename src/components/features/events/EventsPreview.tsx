@@ -11,6 +11,7 @@ interface ClubEvent {
   location: string | null;
   status: 'upcoming' | 'past' | 'cancelled';
   cover_image_key: string | null;
+  departments: string[];
 }
 
 export default async function EventsPreview() {

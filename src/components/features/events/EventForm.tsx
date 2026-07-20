@@ -14,6 +14,7 @@ interface EventInput {
   location: string | null;
   status: 'upcoming' | 'past' | 'cancelled';
   cover_image_key: string | null;
+  departments: string[];
 }
 
 interface EventFormProps {
@@ -26,6 +27,7 @@ interface EventFormProps {
     location: string | null;
     status: 'upcoming' | 'past' | 'cancelled';
     cover_image_key: string | null;
+    departments?: string[];
   };
   onSave: (input: EventInput) => Promise<{ success: boolean; error?: string; id?: string }>;
 }
@@ -104,6 +106,7 @@ export default function EventForm({ initialData, onSave }: EventFormProps) {
     setEndsAt(time)
   }
   const [status, setStatus] = useState<'upcoming' | 'past' | 'cancelled'>(initialData?.status || 'upcoming')
+  const [departments, setDepartments] = useState<string[]>(initialData?.departments || [])
   const [coverImageKey, setCoverImageKey] = useState(initialData?.cover_image_key || '')
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
@@ -187,6 +190,7 @@ export default function EventForm({ initialData, onSave }: EventFormProps) {
         location: location.trim() || null,
         status,
         cover_image_key: coverImageKey.trim() || null,
+        departments,
       })
 
       if (result.success) {
@@ -320,6 +324,61 @@ export default function EventForm({ initialData, onSave }: EventFormProps) {
             <option value="past">Past</option>
             <option value="cancelled">Cancelled</option>
           </select>
+        </div>
+      </div>
+
+      {/* Organizing Departments */}
+      <div className="flex flex-col space-y-2">
+        <span className="text-xs uppercase font-extrabold tracking-wider text-neutral-500">
+          Organizing Departments
+        </span>
+        <div className="flex flex-wrap gap-3">
+          {[
+            { id: 'CASuals', color: 'bg-sky-50 text-sky-700 border-sky-300' },
+            { id: 'TOPICS', color: 'bg-emerald-50 text-emerald-700 border-emerald-300' },
+            { id: 'Palette', color: 'bg-pink-50 text-pink-700 border-pink-300' },
+          ].map((dept) => {
+            const isChecked = departments.includes(dept.id);
+            return (
+              <label
+                key={dept.id}
+                className={`relative flex items-center justify-center px-4 py-3 rounded-xl border border-border bg-surface cursor-pointer select-none text-sm font-bold transition-all active:scale-95 duration-200 ${
+                  isChecked
+                    ? dept.id === 'CASuals'
+                      ? 'bg-sky-50 text-sky-700 border-sky-300 ring-1 ring-sky-300 shadow-sm'
+                      : dept.id === 'TOPICS'
+                        ? 'bg-emerald-50 text-emerald-700 border-emerald-300 ring-1 ring-emerald-300 shadow-sm'
+                        : 'bg-pink-50 text-pink-700 border-pink-300 ring-1 ring-pink-300 shadow-sm'
+                    : 'text-text-muted hover:border-neutral-400 hover:text-neutral-800'
+                }`}
+              >
+                <input
+                  type="checkbox"
+                  checked={isChecked}
+                  onChange={() => {
+                    setDepartments((prev) =>
+                      prev.includes(dept.id)
+                        ? prev.filter((d) => d !== dept.id)
+                        : [...prev, dept.id]
+                    );
+                  }}
+                  className="sr-only"
+                />
+                <span className="flex items-center gap-2">
+                  <span className={`w-2 h-2 rounded-full ${
+                    isChecked
+                      ? dept.id === 'CASuals'
+                        ? 'bg-sky-500'
+                        : dept.id === 'TOPICS'
+                          ? 'bg-emerald-500'
+                          : 'bg-pink-500'
+                      : 'bg-neutral-300'
+                  }`} />
+                  {dept.id}
+                </span>
+              </label>
+            );
+          })}
         </div>
       </div>
 
