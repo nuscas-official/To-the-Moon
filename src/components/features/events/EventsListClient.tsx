@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react'
+import React, { useState } from 'react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import EventCard, { EventPlaceholderCard } from './EventCard'
@@ -46,8 +46,15 @@ const headerVariants = {
   },
 }
 
+const DEPARTMENTS = [
+  { name: 'CASuals', activeClass: 'bg-sky-50 border-sky-300 text-sky-800 ring-1 ring-sky-300 font-extrabold shadow-sm' },
+  { name: 'TOPICS', activeClass: 'bg-emerald-50 border-emerald-300 text-emerald-800 ring-1 ring-emerald-300 font-extrabold shadow-sm' },
+  { name: 'Palette', activeClass: 'bg-pink-50 border-pink-300 text-pink-800 ring-1 ring-pink-300 font-extrabold shadow-sm' },
+]
+
 export default function EventsListClient({ events }: EventsListClientProps) {
   const hasEvents = events && events.length > 0
+  const [selectedDept, setSelectedDept] = useState<string | null>(null)
 
   return (
     <motion.div
@@ -84,14 +91,56 @@ export default function EventsListClient({ events }: EventsListClientProps) {
         )}
       </motion.div>
 
-      {/* Grid of Event Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      {/* Department Filter Pills */}
+      {hasEvents && (
+        <motion.div
+          variants={headerVariants}
+          className="flex flex-wrap items-center gap-2 mb-8"
+        >
+          <span className="text-xs uppercase font-extrabold tracking-wider text-text-muted mr-2">
+            Filter by Department:
+          </span>
+          <button
+            type="button"
+            onClick={() => setSelectedDept(null)}
+            className={`px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all ${
+              selectedDept === null
+                ? 'bg-foreground text-surface shadow-sm'
+                : 'bg-surface hover:bg-neutral-500/10 text-text-muted'
+            }`}
+          >
+            All
+          </button>
+          {DEPARTMENTS.map((dept) => (
+            <button
+              key={dept.name}
+              type="button"
+              onClick={() => setSelectedDept(dept.name === selectedDept ? null : dept.name)}
+              className={`px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all border ${
+                selectedDept === dept.name
+                  ? dept.activeClass
+                  : 'bg-surface border-border text-text-muted hover:bg-neutral-500/10 hover:text-foreground'
+              }`}
+            >
+              {dept.name}
+            </button>
+          ))}
+        </motion.div>
+      )}
+
+      {/* Grid of Event Cards — up to 2 rows of 4 */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {hasEvents ? (
           events.map((event) => (
-            <EventCard key={event.id} event={event} detailsLabel="View" />
+            <EventCard
+              key={event.id}
+              event={event}
+              detailsLabel="View"
+              dimmed={selectedDept !== null && !event.departments?.includes(selectedDept)}
+            />
           ))
         ) : (
-          [1, 2, 3].map((i) => (
+          [1, 2, 3, 4].map((i) => (
             <EventPlaceholderCard key={i} index={i} />
           ))
         )}

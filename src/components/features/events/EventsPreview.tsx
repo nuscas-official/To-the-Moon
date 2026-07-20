@@ -38,8 +38,8 @@ export default async function EventsPreview() {
         .filter(e => e.status === 'past' || (e.status === 'upcoming' && new Date(e.starts_at) < now))
         .sort((a, b) => new Date(b.starts_at).getTime() - new Date(a.starts_at).getTime())
 
-      // Prioritize upcoming events first, then fill with past events, limit to 3
-      events = [...upcoming, ...past].slice(0, 3)
+      // Prioritize upcoming events first, then fill with past events, up to 2 rows of 4
+      events = [...upcoming, ...past].slice(0, 8)
     }
   } catch (err) {
     console.error('Failed to query events table:', err)

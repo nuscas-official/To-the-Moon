@@ -22,6 +22,7 @@ interface ClubEvent {
 interface EventCardProps {
   event: ClubEvent
   detailsLabel?: string // e.g. "View" or "Details"
+  dimmed?: boolean // filtered-out: faded and non-interactive, but stays in place
 }
 
 // Card entry animation settings
@@ -100,7 +101,7 @@ function TiltWrapper({ children, className = '', variants }: TiltWrapperProps) {
   )
 }
 
-export default function EventCard({ event, detailsLabel = 'View' }: EventCardProps) {
+export default function EventCard({ event, detailsLabel = 'View', dimmed = false }: EventCardProps) {
   const pathname = usePathname()
   const searchParams = useSearchParams()
 
@@ -123,13 +124,21 @@ export default function EventCard({ event, detailsLabel = 'View' }: EventCardPro
   const targetHref = `${pathname}?${params.toString()}`
 
   return (
-    <Link href={targetHref} scroll={false} className="block h-full w-full">
+    <Link
+      href={targetHref}
+      scroll={false}
+      aria-hidden={dimmed}
+      tabIndex={dimmed ? -1 : undefined}
+      className={`block h-full w-full transition-opacity duration-300 ${
+        dimmed ? 'opacity-30 grayscale pointer-events-none' : 'opacity-100'
+      }`}
+    >
       <TiltWrapper
         variants={cardVariants}
         className="group flex flex-col justify-between overflow-hidden border-2 border-border bg-surface shadow-sm hover:shadow-xl hover:shadow-accent/5 hover:border-accent/30 transition-[border-color,box-shadow,background-color] duration-300 chaos-card-active text-left cursor-pointer"
       >
         {/* Cover Image */}
-        <div className="relative h-48 w-full bg-neutral-100 overflow-hidden border-b border-border">
+        <div className="relative h-32 w-full bg-neutral-100 overflow-hidden border-b border-border">
           {event.cover_image_key ? (
             <Image
               src={event.cover_image_key}
@@ -152,7 +161,7 @@ export default function EventCard({ event, detailsLabel = 'View' }: EventCardPro
         </div>
 
         {/* Card Content */}
-        <div className="p-5 flex-grow flex flex-col justify-between">
+        <div className="p-4 flex-grow flex flex-col justify-between">
           <div>
             {/* Time Info */}
             <div className="flex items-center gap-1.5 text-xs text-accent font-bold mb-2">
@@ -189,19 +198,13 @@ export default function EventCard({ event, detailsLabel = 'View' }: EventCardPro
               </div>
             )}
 
-            <p className="text-md font-sans font-extrabold text-foreground line-clamp-1 group-hover:text-accent-hover transition-colors">
+            <p className="text-sm font-sans font-extrabold text-foreground line-clamp-1 group-hover:text-accent-hover transition-colors">
               {event.title}
             </p>
-
-            {event.description && (
-              <p className="text-xs text-text-muted mt-2 line-clamp-3 leading-relaxed">
-                {event.description}
-              </p>
-            )}
           </div>
 
           {/* Footer */}
-          <div className="mt-5 pt-4 border-t border-border flex items-center justify-between text-xs">
+          <div className="mt-4 pt-3 border-t border-border flex items-center justify-between text-xs">
             <span className="text-text-muted flex items-center gap-1">
               <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />

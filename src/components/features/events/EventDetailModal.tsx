@@ -182,50 +182,51 @@ export default function EventDetailModal() {
             animate={{ scale: 1, opacity: 1, y: 0 }}
             exit={{ scale: 0.95, opacity: 0, y: 15 }}
             transition={{ type: 'spring', damping: 26, stiffness: 220 }}
-            className="relative w-full max-w-4xl max-h-[85vh] md:max-h-[90vh] overflow-y-auto bg-crimson shadow-2xl flex flex-col text-left z-10 scrollbar-thin"
+            className="relative w-full max-w-4xl max-h-[85vh] md:max-h-[90vh] overflow-hidden bg-background text-foreground shadow-2xl flex flex-col text-left z-10"
           >
-            {/* Header Sticky Action Area (Close Button overlay) */}
-            <div className="absolute top-4 right-4 z-20">
-              <button
-                onClick={handleClose}
-                aria-label="Close modal"
-                className="w-10 h-10 rounded-full bg-black/60 hover:bg-black/80 backdrop-blur text-white flex items-center justify-center border border-white/20 hover:scale-105 hover:border-white/40 active:scale-95 transition-all outline-none"
-              >
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
-            </div>
+            {/* Close Button — fixed to the non-scrolling modal frame */}
+            <button
+              onClick={handleClose}
+              aria-label="Close modal"
+              className="absolute top-4 right-4 z-30 w-10 h-10 rounded-full bg-black/70 hover:bg-black/85 text-white flex items-center justify-center border border-white/20 hover:scale-105 hover:border-white/40 active:scale-95 transition-all outline-none"
+            >
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+
+            {/* Scrollable content area */}
+            <div className="min-h-0 overflow-y-auto scrollbar-thin">
 
             {/* Skeleton Loading State */}
             {loading && (
               <div className="w-full flex flex-col">
-                <div className="h-64 sm:h-80 w-full bg-neutral-200 dark:bg-neutral-800 animate-pulse border-b border-border" />
+                <div className="h-64 sm:h-80 w-full bg-neutral-200 animate-pulse border-b border-border" />
                 <div className="p-6 sm:p-10 space-y-8">
                   <div className="space-y-3">
-                    <div className="h-8 bg-neutral-200 dark:bg-neutral-800 w-3/4 animate-pulse" />
-                    <div className="h-4 bg-neutral-200 dark:bg-neutral-800 w-1/2 animate-pulse" />
+                    <div className="h-8 bg-neutral-200 w-3/4 animate-pulse" />
+                    <div className="h-4 bg-neutral-200 w-1/2 animate-pulse" />
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-6 border-t border-border/80">
                     <div className="flex gap-3">
-                      <div className="w-8 h-8 bg-neutral-200 dark:bg-neutral-800 animate-pulse shrink-0" />
+                      <div className="w-8 h-8 bg-neutral-200 animate-pulse shrink-0" />
                       <div className="space-y-2 flex-grow">
-                        <div className="h-3 bg-neutral-200 dark:bg-neutral-800 w-1/4 animate-pulse" />
-                        <div className="h-4 bg-neutral-200 dark:bg-neutral-800 w-3/4 animate-pulse" />
+                        <div className="h-3 bg-neutral-200 w-1/4 animate-pulse" />
+                        <div className="h-4 bg-neutral-200 w-3/4 animate-pulse" />
                       </div>
                     </div>
                     <div className="flex gap-3">
-                      <div className="w-8 h-8 bg-neutral-200 dark:bg-neutral-800 animate-pulse shrink-0" />
+                      <div className="w-8 h-8 bg-neutral-200 animate-pulse shrink-0" />
                       <div className="space-y-2 flex-grow">
-                        <div className="h-3 bg-neutral-200 dark:bg-neutral-800 w-1/4 animate-pulse" />
-                        <div className="h-4 bg-neutral-200 dark:bg-neutral-800 w-3/4 animate-pulse" />
+                        <div className="h-3 bg-neutral-200 w-1/4 animate-pulse" />
+                        <div className="h-4 bg-neutral-200 w-3/4 animate-pulse" />
                       </div>
                     </div>
                   </div>
                   <div className="space-y-3 pt-4">
-                    <div className="h-4 bg-neutral-200 dark:bg-neutral-800 animate-pulse" />
-                    <div className="h-4 bg-neutral-200 dark:bg-neutral-800 animate-pulse" />
-                    <div className="h-4 bg-neutral-200 dark:bg-neutral-800 w-5/6 animate-pulse" />
+                    <div className="h-4 bg-neutral-200 animate-pulse" />
+                    <div className="h-4 bg-neutral-200 animate-pulse" />
+                    <div className="h-4 bg-neutral-200 w-5/6 animate-pulse" />
                   </div>
                 </div>
               </div>
@@ -239,7 +240,7 @@ export default function EventDetailModal() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                   </svg>
                 </div>
-                <h3 className="text-xl font-bold text-neutral-900 dark:text-white">Something Went Wrong</h3>
+                <h3 className="text-xl font-bold text-foreground">Something Went Wrong</h3>
                 <p className="text-sm text-text-muted max-w-md">{error}</p>
                 <button
                   onClick={handleClose}
@@ -255,7 +256,7 @@ export default function EventDetailModal() {
               <div className="w-full flex flex-col">
                 
                 {/* Banner Cover Image */}
-                <div className="relative h-56 sm:h-80 w-full bg-neutral-100 dark:bg-neutral-900 overflow-hidden shrink-0">
+                <div className="relative h-56 sm:h-80 w-full bg-neutral-100 overflow-hidden shrink-0">
                   {event.cover_image_key ? (
                     <Image
                       src={event.cover_image_key}
@@ -282,7 +283,7 @@ export default function EventDetailModal() {
                   
                   {/* Title & Timing Grid */}
                   <div>
-                    <h1 className="text-xl sm:text-3xl font-black text-neutral-900 dark:text-white tracking-tight leading-snug">
+                    <h1 className="text-xl sm:text-3xl font-black text-foreground tracking-tight leading-snug">
                       {event.title}
                     </h1>
 
@@ -296,7 +297,7 @@ export default function EventDetailModal() {
                         </div>
                         <div>
                           <div className="text-[10px] uppercase font-black tracking-wider text-text-muted">Date</div>
-                          <div className="text-sm font-bold text-neutral-800 dark:text-neutral-200 mt-0.5">{dateDetails?.dateStr}</div>
+                          <div className="text-sm font-bold text-neutral-800 mt-0.5">{dateDetails?.dateStr}</div>
                           <div className="text-xs text-text-muted mt-0.5">{dateDetails?.timeRangeStr}</div>
                         </div>
                       </div>
@@ -311,7 +312,7 @@ export default function EventDetailModal() {
                         </div>
                         <div>
                           <div className="text-[10px] uppercase font-black tracking-wider text-text-muted">Location</div>
-                          <div className="text-sm font-bold text-neutral-800 dark:text-neutral-200 mt-0.5">{event.location || 'Online / Discord'}</div>
+                          <div className="text-sm font-bold text-neutral-800 mt-0.5">{event.location || 'Online / Discord'}</div>
                         </div>
                       </div>
 
@@ -348,7 +349,7 @@ export default function EventDetailModal() {
                                 })
                               )
                             ) : (
-                              <span className="text-sm font-bold text-neutral-800 dark:text-neutral-200">General Club</span>
+                              <span className="text-sm font-bold text-neutral-800">General Club</span>
                             )}
                           </div>
                         </div>
@@ -359,8 +360,8 @@ export default function EventDetailModal() {
                   {/* Description */}
                   {event.description && (
                     <div className="py-2">
-                      <h2 className="text-xs uppercase tracking-wider font-extrabold text-neutral-400 dark:text-neutral-500 mb-3">About the Event</h2>
-                      <div className="text-neutral-700 dark:text-neutral-300 leading-relaxed whitespace-pre-line text-sm sm:text-base">
+                      <h2 className="text-xs uppercase tracking-wider font-extrabold text-neutral-500 mb-3">About the Event</h2>
+                      <div className="text-neutral-700 leading-relaxed whitespace-pre-line text-sm sm:text-base">
                         {event.description}
                       </div>
                     </div>
@@ -370,7 +371,7 @@ export default function EventDetailModal() {
                   {photos.length > 0 && (
                     <div className="pt-4 space-y-6">
                       <div className="border-b border-border pb-3">
-                        <h2 className="text-lg sm:text-xl font-black text-neutral-900 dark:text-white tracking-tight">
+                        <h2 className="text-lg sm:text-xl font-black text-foreground tracking-tight">
                           Gallery
                         </h2>
                         <p className="text-xs text-text-muted mt-1">
@@ -382,7 +383,7 @@ export default function EventDetailModal() {
                         {photos.map((photo) => (
                           <div
                             key={photo.id}
-                            className="group relative h-48 overflow-hidden border border-border bg-neutral-100 dark:bg-neutral-800 shadow-sm hover:shadow-md transition-all duration-300 chaos-card-active"
+                            className="group relative h-48 overflow-hidden border border-border bg-neutral-100 shadow-sm hover:shadow-md transition-all duration-300 chaos-card-active"
                           >
                             <Image
                               src={photo.storage_key}
@@ -407,6 +408,7 @@ export default function EventDetailModal() {
                 </div>
               </div>
             )}
+            </div>
           </motion.div>
         </div>
       )}
