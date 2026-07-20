@@ -331,7 +331,7 @@ export default function EventDetailModal() {
                     <div className="pt-4 space-y-6">
                       <div className="border-b border-border pb-3">
                         <h2 className="text-lg sm:text-xl font-black text-neutral-900 dark:text-white tracking-tight">
-                          Memory Lane & Gallery
+                          Gallery
                         </h2>
                         <p className="text-xs text-text-muted mt-1">
                           Photos from the activity uploaded by committee members and attendees.

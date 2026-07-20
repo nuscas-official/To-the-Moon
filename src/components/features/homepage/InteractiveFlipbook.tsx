@@ -34,111 +34,57 @@ export default function InteractiveFlipbook({ className = '' }: { className?: st
   const rotateYVal = useMotionValue(0)
   const dyVal = useMotionValue(0)
 
-  // Dynamic transforms to bend/twist the page
-  // 1. Tame the X-axis tilt to prevent corners from digging into the book
-const rotateXVal = useTransform(
-    [rotateYVal, dyVal],
-    ([latestRotateY, latestDy]) => {
-      const r = Number(latestRotateY)
-      // STRICT CLAMP: Prevent spring bounce from breaking 3D space
-      const clampedR = Math.max(-180, Math.min(0, r))
-      const dy = Number(latestDy)
-      const h = containerHeight.current || 500
-      
-      const progressFactor = Math.abs(Math.sin((clampedR * Math.PI) / 180)) 
-      const dyRatio = Math.max(-1, Math.min(1, dy / h))
-      
-      return dyRatio * 8 * progressFactor
-    }
-  )
+  // Page-turn physics
+  // ------------------
+  // Real book libraries (turn.js / FlipHTML) keep the turning page a rigid
+  // plane rotating about the spine and sell the realism with *shadows*, not by
+  // bending/skewing the sheet. Arching + skewing the plane is what made corners
+  // dig into the book and clip, so we drop it entirely and lift cleanly on Z.
 
-  // 2. Reduce excessive arching and twisting that breaks the rigid plane illusion
-const rotateZVal = useTransform(
-    [rotateYVal, dyVal],
-    ([latestRotateY, latestDy]) => {
-      const r = Number(latestRotateY)
-      const clampedR = Math.max(-180, Math.min(0, r))
-      const dy = Number(latestDy)
-      const h = containerHeight.current || 500
-      
-      const progressFactor = Math.abs(Math.sin((clampedR * Math.PI) / 180))
-      const isForward = flippingStateRef.current === 'forward'
-      const archAmount = isForward ? -4 : 4
-      const arch = progressFactor * archAmount
-      
-      const dyRatio = Math.max(-1, Math.min(1, dy / h))
-      const twist = dyRatio * 5
-      
-      return arch + twist
-    }
-  )
+  // Normalized turn progress: 0 (flat, at rest) -> 1 (page stood up at 90°) -> 0
+  const flipProgress = useTransform(rotateYVal, (r) => {
+    const clamped = Math.max(-180, Math.min(0, r))
+    return Math.abs(Math.sin((clamped * Math.PI) / 180))
+  })
 
-  // 3. Keep the skew for that "curling" paper feel, but soften it
-const skewYVal = useTransform(
-    [rotateYVal, dyVal],
-    ([latestRotateY, latestDy]) => {
-      const r = Number(latestRotateY)
-      const clampedR = Math.max(-180, Math.min(0, r))
-      const dy = Number(latestDy)
-      const h = containerHeight.current || 500
-      
-      const progressFactor = Math.abs(Math.sin((clampedR * Math.PI) / 180))
-      const isForward = flippingStateRef.current === 'forward'
-      const skewDirection = isForward ? 6 : -6
-      
-      const dyRatio = Math.max(-1, Math.min(1, dy / h))
-      return progressFactor * dyRatio * skewDirection
-    }
-  )
-
-// 4. Parachute Z-lift
+  // Smooth, symmetric Z-lift: a clean half-sine arc that peaks mid-turn and
+  // returns perfectly flush at both ends, so the page always settles without
+  // hovering or z-fighting against the sheets beneath it.
   const zMotionVal = useTransform(
     [rotateYVal, dyVal],
     ([latestRotateY, latestDy]) => {
-      const r = Number(latestRotateY)
-      const clampedR = Math.max(-180, Math.min(0, r))
+      const r = Math.max(-180, Math.min(0, Number(latestRotateY)))
       const dy = Number(latestDy)
       const h = containerHeight.current || 500
-      
-      const progressFactor = Math.abs(Math.sin((clampedR * Math.PI) / 180))
-      // PARACHUTE EFFECT: Square root curve makes it pop up fast and stay high longer
-      const zProgress = Math.pow(progressFactor, 0.5)
-      
+
       const isForward = flippingStateRef.current === 'forward'
       const sheetIdx = isForward ? currentSpreadIndexRef.current : currentSpreadIndexRef.current - 1
-      
+
       const startingZ = isForward ? (3 - sheetIdx) * 2 : sheetIdx * 2
       const targetZ = isForward ? sheetIdx * 2 : (3 - sheetIdx) * 2
-      
-      const t = isForward ? (clampedR / -180) : ((clampedR + 180) / 180)
+
+      // Blend the resting stack height across the turn.
+      const t = isForward ? (r / -180) : ((r + 180) / 180)
       const clampedT = Math.max(0, Math.min(1, t))
-      
       const baseZ = (1 - clampedT) * startingZ + clampedT * targetZ
-      
-      // Use the fatter zProgress curve for clearance
-      let lift = zProgress * 60
+
+      // Gentle arc, with a little extra clearance when dragged vertically.
+      const arc = Math.sin(clampedT * Math.PI)
       const dyRatio = Math.abs(Math.max(-1, Math.min(1, dy / h)))
-      lift += zProgress * (dyRatio * 40)
-      
+      const lift = arc * (34 + dyRatio * 16)
+
       return baseZ + lift
     }
   )
 
-  // Dynamic shadows and highlights for curling effect
-  const frontShadowOpacity = useTransform(rotateYVal, (r) => {
-    const progress = Math.abs(Math.sin((r * Math.PI) / 180))
-    return progress * 0.3
-  })
+  // Fold shading + gloss on the turning page: darkens as it approaches 90°,
+  // where it catches the least light, then eases back off.
+  const frontShadowOpacity = useTransform(flipProgress, (p) => p * 0.45)
+  const backShadowOpacity = useTransform(flipProgress, (p) => p * 0.45)
+  const highlightOpacity = useTransform(flipProgress, (p) => p * 0.18)
 
-  const backShadowOpacity = useTransform(rotateYVal, (r) => {
-    const progress = Math.abs(Math.sin((r * Math.PI) / 180))
-    return progress * 0.3
-  })
-
-  const highlightOpacity = useTransform(rotateYVal, (r) => {
-    const progress = Math.abs(Math.sin((r * Math.PI) / 180))
-    return progress * 0.15
-  })
+  // Soft shadow the turning page casts down onto the spread beneath it.
+  const castShadowOpacity = useTransform(flipProgress, (p) => p * 0.4)
 
   // Translation Motion Value for sliding turns
   const xMotionVal = useMotionValue(activePageIndex === 0 ? '-25%' : activePageIndex === 7 ? '25%' : '0%')
@@ -735,9 +681,10 @@ const skewYVal = useTransform(
       
   const springConfig = {
         type: 'spring',
-        stiffness: 300, 
+        stiffness: 260,
         damping: 30,
         mass: 1,
+        restDelta: 0.05,
       } as const
 
       animate(rotateYVal, -180, {
@@ -764,8 +711,10 @@ const skewYVal = useTransform(
 
       const springConfig = {
         type: 'spring',
-        stiffness: 240,
-        damping: 24,
+        stiffness: 260,
+        damping: 30,
+        mass: 1,
+        restDelta: 0.05,
       } as const
 
       animate(rotateYVal, 0, {
@@ -884,8 +833,10 @@ const skewYVal = useTransform(
     const currentRotation = rotateYVal.get()
     const springConfig = {
       type: 'spring',
-      stiffness: 280,
-      damping: 24,
+      stiffness: 260,
+      damping: 30,
+      mass: 1,
+      restDelta: 0.05,
     } as const
 
     if (flippingState === 'forward') {
@@ -951,11 +902,11 @@ const skewYVal = useTransform(
 
   // 3D Parallax Mouse movement (desktop only, hover state only)
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (isMobile || isDragging.current || !containerRef.current) return
+    if (isMobile || isDragging.current || flippingState !== 'none' || !containerRef.current) return
     const rect = containerRef.current.getBoundingClientRect()
     const x = (e.clientX - rect.left) / rect.width - 0.5
     const y = (e.clientY - rect.top) / rect.height - 0.5
-    setTilt({ x: x * 8, y: y * -8 })
+    setTilt({ x: x * 6, y: y * -6 })
   }
 
   const handleMouseLeave = () => {
@@ -1007,7 +958,8 @@ const skewYVal = useTransform(
         style={{
           x: xMotionVal,
           transformStyle: isMobile ? 'flat' : 'preserve-3d',
-          perspective: isMobile ? 'none' : '1500px',
+          perspective: isMobile ? 'none' : '2000px',
+          perspectiveOrigin: 'center center',
         }}
       >
         {isMobile ? (
@@ -1059,6 +1011,18 @@ const skewYVal = useTransform(
             </>
           )}
 
+          {/* Soft shadow cast by the turning page onto the spread beneath it */}
+          {flippingState !== 'none' && (
+            <motion.div
+              className={`absolute top-0 bottom-0 w-1/2 pointer-events-none ${
+                flippingState === 'forward'
+                  ? 'left-0 bg-gradient-to-l'
+                  : 'right-0 bg-gradient-to-r'
+              } from-black/40 via-black/10 to-transparent`}
+              style={{ opacity: castShadowOpacity, transform: 'translateZ(6px)' }}
+            />
+          )}
+
           {/* Render Stacked 3D Sheets */}
           {[0, 1, 2, 3].map((sheetIdx) => {
             const isFlippingForward = flippingState === 'forward' && sheetIdx === currentSpreadIndex
@@ -1085,10 +1049,8 @@ const skewYVal = useTransform(
                   transformOrigin: 'left center',
                   transformStyle: 'preserve-3d',
                   rotateY: rotationY,
-                  rotateX: isFlipping ? rotateXVal : 0,
-                  rotateZ: isFlipping ? rotateZVal : 0,
-                  skewY: isFlipping ? skewYVal : 0,
                   z: sheetZ,
+                  willChange: isFlipping ? 'transform' : 'auto',
                 }}
               >
                 {/* Front of Sheet (Right Page when open, facing front) */}
