@@ -10,7 +10,6 @@ import ClubDepartments from '@/components/features/homepage/ClubDepartments'
 import RollingGallery from '@/components/features/homepage/RollingGallery'
 import type { Metadata } from 'next'
 import ParticleCanvas from '@/components/ParticleCanvas'
-import WordFieldCanvas from '@/components/WordFieldCanvas'
 import InteractiveFlipbook from '@/components/features/homepage/InteractiveFlipbook'
 
 export const metadata: Metadata = {
