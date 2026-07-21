@@ -2,7 +2,6 @@ import { createClient } from '@/lib/supabase/server'
 import { getUserRole } from '@/lib/supabase/role'
 import { uploadToR2 } from '@/lib/r2'
 import { NextResponse } from 'next/server'
-import sharp from 'sharp'
 
 export const dynamic = 'force-dynamic'
 
@@ -65,9 +64,11 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Bad Request: File size exceeds the 10MB limit.' }, { status: 400 })
     }
 
-    // 6. Process image with sharp
+    // 6. Process image with sharp (imported dynamically so a native-binary
+    // load failure surfaces as a JSON 500 rather than crashing the module)
+    const sharp = (await import('sharp')).default
     const fileBuffer = Buffer.from(await file.arrayBuffer())
-    
+
     const processedBuffer = await sharp(fileBuffer)
       .resize({
         width: 2000,

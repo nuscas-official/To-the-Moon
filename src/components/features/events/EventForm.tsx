@@ -304,7 +304,7 @@ export default function EventForm({ initialData, onSave }: EventFormProps) {
             type="text"
             value={location}
             onChange={(e) => setLocation(e.target.value)}
-            placeholder="e.g. LT19, UTown SR3, or Online"
+            placeholder="S16, UTown SRC or Online"
             className="w-full rounded-xl border border-border bg-surface px-4 py-3 text-sm text-neutral-800 placeholder-neutral-400 focus:border-accent focus:ring-1 focus:ring-accent outline-none transition-colors"
           />
         </div>

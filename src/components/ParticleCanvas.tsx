@@ -126,6 +126,7 @@ export default function ParticleCanvas({
     // --- Animation loop ---
     let elapsed = 0
     let lastTs = 0
+    let running = false
 
     const draw = (ts: number) => {
       const dt = Math.min(ts - lastTs, 50) // cap dt to avoid huge jumps
@@ -215,13 +216,33 @@ export default function ParticleCanvas({
         ctx.restore()
       }
 
-      rafRef.current = requestAnimationFrame(draw)
+      if (running) rafRef.current = requestAnimationFrame(draw)
     }
 
-    rafRef.current = requestAnimationFrame(draw)
+    // --- Visibility gating: only run the RAF loop while on-screen ---
+    const startLoop = () => {
+      if (running) return
+      running = true
+      lastTs = 0 // reset so the resumed frame doesn't see a huge dt gap
+      rafRef.current = requestAnimationFrame(draw)
+    }
+    const stopLoop = () => {
+      running = false
+      cancelAnimationFrame(rafRef.current)
+    }
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (entries[0]?.isIntersecting) startLoop()
+        else stopLoop()
+      },
+      { threshold: 0 },
+    )
+    io.observe(canvas)
 
     return () => {
-      cancelAnimationFrame(rafRef.current)
+      stopLoop()
+      io.disconnect()
       ro.disconnect()
       themeObserver.disconnect()
       section.removeEventListener('mousemove', onMouseMove)

@@ -17,6 +17,12 @@ const r2Host = getR2Host();
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Keep sharp external so its native binaries load at runtime on Vercel
+  // instead of being bundled into the serverless function (which breaks image
+  // uploads with a 500 in production).
+  experimental: {
+    serverComponentsExternalPackages: ['sharp'],
+  },
   images: {
     remotePatterns: [
       {
