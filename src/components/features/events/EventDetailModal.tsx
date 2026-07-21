@@ -349,7 +349,9 @@ export default function EventDetailModal() {
                                 })
                               )
                             ) : (
-                              <span className="text-sm font-bold text-neutral-800">General Club</span>
+                              <span className="text-[10px] px-2 py-0.5 font-extrabold uppercase tracking-wider rounded border bg-violet-50 text-violet-700 border-violet-100">
+                                NUSCAS
+                              </span>
                             )}
                           </div>
                         </div>

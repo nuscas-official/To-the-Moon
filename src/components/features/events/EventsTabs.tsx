@@ -38,8 +38,13 @@ export default function EventsTabs({ upcomingEvents, pastEvents }: EventsTabsPro
   const currentEvents = activeTab === 'upcoming' ? upcomingEvents : pastEvents
   const tabHasEvents = currentEvents.length > 0
 
+  // A NUSCAS (general club) event has no organizing department assigned
   const filteredEvents = selectedDept
-    ? currentEvents.filter(e => e.departments?.includes(selectedDept))
+    ? currentEvents.filter(e =>
+        selectedDept === 'NUSCAS'
+          ? !e.departments || e.departments.length === 0
+          : e.departments?.includes(selectedDept)
+      )
     : currentEvents
 
   const hasEvents = filteredEvents.length > 0
@@ -87,6 +92,7 @@ export default function EventsTabs({ upcomingEvents, pastEvents }: EventsTabsPro
           All
         </button>
         {[
+          { name: 'NUSCAS', activeClass: 'bg-violet-50 border-violet-300 text-violet-800 ring-1 ring-violet-300 font-extrabold shadow-sm' },
           { name: 'CASuals', activeClass: 'bg-sky-50 border-sky-300 text-sky-800 ring-1 ring-sky-300 font-extrabold shadow-sm' },
           { name: 'TOPICS', activeClass: 'bg-emerald-50 border-emerald-300 text-emerald-800 ring-1 ring-emerald-300 font-extrabold shadow-sm' },
           { name: 'Palette', activeClass: 'bg-pink-50 border-pink-300 text-pink-800 ring-1 ring-pink-300 font-extrabold shadow-sm' }

@@ -47,10 +47,17 @@ const headerVariants = {
 }
 
 const DEPARTMENTS = [
+  { name: 'NUSCAS', activeClass: 'bg-violet-50 border-violet-300 text-violet-800 ring-1 ring-violet-300 font-extrabold shadow-sm' },
   { name: 'CASuals', activeClass: 'bg-sky-50 border-sky-300 text-sky-800 ring-1 ring-sky-300 font-extrabold shadow-sm' },
   { name: 'TOPICS', activeClass: 'bg-emerald-50 border-emerald-300 text-emerald-800 ring-1 ring-emerald-300 font-extrabold shadow-sm' },
   { name: 'Palette', activeClass: 'bg-pink-50 border-pink-300 text-pink-800 ring-1 ring-pink-300 font-extrabold shadow-sm' },
 ]
+
+// A NUSCAS (general club) event has no organizing department assigned
+function matchesDept(event: ClubEvent, dept: string): boolean {
+  if (dept === 'NUSCAS') return !event.departments || event.departments.length === 0
+  return event.departments?.includes(dept) ?? false
+}
 
 export default function EventsListClient({ events }: EventsListClientProps) {
   const hasEvents = events && events.length > 0
@@ -136,7 +143,7 @@ export default function EventsListClient({ events }: EventsListClientProps) {
               key={event.id}
               event={event}
               detailsLabel="View"
-              dimmed={selectedDept !== null && !event.departments?.includes(selectedDept)}
+              dimmed={selectedDept !== null && !matchesDept(event, selectedDept)}
             />
           ))
         ) : (

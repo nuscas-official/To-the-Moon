@@ -172,31 +172,33 @@ export default function EventCard({ event, detailsLabel = 'View', dimmed = false
             </div>
 
             {/* Department Badges */}
-            {event.departments && event.departments.length > 0 && (
-              <div className="flex flex-wrap gap-1.5 mb-2">
-                {event.departments.length === 3 ? (
-                  <span className="text-[10px] px-2 py-0.5 font-extrabold uppercase tracking-wider rounded border bg-amber-50 text-amber-700 border-amber-200 shadow-sm">
-                    Joint Department
-                  </span>
-                ) : (
-                  event.departments.map((dept) => {
-                    let classes = "";
-                    if (dept === 'CASuals') {
-                      classes = "bg-sky-50 text-sky-700 border-sky-100";
-                    } else if (dept === 'TOPICS') {
-                      classes = "bg-emerald-50 text-emerald-700 border-emerald-100";
-                    } else if (dept === 'Palette') {
-                      classes = "bg-pink-50 text-pink-700 border-pink-100";
-                    }
-                    return (
-                      <span key={dept} className={`text-[10px] px-2 py-0.5 font-extrabold uppercase tracking-wider rounded border ${classes}`}>
-                        {dept}
-                      </span>
-                    );
-                  })
-                )}
-              </div>
-            )}
+            <div className="flex flex-wrap gap-1.5 mb-2">
+              {!event.departments || event.departments.length === 0 ? (
+                <span className="text-[10px] px-2 py-0.5 font-extrabold uppercase tracking-wider rounded border bg-violet-50 text-violet-700 border-violet-100">
+                  NUSCAS
+                </span>
+              ) : event.departments.length === 3 ? (
+                <span className="text-[10px] px-2 py-0.5 font-extrabold uppercase tracking-wider rounded border bg-amber-50 text-amber-700 border-amber-200 shadow-sm">
+                  Joint Department
+                </span>
+              ) : (
+                event.departments.map((dept) => {
+                  let classes = "";
+                  if (dept === 'CASuals') {
+                    classes = "bg-sky-50 text-sky-700 border-sky-100";
+                  } else if (dept === 'TOPICS') {
+                    classes = "bg-emerald-50 text-emerald-700 border-emerald-100";
+                  } else if (dept === 'Palette') {
+                    classes = "bg-pink-50 text-pink-700 border-pink-100";
+                  }
+                  return (
+                    <span key={dept} className={`text-[10px] px-2 py-0.5 font-extrabold uppercase tracking-wider rounded border ${classes}`}>
+                      {dept}
+                    </span>
+                  );
+                })
+              )}
+            </div>
 
             <p className="text-sm font-sans font-extrabold text-foreground line-clamp-1 group-hover:text-accent-hover transition-colors">
               {event.title}
