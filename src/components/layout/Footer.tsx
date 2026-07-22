@@ -30,25 +30,6 @@ export default function Footer() {
             </span>
           )}
         </div>
-
-        {/* Right Side: Links */}
-        <div className="flex gap-6 font-medium">
-          <a 
-            href="https://github.com" 
-            target="_blank" 
-            rel="noreferrer" 
-            className="hover:text-neutral-900 transition-colors"
-          >
-            GitHub
-          </a>
-          <Link 
-            href="/about" 
-            className="hover:text-neutral-900 transition-colors"
-          >
-            About Us
-          </Link>
-        </div>
-
       </div>
 
         {/* Disclaimer & Declarations */}

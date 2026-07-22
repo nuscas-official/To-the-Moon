@@ -11,6 +11,7 @@ import RollingGallery from '@/components/features/homepage/RollingGallery'
 import type { Metadata } from 'next'
 import ParticleCanvas from '@/components/ParticleCanvas'
 import InteractiveFlipbook from '@/components/features/homepage/InteractiveFlipbook'
+import CTASection from '@/components/features/homepage/CTASection'
 
 export const metadata: Metadata = {
   title: "Home | NUSCAS",
@@ -67,7 +68,7 @@ export default async function Home({ searchParams }: HomeProps) {
   }
 
   return (
-    <div className="w-full pb-16">
+    <div className="w-full">
       {/* Toast / Banner Notifications */}
       {reason && (
         <div className="w-full animate-fade-in text-left mb-8">
@@ -157,6 +158,8 @@ export default async function Home({ searchParams }: HomeProps) {
         </div>
       </div>
 
+      {/* CTA Section */}
+      <CTASection />
 
     </div>
   )
