@@ -258,6 +258,7 @@ export default function ArtworkCard({ artwork, variant = 'masonry', onZoomToggle
             </button>
 
             {/* Zooming Image Element */}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={artwork.storage_key}
               alt={artwork.title || 'Full size artwork'}

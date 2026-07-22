@@ -10,6 +10,7 @@ import ClubDepartments from '@/components/features/homepage/ClubDepartments'
 import RollingGallery from '@/components/features/homepage/RollingGallery'
 import type { Metadata } from 'next'
 import ParticleCanvas from '@/components/ParticleCanvas'
+import Image from 'next/image'
 import InteractiveFlipbook from '@/components/features/homepage/InteractiveFlipbook'
 import CTASection from '@/components/features/homepage/CTASection'
 
@@ -146,11 +147,13 @@ export default async function Home({ searchParams }: HomeProps) {
       </div>
 
       <div id="blog-section" className="w-screen relative left-1/2 -translate-x-1/2 pt-20 pb-40 bg-white">
-        <img
+        <Image
           src="/images/word-field.webp"
           alt=""
           aria-hidden="true"
-          className="absolute inset-0 w-full h-full object-cover pointer-events-none select-none"
+          fill
+          sizes="100vw"
+          className="object-cover pointer-events-none select-none"
         />
 
         <div className="relative z-10 max-w-7xl mx-auto pt-8 pb-4 px-6 sm:px-8 lg:px-8">

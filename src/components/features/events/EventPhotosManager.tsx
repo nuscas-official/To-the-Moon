@@ -231,6 +231,7 @@ export default function EventPhotosManager({ eventId, initialPhotos }: EventPhot
                 />
                 {imageUrl && /^(https?:\/\/|\/).+/.test(imageUrl) && (
                   <div className="mt-2 relative h-32 w-full rounded-xl border border-border bg-neutral-50 overflow-hidden">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={imageUrl}
                       alt="Photo URL Preview"

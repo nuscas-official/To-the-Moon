@@ -1,6 +1,5 @@
 'use client'
 
-import Link from 'next/link'
 import { useChaos } from '@/components/providers/ChaosProvider'
 
 export default function Footer() {

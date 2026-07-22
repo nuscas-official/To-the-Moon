@@ -256,6 +256,7 @@ export default function AdminGalleryClient({ initialArtworks }: AdminGalleryClie
                 />
                 {imageUrl && /^(https?:\/\/|\/).+/.test(imageUrl) && (
                   <div className="mt-2 relative h-32 w-full border border-border bg-neutral-50 overflow-hidden">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={imageUrl}
                       alt="Artwork URL Preview"
