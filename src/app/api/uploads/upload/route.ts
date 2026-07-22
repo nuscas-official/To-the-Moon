@@ -8,6 +8,36 @@ export const dynamic = 'force-dynamic'
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif']
 const MAX_FILE_SIZE = 10 * 1024 * 1024 // 10MB
 
+const EXT_BY_TYPE: Record<string, string> = {
+  'image/jpeg': 'jpg',
+  'image/png': 'png',
+  'image/webp': 'webp',
+  'image/gif': 'gif',
+}
+
+/**
+ * Resize + re-encode to WebP with sharp. Returns null if sharp can't be used
+ * (e.g. its native binary fails to load in the serverless runtime), so the
+ * caller can fall back to the original — already client-compressed — buffer.
+ */
+async function processWithSharp(input: Buffer): Promise<Buffer | null> {
+  try {
+    const sharp = (await import('sharp')).default
+    return await sharp(input)
+      .resize({
+        width: 2000,
+        height: 2000,
+        fit: 'inside', // preserves aspect ratio, ensures dimensions are <= 2000px
+        withoutEnlargement: true, // don't upscale small images
+      })
+      .webp({ quality: 80 })
+      .toBuffer()
+  } catch (err) {
+    console.error('sharp unavailable, uploading original buffer:', err)
+    return null
+  }
+}
+
 /**
  * POST /api/uploads/upload
  * Authenticated API endpoint to upload and compress images.
@@ -64,27 +94,23 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Bad Request: File size exceeds the 10MB limit.' }, { status: 400 })
     }
 
-    // 6. Process image with sharp (imported dynamically so a native-binary
-    // load failure surfaces as a JSON 500 rather than crashing the module)
-    const sharp = (await import('sharp')).default
+    // 6. Process image with sharp when available. The client already compresses
+    // to WebP before upload, so if sharp's native binary can't load in the
+    // serverless runtime we simply upload the original buffer as-is.
     const fileBuffer = Buffer.from(await file.arrayBuffer())
+    const processedBuffer = await processWithSharp(fileBuffer)
 
-    const processedBuffer = await sharp(fileBuffer)
-      .resize({
-        width: 2000,
-        height: 2000,
-        fit: 'inside', // preserves aspect ratio, ensures dimensions are <= 2000px
-        withoutEnlargement: true, // don't upscale small images
-      })
-      .webp({ quality: 80 })
-      .toBuffer()
+    const usedSharp = processedBuffer !== null
+    const uploadBuffer = processedBuffer ?? fileBuffer
+    const ext = usedSharp ? 'webp' : (EXT_BY_TYPE[file.type] || 'bin')
+    const contentType = usedSharp ? 'image/webp' : file.type
 
     // 7. Upload to storage
     const crypto = await import('crypto')
     const fileUuid = crypto.randomUUID()
-    const storageKey = `${folder}/${fileUuid}.webp`
+    const storageKey = `${folder}/${fileUuid}.${ext}`
 
-    const publicUrl = await uploadToR2(storageKey, processedBuffer, 'image/webp')
+    const publicUrl = await uploadToR2(storageKey, uploadBuffer, contentType)
 
     return NextResponse.json({
       key: storageKey,
