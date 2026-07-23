@@ -121,10 +121,10 @@ export function HeaderContent({ user, showAdminLink, isEventModalOpen = false }:
       {/* Top Sticky Header Bar */}
       <header className={`sticky top-0 z-[60] w-full transition-all duration-300 ${
         isScrolled 
-          ? 'bg-surface/85 shadow-sm' 
-          : 'bg-surface md:bg-transparent'
+          ? 'bg-surface shadow-sm opacity-75' 
+          : 'bg-surface'
       } ${isEventModalOpen ? 'hidden md:block' : ''}`}>
-        <div className="max-w-8xl mx-auto flex h-20 items-center justify-between px-6 relative">
+        <div className="max-w-8xl mx-auto flex h-16 items-center justify-between px-6 relative">
           {/* Logo & Menu Title on Left */}
           <div className="flex items-center">
             <Link href="/" className="flex items-center hover:opacity-80 transition-opacity">
@@ -143,8 +143,8 @@ export function HeaderContent({ user, showAdminLink, isEventModalOpen = false }:
 
           {/* Desktop Horizontal Navigation Bar */}
           <nav className={`hidden md:flex items-center gap-8 transition-all duration-300 ${
-            (isScrolled || isOpen) 
-              ? 'opacity-0 -translate-y-2 pointer-events-none' 
+            isOpen
+              ? 'opacity-0 -translate-y-2 pointer-events-none'
               : 'opacity-100 translate-y-0 pointer-events-auto'
           }`}>
             <div className="flex items-center gap-8">
@@ -163,7 +163,7 @@ export function HeaderContent({ user, showAdminLink, isEventModalOpen = false }:
                   </Link>
                 )
               })}
-              
+
               {/* Member Link */}
               {user && (
                 <Link
@@ -188,10 +188,10 @@ export function HeaderContent({ user, showAdminLink, isEventModalOpen = false }:
                 </Link>
               )}
             </div>
-  
+
             {/* Divider */}
             <div className="h-4 w-[1px] borderbg-" />
-            
+
             {/* Auth Button */}
             <div className="flex items-center">
               <AuthButton user={user} />
@@ -201,11 +201,7 @@ export function HeaderContent({ user, showAdminLink, isEventModalOpen = false }:
           {/* Unified Hamburger / Close Menu Trigger Button */}
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className={`flex items-center justify-center w-16 h-16 rounded-full overflow-hidden group focus:outline-none transition-all duration-300 z-[60] absolute right-6 top-1/2 -translate-y-1/2 md:right-8 ${
-              (!isScrolled && !isOpen) 
-                ? 'md:opacity-0 md:pointer-events-none md:scale-95' 
-                : 'md:opacity-100 md:pointer-events-auto md:scale-100'
-            }`}
+            className="flex items-center justify-center w-16 h-16 rounded-full overflow-hidden group focus:outline-none transition-all duration-300 z-[60] absolute right-6 top-1/2 -translate-y-1/2 md:right-8 md:hidden"
             aria-label={isOpen ? "Close navigation menu" : "Open navigation menu"}
             aria-expanded={isOpen}
             aria-controls="sidebar-navigation"

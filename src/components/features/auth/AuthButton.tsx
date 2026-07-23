@@ -59,7 +59,7 @@ export default function AuthButton({ user }: AuthButtonProps) {
     <button
       onClick={handleSignIn}
       disabled={isLoading}
-      className="group relative flex items-center justify-center gap-3 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 active:scale-[0.98] px-6 py-3 text-sm font-semibold text-slate-700 shadow-sm hover:shadow transition-all duration-200 disabled:opacity-50"
+      className="group relative flex items-center justify-center gap-3 border border-slate-200 bg-white hover:bg-slate-50 active:scale-[0.98] px-6 py-3 text-sm font-semibold text-slate-700 shadow-sm hover:shadow transition-all duration-200 disabled:opacity-50"
     >
       {isLoading ? (
         // Playful custom loading spinner
