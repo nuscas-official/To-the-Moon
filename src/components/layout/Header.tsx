@@ -1,8 +1,8 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { usePathname, useSearchParams } from 'next/navigation'
 import { type User } from '@supabase/supabase-js'
 import { motion, AnimatePresence } from 'framer-motion'
 import AuthButton from '@/components/features/auth/AuthButton'
@@ -12,6 +12,7 @@ import { NavLabel } from './NavLabel'
 interface HeaderProps {
   user: User | null
   showAdminLink: boolean
+  isEventModalOpen?: boolean
 }
 
 // Framer Motion Animation Variants
@@ -48,7 +49,7 @@ const navItems = [
   { label: 'VNs', href: '/vn' },
 ];
 
-export default function Header({ user, showAdminLink }: HeaderProps) {
+export function HeaderContent({ user, showAdminLink, isEventModalOpen = false }: HeaderProps) {
   const [isOpen, setIsOpen] = useState(false)
   const pathname = usePathname()
   const [isOverDark, setIsOverDark] = useState(false)
@@ -81,10 +82,10 @@ export default function Header({ user, showAdminLink }: HeaderProps) {
     }
   }, [pathname])
 
-  // Close sidebar on path change
+  // Close sidebar on path change or when event modal opens
   useEffect(() => {
     setIsOpen(false)
-  }, [pathname])
+  }, [pathname, isEventModalOpen])
 
   // Escape key handler to close sidebar
   useEffect(() => {
@@ -122,7 +123,7 @@ export default function Header({ user, showAdminLink }: HeaderProps) {
         isScrolled 
           ? 'bg-surface/85 shadow-sm' 
           : 'bg-surface md:bg-transparent'
-      }`}>
+      } ${isEventModalOpen ? 'hidden md:block' : ''}`}>
         <div className="max-w-8xl mx-auto flex h-20 items-center justify-between px-6 relative">
           {/* Logo & Menu Title on Left */}
           <div className="flex items-center">
@@ -373,5 +374,25 @@ export default function Header({ user, showAdminLink }: HeaderProps) {
         )}
       </AnimatePresence>
     </>
+  )
+}
+
+function HeaderWithSearchParams({ user, showAdminLink }: HeaderProps) {
+  const searchParams = useSearchParams()
+  const isEventModalOpen = !!searchParams.get('event')
+  return (
+    <HeaderContent
+      user={user}
+      showAdminLink={showAdminLink}
+      isEventModalOpen={isEventModalOpen}
+    />
+  )
+}
+
+export default function Header(props: Omit<HeaderProps, 'isEventModalOpen'>) {
+  return (
+    <Suspense fallback={<HeaderContent {...props} isEventModalOpen={false} />}>
+      <HeaderWithSearchParams {...props} />
+    </Suspense>
   )
 }
