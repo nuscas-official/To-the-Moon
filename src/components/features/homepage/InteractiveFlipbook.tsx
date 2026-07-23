@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect, useRef, useCallback } from 'react'
-import { motion, AnimatePresence, useMotionValue, useTransform, animate, MotionValue } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import Image from 'next/image'
 
 // Hybrid Model Toggle: 
@@ -9,161 +9,32 @@ import Image from 'next/image'
 const USE_SLIDE_IMAGES = false
 
 export default function InteractiveFlipbook({ className = '' }: { className?: string }) {
-  const [activePageIndex, setActivePageIndex] = useState(0)
-  const [flippingState, setFlippingState] = useState<'none' | 'forward' | 'backward'>('none')
+  // Mobile keeps the original single-page swipe carousel; desktop uses the strip.
   const [isMobile, setIsMobile] = useState(false)
-  const [slideDirection, setSlideDirection] = useState(1) // 1 = forward, -1 = backward
-  const [tilt, setTilt] = useState({ x: 0, y: 0 })
 
-  // Refs to avoid stale closures in the transform function
-  const flippingStateRef = useRef(flippingState)
-  const currentSpreadIndexRef = useRef(0)
-  const isMobileRef = useRef(isMobile)
-  const containerHeight = useRef(500)
+  // Mobile carousel state
+  const [activePageIndex, setActivePageIndex] = useState(0)
+  const [slideDirection, setSlideDirection] = useState(1) // 1 = forward, -1 = back
 
-  // Keep refs in sync with state
-  useEffect(() => {
-    flippingStateRef.current = flippingState
-  }, [flippingState])
-
-  useEffect(() => {
-    isMobileRef.current = isMobile
-  }, [isMobile])
-
-  // Motion Value for 3D page flip rotation
-  const rotateYVal = useMotionValue(0)
-  const dyVal = useMotionValue(0)
-
-  // Page-turn physics
-  // ------------------
-  // Real book libraries (turn.js / FlipHTML) keep the turning page a rigid
-  // plane rotating about the spine and sell the realism with *shadows*, not by
-  // bending/skewing the sheet. Arching + skewing the plane is what made corners
-  // dig into the book and clip, so we drop it entirely and lift cleanly on Z.
-
-  // Normalized turn progress: 0 (flat, at rest) -> 1 (page stood up at 90°) -> 0
-  const flipProgress = useTransform(rotateYVal, (r) => {
-    const clamped = Math.max(-180, Math.min(0, r))
-    return Math.abs(Math.sin((clamped * Math.PI) / 180))
-  })
-
-  // Smooth, symmetric Z-lift: a clean half-sine arc that peaks mid-turn and
-  // returns perfectly flush at both ends, so the page always settles without
-  // hovering or z-fighting against the sheets beneath it.
-  const zMotionVal = useTransform(
-    [rotateYVal, dyVal],
-    ([latestRotateY, latestDy]) => {
-      const r = Math.max(-180, Math.min(0, Number(latestRotateY)))
-      const dy = Number(latestDy)
-      const h = containerHeight.current || 500
-
-      const isForward = flippingStateRef.current === 'forward'
-      const sheetIdx = isForward ? currentSpreadIndexRef.current : currentSpreadIndexRef.current - 1
-
-      const startingZ = isForward ? (3 - sheetIdx) * 2 : sheetIdx * 2
-      const targetZ = isForward ? sheetIdx * 2 : (3 - sheetIdx) * 2
-
-      // Blend the resting stack height across the turn.
-      const t = isForward ? (r / -180) : ((r + 180) / 180)
-      const clampedT = Math.max(0, Math.min(1, t))
-      const baseZ = (1 - clampedT) * startingZ + clampedT * targetZ
-
-      // Gentle arc, with a little extra clearance when dragged vertically.
-      const arc = Math.sin(clampedT * Math.PI)
-      const dyRatio = Math.abs(Math.max(-1, Math.min(1, dy / h)))
-      const lift = arc * (34 + dyRatio * 16)
-
-      return baseZ + lift
-    }
-  )
-
-  // Fold shading + gloss on the turning page: darkens as it approaches 90°,
-  // where it catches the least light, then eases back off.
-  const frontShadowOpacity = useTransform(flipProgress, (p) => p * 0.45)
-  const backShadowOpacity = useTransform(flipProgress, (p) => p * 0.45)
-  const highlightOpacity = useTransform(flipProgress, (p) => p * 0.18)
-
-  // Soft shadow the turning page casts down onto the spread beneath it.
-  const castShadowOpacity = useTransform(flipProgress, (p) => p * 0.4)
-
-  // Translation Motion Value for sliding turns
-  const xMotionVal = useMotionValue(activePageIndex === 0 ? '-25%' : activePageIndex === 7 ? '25%' : '0%')
-
-  const wrapperRef = useRef<HTMLDivElement>(null)
-  const containerRef = useRef<HTMLDivElement>(null)
-  const isDragging = useRef(false)
-  const dragStartX = useRef(0)
-  const dragStartY = useRef(0)
-  const halfBookWidth = useRef(360)
+  // Desktop strip
+  const scrollRef = useRef<HTMLDivElement>(null)
+  // Edge state drives the fade cues and the hover arrows' enabled/disabled look
+  const [atStart, setAtStart] = useState(true)
+  const [atEnd, setAtEnd] = useState(false)
 
   // Detect mobile viewports
   useEffect(() => {
     if (typeof window === 'undefined') return
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768)
-    }
+    const checkMobile = () => setIsMobile(window.innerWidth < 768)
     checkMobile()
     window.addEventListener('resize', checkMobile)
     return () => window.removeEventListener('resize', checkMobile)
   }, [])
 
-  // Flat Array of Pages (8 pages total)
+  // The pages that make up the book. On desktop they scroll as one long
+  // horizontal strip; on mobile they're a one-at-a-time swipe carousel.
   const pages: React.ReactNode[] = [
-    // Page 0: FRONT COVER (Closed book cover)
-    USE_SLIDE_IMAGES ? (
-      <div key="p0" className="w-full h-full relative overflow-hidden border-y border-l border-neutral-800">
-        <Image src="/images/slides/slide0.webp" alt="Front Cover" fill className="object-cover" priority />
-      </div>
-    ) : (
-      <div key="p0" className="w-full h-full flex flex-col justify-between p-6 bg-[#8c0e1a] text-[#f7f4eb] relative overflow-hidden border-y border-l border-neutral-800">
-        {/* Subtle halftone background */}
-        <div 
-          className="absolute inset-0 opacity-5 pointer-events-none"
-          style={{
-            backgroundImage: 'radial-gradient(rgba(255, 255, 255, 0.25) 1px, transparent 1px)',
-            backgroundSize: '12px 12px'
-          }}
-        />
-        {/* Cover graphic frame decoration */}
-        <div className="absolute inset-4 border border-[#c5a059]/30 pointer-events-none" />
-        <div className="absolute inset-5 border border-[#c5a059]/10 pointer-events-none" />
-        <div className="absolute left-6 top-6 bottom-6 w-[1px] bg-[#c5a059]/20" />
-
-        <div className="relative pl-4 space-y-4">
-          <div className="flex items-center gap-2 text-[9px] font-mono text-[#c5a059] uppercase tracking-widest">
-            <span className="relative flex h-1.5 w-1.5">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#c5a059] opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[#c5a059]"></span>
-            </span>
-            <span>NUSCAS VOL.1</span>
-          </div>
-          
-          <h2 className="text-4xl font-serif italic font-black leading-none tracking-tight text-[#f7f4eb]">
-            NUS<br />
-            Comics
-            <span className="text-[#c5a059] font-sans not-italic font-black text-4xl tracking-normal"> & </span><br />
-            Animation Society
-          </h2>
-          <p className="text-[10px] text-neutral-300 font-mono tracking-wider">
-            About Us
-          </p>
-        </div>
-
-        <div className="relative pl-4 flex items-center justify-between border-t border-[#c5a059]/25 pt-4 z-10">
-          <div>
-            <div className="text-[9px] font-mono text-[#c5a059] tracking-wider uppercase">
-              EST. 1999
-            </div>
-          </div>
-          
-          {/* Issue sticker badge */}
-          <div className="px-2 py-1 bg-[#c5a059] text-[#1a1616] text-[8px] font-mono font-bold tracking-widest leading-none">
-            Every Friday
-          </div>
-        </div>
-      </div>
-    ),
-    // Page 1: Spread 1 Left (Welcome Card)
+    // Page 1: Welcome Card
     USE_SLIDE_IMAGES ? (
       <div key="p1" className="w-full h-full relative overflow-hidden border-y border-l border-neutral-800">
         <Image src="/images/slides/slide1.webp" alt="Welcome" fill className="object-cover" />
@@ -504,161 +375,13 @@ export default function InteractiveFlipbook({ className = '' }: { className?: st
         </div>
       </div>
     ),
-    // Page 7: BACK COVER (Closed book back cover)
-    USE_SLIDE_IMAGES ? (
-      <div key="p7" className="w-full h-full relative overflow-hidden border-y border-r border-neutral-800">
-        <Image src="/images/slides/slide7.webp" alt="Back Cover" fill className="object-cover" />
-        {/* Transparent Overlay links for Join Us and Discord */}
-        <div className="absolute bottom-[20%] left-[12%] right-[12%] h-[12%] flex gap-2 z-10">
-          <a 
-            href="#join"
-            onClick={(e) => {
-              e.preventDefault();
-              const target = document.getElementById('join-section') || document.querySelector('.club-card');
-              target?.scrollIntoView({ behavior: 'smooth' });
-            }}
-            className="flex-grow h-full bg-transparent hover:bg-white/5 active:bg-white/10 transition cursor-pointer"
-            aria-label="Join Us"
-          />
-          <a 
-            href="https://discord.gg/nuscas" 
-            target="_blank" 
-            rel="noreferrer"
-            className="flex-grow h-full bg-transparent hover:bg-white/5 active:bg-white/10 transition cursor-pointer"
-            aria-label="Join Discord"
-          />
-        </div>
-      </div>
-    ) : (
-      <div key="p7" className="w-full h-full flex flex-col justify-between p-6 bg-[#8c0e1a] text-[#f7f4eb] relative overflow-hidden border-y border-r border-neutral-800">
-        <div 
-          className="absolute inset-0 opacity-5 pointer-events-none"
-          style={{
-            backgroundImage: 'radial-gradient(rgba(255, 255, 255, 0.25) 1px, transparent 1px)',
-            backgroundSize: '12px 12px'
-          }}
-        />
-        {/* Cover graphic frame decoration */}
-        <div className="absolute inset-4 border border-[#c5a059]/30 pointer-events-none" />
-        <div className="absolute right-6 top-6 bottom-6 w-[1px] bg-[#c5a059]/20" />
-
-        <div className="relative pr-4 text-right">
-          <span className="text-[9px] font-mono text-[#c5a059] uppercase tracking-widest block mb-1">
-            MEMBER PORTAL
-          </span>
-          <h3 className="text-xl font-serif italic font-black text-[#f7f4eb] leading-none">
-            NUSCAS Website
-          </h3>
-        </div>
-
-        <div className="relative pr-4 my-auto flex flex-col items-center space-y-4">
-          <div className="relative w-20 h-20 pointer-events-none select-none z-10 animate-float">
-            <Image
-              src="/images/anitan-thumbs-up.webp"
-              alt="Anitan thumbs up"
-              fill
-              className="object-contain"
-            />
-          </div>
-
-          <div className="text-center space-y-1">
-            <p className="text-[11px] font-bold text-[#f7f4eb] uppercase tracking-wide font-serif italic">
-              To the Moon!
-            </p>
-            <p className="text-[9px] text-neutral-300 max-w-[180px] mx-auto leading-relaxed">
-              Connect with Singapore&apos;s biggest animation and comic fan community.
-            </p>
-          </div>
-
-          <div className="flex gap-2 w-full max-w-[200px]">
-            <a 
-              href="#join"
-              onClick={(e) => {
-                e.preventDefault();
-                const target = document.getElementById('join-section') || document.querySelector('.club-card');
-                target?.scrollIntoView({ behavior: 'smooth' });
-              }}
-              className="flex-grow py-1.5 text-center bg-[#c5a059] hover:bg-[#ab8741] text-[#1a1616] text-[9px] font-mono font-bold rounded-none uppercase tracking-wider transition hover:scale-105 active:scale-95 duration-150 shadow"
-            >
-              Join Us
-            </a>
-            <a 
-              href="https://discord.gg/nuscas" 
-              target="_blank" 
-              rel="noreferrer"
-              className="flex-grow py-1.5 text-center bg-[#1a1616] hover:bg-black border border-[#c5a059]/30 text-[#f7f4eb] text-[9px] font-mono font-bold rounded-none uppercase tracking-wider transition hover:scale-105 active:scale-95 duration-150"
-            >
-              Discord
-            </a>
-          </div>
-        </div>
-
-        {/* Comic barcode & publication details footer */}
-        <div className="relative pr-4 flex items-end justify-between border-t border-[#c5a059]/25 pt-4 z-10 text-[8px] font-mono text-[#c5a059]">
-          <div className="text-left leading-tight">
-            <span>EDITED & PUBLISHED BY</span><br />
-            <span className="text-white">NUSCAS COMMITTEE 2026</span>
-          </div>
-
-          {/* Barcode representation */}
-          <div className="flex flex-col items-center bg-white p-1">
-            <div className="flex items-stretch h-5 gap-[1px]">
-              <span className="w-[1px] bg-black" />
-              <span className="w-[2px] bg-black" />
-              <span className="w-[1px] bg-black" />
-              <span className="w-[3px] bg-black" />
-              <span className="w-[1px] bg-black" />
-              <span className="w-[1px] bg-black" />
-              <span className="w-[2px] bg-black" />
-              <span className="w-[1px] bg-black" />
-              <span className="w-[3px] bg-black" />
-              <span className="w-[1px] bg-black" />
-            </div>
-            <span className="text-[6px] text-black scale-90 mt-0.5 leading-none">FREE FOR MEMBERS</span>
-          </div>
-        </div>
-      </div>
-    )
   ]
 
+  // The strip is simply all content pages, laid edge to edge as one long page.
+  const contentPages = pages
   const totalPages = pages.length
-  // Spreads mapping: 
-  // Spread 0: Left = Empty, Right = Page 0
-  // Spread 1: Left = Page 1, Right = Page 2
-  // Spread 2: Left = Page 3, Right = Page 4
-  // Spread 3: Left = Page 5, Right = Page 6
-  // Spread 4: Left = Page 7, Right = Empty
-  const totalSpreads = 5
 
-  // Map activePageIndex to SpreadIndex on Desktop
-  const getSpreadIndex = useCallback((pageIdx: number) => {
-    if (pageIdx === 0) return 0
-    if (pageIdx === totalPages - 1) return totalSpreads - 1
-    return Math.floor((pageIdx - 1) / 2) + 1
-  }, [totalPages, totalSpreads])
-
-  const currentSpreadIndex = getSpreadIndex(activePageIndex)
-
-  useEffect(() => {
-    currentSpreadIndexRef.current = currentSpreadIndex
-  }, [currentSpreadIndex])
-
-  // Synchronize translation offset when book is static
-  useEffect(() => {
-    if (flippingState === 'none') {
-      if (isMobile) {
-        xMotionVal.set('0%')
-      } else if (currentSpreadIndex === 0) {
-        xMotionVal.set('-25%')
-      } else if (currentSpreadIndex === totalSpreads - 1) {
-        xMotionVal.set('25%')
-      } else {
-        xMotionVal.set('0%')
-      }
-    }
-  }, [flippingState, currentSpreadIndex, isMobile, totalSpreads, xMotionVal])
-
-  // Mobile navigation page by page
+  // --- Mobile navigation (single-page swipe carousel) ---
   const nextPageMobile = useCallback(() => {
     if (activePageIndex < totalPages - 1) {
       setSlideDirection(1)
@@ -673,435 +396,158 @@ export default function InteractiveFlipbook({ className = '' }: { className?: st
     }
   }, [activePageIndex])
 
-  // Desktop navigation spread by spread (programmatic flips)
-  const nextSpread = useCallback(() => {
-    if (currentSpreadIndex < totalSpreads - 1 && flippingState === 'none') {
-      setFlippingState('forward')
-      rotateYVal.set(0)
-      
-  const springConfig = {
-        type: 'spring',
-        stiffness: 260,
-        damping: 30,
-        mass: 1,
-        restDelta: 0.05,
-      } as const
+  const mobileVariants = {
+    enter: (direction: number) => ({ x: direction > 0 ? '100%' : '-100%', opacity: 0 }),
+    center: { x: 0, opacity: 1 },
+    exit: (direction: number) => ({ x: direction < 0 ? '-100%' : '100%', opacity: 0 }),
+  }
 
-      animate(rotateYVal, -180, {
-        ...springConfig,
-        onComplete: () => {
-          setActivePageIndex((currentSpreadIndex + 1) * 2 - 1)
-          setFlippingState('none')
-        }
-      })
-
-      // Slide in sync with turn for forward flips
-      if (currentSpreadIndex === 0) {
-        animate(xMotionVal, '0%', springConfig)
-      } else if (currentSpreadIndex === 3) {
-        animate(xMotionVal, '25%', springConfig)
-      }
-    }
-  }, [currentSpreadIndex, totalSpreads, flippingState, rotateYVal, xMotionVal])
-
-  const prevSpread = useCallback(() => {
-    if (currentSpreadIndex > 0 && flippingState === 'none') {
-      setFlippingState('backward')
-      rotateYVal.set(-180)
-
-      const springConfig = {
-        type: 'spring',
-        stiffness: 260,
-        damping: 30,
-        mass: 1,
-        restDelta: 0.05,
-      } as const
-
-      animate(rotateYVal, 0, {
-        ...springConfig,
-        onComplete: () => {
-          setActivePageIndex((currentSpreadIndex - 1) * 2)
-          setFlippingState('none')
-        }
-      })
-
-      // Slide in sync with turn for backward flips
-      if (currentSpreadIndex === 1) {
-        animate(xMotionVal, '-25%', springConfig)
-      } else if (currentSpreadIndex === 4) {
-        animate(xMotionVal, '0%', springConfig)
-      }
-    }
-  }, [currentSpreadIndex, flippingState, rotateYVal, xMotionVal])
-
-  // Keyboard navigation
+  // Mobile keyboard navigation (desktop keyboard lives on the strip element)
   useEffect(() => {
+    if (!isMobile) return
     const handleKeyDown = (e: KeyboardEvent) => {
       if (document.activeElement?.tagName === 'INPUT' || document.activeElement?.tagName === 'TEXTAREA') return
-      
-      if (e.key === 'ArrowRight') {
-        if (isMobile) {
-          nextPageMobile()
-        } else {
-          nextSpread()
-        }
-      } else if (e.key === 'ArrowLeft') {
-        if (isMobile) {
-          prevPageMobile()
-        } else {
-          prevSpread()
-        }
-      }
+      if (e.key === 'ArrowRight') nextPageMobile()
+      else if (e.key === 'ArrowLeft') prevPageMobile()
     }
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [isMobile, nextSpread, prevSpread, nextPageMobile, prevPageMobile])
+  }, [isMobile, nextPageMobile, prevPageMobile])
 
-  // Desktop Pointer Events (Manual Drag & Lift turns)
-  const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
-    // Ignore button/link click interactions
-    if ((e.target as HTMLElement).closest('button, a, input, [role="button"]')) return
+  // Edge state powers the fade cues and the hover arrows.
+  const updateEdges = useCallback(() => {
+    const el = scrollRef.current
+    if (!el) return
+    setAtStart(el.scrollLeft <= 1)
+    setAtEnd(el.scrollLeft >= el.scrollWidth - el.clientWidth - 1)
+  }, [])
+
+  // Scroll by roughly one page (falls back to most of the viewport width).
+  const scrollByPage = useCallback((dir: number) => {
+    const el = scrollRef.current
+    if (!el) return
+    const page = el.querySelector<HTMLElement>('[data-page]')
+    const amount = page ? page.clientWidth : el.clientWidth * 0.8
+    el.scrollBy({ left: dir * amount, behavior: 'smooth' })
+  }, [])
+
+  const onKeyDown = useCallback((e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === 'ArrowRight') { e.preventDefault(); scrollByPage(1) }
+    else if (e.key === 'ArrowLeft') { e.preventDefault(); scrollByPage(-1) }
+  }, [scrollByPage])
+
+  // Translate a vertical mouse wheel into horizontal movement so the strip is
+  // scrollable without a horizontal wheel/trackpad. Release at either edge so
+  // it never traps the page's own vertical scroll.
+  useEffect(() => {
     if (isMobile) return
-    if (flippingState !== 'none') return
+    const el = scrollRef.current
+    if (!el) return
+    updateEdges()
 
-    const rect = e.currentTarget.getBoundingClientRect()
-    const relativeX = e.clientX - rect.left
-    const halfWidth = rect.width / 2
-    
-    halfBookWidth.current = halfWidth
-    containerHeight.current = rect.height
-    dragStartX.current = e.clientX
-    dragStartY.current = e.clientY
-    isDragging.current = true
-
-    e.currentTarget.setPointerCapture(e.pointerId)
-
-    if (relativeX > halfWidth && currentSpreadIndex < totalSpreads - 1) {
-      setFlippingState('forward')
-      rotateYVal.set(0)
-      dyVal.set(0)
-    } else if (relativeX < halfWidth && currentSpreadIndex > 0) {
-      setFlippingState('backward')
-      rotateYVal.set(-180)
-      dyVal.set(0)
+    const onWheel = (e: WheelEvent) => {
+      const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY
+      if (delta === 0) return
+      const atStartEdge = el.scrollLeft <= 0
+      const atEndEdge = el.scrollLeft >= el.scrollWidth - el.clientWidth - 1
+      if ((delta < 0 && atStartEdge) || (delta > 0 && atEndEdge)) return // let the page scroll
+      e.preventDefault()
+      el.scrollLeft += delta
     }
-  }
 
-  const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
-    if (!isDragging.current) return
-
-    const dx = e.clientX - dragStartX.current
-    const dy = e.clientY - dragStartY.current
-    const halfWidth = halfBookWidth.current
-
-    dyVal.set(dy)
-
-    if (flippingState === 'forward') {
-      // Leftward dragging flips right page left (using inverse cosine for precise cursor tracking)
-      const ratio = Math.max(-1, Math.min(1, 1 + dx / halfWidth))
-      const rotation = -Math.acos(ratio) * (180 / Math.PI)
-      rotateYVal.set(rotation)
-
-      // Slide container in real-time during forward flips
-      const progress = rotation / -180
-      if (currentSpreadIndex === 0) {
-        xMotionVal.set(`${-25 * (1 - progress)}%`)
-      } else if (currentSpreadIndex === 3) {
-        xMotionVal.set(`${25 * progress}%`)
-      }
-    } else if (flippingState === 'backward') {
-      // Rightward dragging flips left page right (using inverse cosine for precise cursor tracking)
-      const ratio = Math.max(-1, Math.min(1, 1 - dx / halfWidth))
-      const rotation = -180 + Math.acos(ratio) * (180 / Math.PI)
-      rotateYVal.set(rotation)
-
-      // Slide container in real-time during backward flips
-      const progress = (rotation + 180) / 180
-      if (currentSpreadIndex === 1) {
-        xMotionVal.set(`${-25 * progress}%`)
-      } else if (currentSpreadIndex === 4) {
-        xMotionVal.set(`${25 * (1 - progress)}%`)
-      }
+    el.addEventListener('wheel', onWheel, { passive: false })
+    window.addEventListener('resize', updateEdges)
+    return () => {
+      el.removeEventListener('wheel', onWheel)
+      window.removeEventListener('resize', updateEdges)
     }
-  }
-
-  const handlePointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
-    if (!isDragging.current) return
-    isDragging.current = false
-    e.currentTarget.releasePointerCapture(e.pointerId)
-
-    const currentRotation = rotateYVal.get()
-    const springConfig = {
-      type: 'spring',
-      stiffness: 260,
-      damping: 30,
-      mass: 1,
-      restDelta: 0.05,
-    } as const
-
-    if (flippingState === 'forward') {
-      // Complete turn if dragged past 60 degrees (i.e. <= -60), else snap back to 0
-      if (currentRotation <= -60) {
-        animate(rotateYVal, -180, {
-          ...springConfig,
-          onComplete: () => {
-            setActivePageIndex((currentSpreadIndex + 1) * 2 - 1)
-            setFlippingState('none')
-          }
-        })
-        if (currentSpreadIndex === 0) {
-          animate(xMotionVal, '0%', springConfig)
-        } else if (currentSpreadIndex === 3) {
-          animate(xMotionVal, '25%', springConfig)
-        }
-      } else {
-        animate(rotateYVal, 0, {
-          ...springConfig,
-          onComplete: () => {
-            setFlippingState('none')
-          }
-        })
-        if (currentSpreadIndex === 0) {
-          animate(xMotionVal, '-25%', springConfig)
-        } else if (currentSpreadIndex === 3) {
-          animate(xMotionVal, '0%', springConfig)
-        }
-      }
-      animate(dyVal, 0, springConfig)
-    } else if (flippingState === 'backward') {
-      // Complete turn if dragged past 60 degrees from -180 (i.e. >= -120), else snap back to -180
-      if (currentRotation >= -120) {
-        animate(rotateYVal, 0, {
-          ...springConfig,
-          onComplete: () => {
-            setActivePageIndex((currentSpreadIndex - 1) * 2)
-            setFlippingState('none')
-          }
-        })
-        if (currentSpreadIndex === 1) {
-          animate(xMotionVal, '-25%', springConfig)
-        } else if (currentSpreadIndex === 4) {
-          animate(xMotionVal, '0%', springConfig)
-        }
-      } else {
-        animate(rotateYVal, -180, {
-          ...springConfig,
-          onComplete: () => {
-            setFlippingState('none')
-          }
-        })
-        if (currentSpreadIndex === 1) {
-          animate(xMotionVal, '0%', springConfig)
-        } else if (currentSpreadIndex === 4) {
-          animate(xMotionVal, '25%', springConfig)
-        }
-      }
-      animate(dyVal, 0, springConfig)
-    }
-  }
-
-  // 3D Parallax Mouse movement (desktop only, hover state only)
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (isMobile || isDragging.current || flippingState !== 'none' || !containerRef.current) return
-    const rect = containerRef.current.getBoundingClientRect()
-    const x = (e.clientX - rect.left) / rect.width - 0.5
-    const y = (e.clientY - rect.top) / rect.height - 0.5
-    setTilt({ x: x * 6, y: y * -6 })
-  }
-
-  const handleMouseLeave = () => {
-    setTilt({ x: 0, y: 0 })
-  }
-
-
-  // Mobile slider enter/center/exit animations
-  const mobileVariants = {
-    enter: (direction: number) => ({
-      x: direction > 0 ? '100%' : '-100%',
-      opacity: 0,
-    }),
-    center: {
-      x: 0,
-      opacity: 1,
-    },
-    exit: (direction: number) => ({
-      x: direction < 0 ? '-100%' : '100%',
-      opacity: 0,
-    }),
-  }
-
-
+  }, [isMobile, updateEdges])
 
   return (
-    <div 
-      ref={wrapperRef}
-      className={`relative w-full h-full flex flex-col items-center justify-center select-none ${className}`}
-      onMouseLeave={handleMouseLeave}
-    >
-      {/* 3D / Fluid Book Container */}
-      <motion.div 
-        ref={containerRef}
-        className="relative w-full h-full flex select-none z-10"
-        onMouseMove={handleMouseMove}
-        onPointerDown={handlePointerDown}
-        onPointerMove={handlePointerMove}
-        onPointerUp={handlePointerUp}
-        onPointerCancel={handlePointerUp}
-        animate={{
-          rotateX: isMobile ? 0 : tilt.y,
-          rotateY: isMobile ? 0 : tilt.x,
-        }}
-        transition={{ 
-          rotateX: { type: 'tween', duration: 0.1 },
-          rotateY: { type: 'tween', duration: 0.1 },
-        }}
-        style={{
-          x: xMotionVal,
-          transformStyle: isMobile ? 'flat' : 'preserve-3d',
-          perspective: isMobile ? 'none' : '2000px',
-          perspectiveOrigin: 'center center',
-        }}
-      >
-        {isMobile ? (
-          // --- MOBILE: Single Page Slider with Swipe Gestures ---
-          <div className="w-full h-full relative overflow-hidden bg-[#f7f4eb] border border-neutral-800">
-            <AnimatePresence initial={false} custom={slideDirection} mode="popLayout">
-              <motion.div
-                key={activePageIndex}
-                custom={slideDirection}
-                variants={mobileVariants}
-                initial="enter"
-                animate="center"
-                exit="exit"
-                transition={{ type: 'spring', stiffness: 320, damping: 28 }}
-                drag="x"
-                dragConstraints={{ left: 0, right: 0 }}
-                dragElastic={0.7}
-                onDragEnd={(e, info) => {
-                  const swipeThreshold = 80
-                  if (info.offset.x < -swipeThreshold) {
-                    nextPageMobile()
-                  } else if (info.offset.x > swipeThreshold) {
-                    prevPageMobile()
-                  }
-                }}
-                className="absolute inset-0 w-full h-full"
-              >
-                <div className="w-full h-full [&>div]:border-r-0 [&>div]:border-l-0 [&>div]:border-neutral-800">
-                  {pages[activePageIndex]}
-                </div>
-              </motion.div>
-            </AnimatePresence>
-          </div>
-        ) : (
-          // --- DESKTOP: Double Page Spread with Closed Covers & Lift Gestures ---
-          <>
-          {/* Spine (Center Crease) - Subtle Version */}
-          {currentSpreadIndex > 0 && currentSpreadIndex < totalSpreads - 1 && (
-            <>
-            <>
-              <div className="absolute right-1/2 top-0 bottom-0 w-8 pointer-events-none bg-gradient-to-r from-transparent via-black/[0.02] to-black/10" style={{ transform: 'translateZ(7px)' }} />
-              
-              <div className="absolute left-1/2 top-0 bottom-0 w-8 pointer-events-none bg-gradient-to-l from-transparent via-black/[0.02] to-black/10" style={{ transform: 'translateZ(7px)' }} />
-
-              <div className="absolute left-1/2 -translate-x-1/2 top-0 bottom-0 w-1.5 pointer-events-none bg-gradient-to-r from-transparent via-black/30 to-transparent" style={{ transform: 'translateZ(7.1px)' }} />
-
-              <div className="absolute left-1/2 -translate-x-1/2 top-0 bottom-0 w-[1px] pointer-events-none bg-white/10 mix-blend-overlay opacity-30" style={{ transform: 'translateZ(7.2px)' }} />
-            </>
-            </>
-          )}
-
-          {/* Soft shadow cast by the turning page onto the spread beneath it */}
-          {flippingState !== 'none' && (
+    <div className={`relative w-full h-full ${className}`}>
+      {isMobile ? (
+        // --- MOBILE: single-page swipe carousel (kept from the original) ---
+        <div className="w-full h-full relative overflow-hidden bg-[#f7f4eb] border border-neutral-800 select-none">
+          <AnimatePresence initial={false} custom={slideDirection} mode="popLayout">
             <motion.div
-              className={`absolute top-0 bottom-0 w-1/2 pointer-events-none ${
-                flippingState === 'forward'
-                  ? 'left-0 bg-gradient-to-l'
-                  : 'right-0 bg-gradient-to-r'
-              } from-black/40 via-black/10 to-transparent`}
-              style={{ opacity: castShadowOpacity, transform: 'translateZ(6px)' }}
-            />
-          )}
+              key={activePageIndex}
+              custom={slideDirection}
+              variants={mobileVariants}
+              initial="enter"
+              animate="center"
+              exit="exit"
+              transition={{ type: 'spring', stiffness: 320, damping: 28 }}
+              drag="x"
+              dragConstraints={{ left: 0, right: 0 }}
+              dragElastic={0.7}
+              onDragEnd={(e, info) => {
+                const swipeThreshold = 80
+                if (info.offset.x < -swipeThreshold) nextPageMobile()
+                else if (info.offset.x > swipeThreshold) prevPageMobile()
+              }}
+              className="absolute inset-0 w-full h-full"
+            >
+              <div className="w-full h-full [&>div]:border-r-0 [&>div]:border-l-0 [&>div]:border-neutral-800">
+                {pages[activePageIndex]}
+              </div>
+            </motion.div>
+          </AnimatePresence>
+        </div>
+      ) : (
+        // --- DESKTOP: one long horizontal page ---
+        <div className="group/strip absolute inset-0 border border-neutral-800 overflow-hidden select-none">
+        {/* One long horizontal page: content pages laid edge to edge */}
+        <div
+          ref={scrollRef}
+          onScroll={updateEdges}
+          onKeyDown={onKeyDown}
+          tabIndex={0}
+          className="flex w-full h-full overflow-x-auto overflow-y-hidden outline-none [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        >
+          {contentPages.map((page, i) => (
+            <div
+              key={i}
+              data-page
+              className="flex-none h-full aspect-[3/4] border-r border-neutral-800/15 last:border-r-0 [&>div]:border-0"
+            >
+              {page}
+            </div>
+          ))}
+        </div>
 
-          {/* Render Stacked 3D Sheets */}
-          {[0, 1, 2, 3].map((sheetIdx) => {
-            const isFlippingForward = flippingState === 'forward' && sheetIdx === currentSpreadIndex
-            const isFlippingBackward = flippingState === 'backward' && sheetIdx === currentSpreadIndex - 1
-            const isFlipping = isFlippingForward || isFlippingBackward
+        {/* Edge fades that hint there's more to scroll */}
+        <div
+          className={`pointer-events-none absolute inset-y-0 left-0 w-10 bg-gradient-to-r from-black/10 to-transparent transition-opacity duration-200 ${atStart ? 'opacity-0' : 'opacity-100'}`}
+        />
+        <div
+          className={`pointer-events-none absolute inset-y-0 right-0 w-10 bg-gradient-to-l from-black/10 to-transparent transition-opacity duration-200 ${atEnd ? 'opacity-0' : 'opacity-100'}`}
+        />
 
-            let rotationY: number | MotionValue<number> = 0
-            if (isFlipping) {
-              rotationY = rotateYVal
-            } else if (sheetIdx < currentSpreadIndex) {
-              rotationY = -180
-            } else {
-              rotationY = 0
-            }
-
-            const restingZ = sheetIdx < currentSpreadIndex ? sheetIdx * 2 : (3 - sheetIdx) * 2
-            const sheetZ: number | MotionValue<number> = isFlipping ? zMotionVal : restingZ
-
-            return (
-              <motion.div
-                key={`sheet-${sheetIdx}`}
-                className="absolute right-0 top-0 w-1/2 h-full"
-                style={{
-                  transformOrigin: 'left center',
-                  transformStyle: 'preserve-3d',
-                  rotateY: rotationY,
-                  z: sheetZ,
-                  willChange: isFlipping ? 'transform' : 'auto',
-                }}
-              >
-                {/* Front of Sheet (Right Page when open, facing front) */}
-                <div 
-                  className="absolute inset-0 w-full h-full overflow-hidden bg-neutral-900 border-r border-neutral-800"
-                  style={{
-                    backfaceVisibility: 'hidden',
-                    WebkitBackfaceVisibility: 'hidden',
-                    transform: 'translateZ(0.2px)',
-                  }}
-                >
-                  {pages[2 * sheetIdx]}
-                  {/* Dynamic Shading & Highlight */}
-                  <motion.div 
-                    className="absolute inset-0 pointer-events-none bg-gradient-to-r from-black/25 via-transparent to-black/2 mix-blend-multiply"
-                    style={{ opacity: isFlipping ? frontShadowOpacity : 0 }}
-                  />
-                  <motion.div 
-                    className="absolute inset-0 pointer-events-none bg-gradient-to-r from-transparent via-white/15 to-transparent mix-blend-overlay"
-                    style={{ opacity: isFlipping ? highlightOpacity : 0 }}
-                  />
-                </div>
-
-                {/* Back of Sheet (Left Page when open, facing back) */}
-                <div 
-                  className="absolute inset-0 w-full h-full overflow-hidden bg-neutral-900 border-l border-neutral-800"
-                  style={{
-                    backfaceVisibility: 'hidden',
-                    WebkitBackfaceVisibility: 'hidden',
-                    transform: 'rotateY(180deg) translateZ(0.2px)',
-                  }}
-                >
-                  {pages[2 * sheetIdx + 1]}
-                  {/* Dynamic Shading & Highlight */}
-                  <motion.div 
-                    className="absolute inset-0 pointer-events-none bg-gradient-to-r from-black/2 mix-blend-multiply to-black/25"
-                    style={{ opacity: isFlipping ? backShadowOpacity : 0 }}
-                  />
-                  <motion.div 
-                    className="absolute inset-0 pointer-events-none bg-gradient-to-r from-transparent via-white/15 to-transparent mix-blend-overlay"
-                    style={{ opacity: isFlipping ? highlightOpacity : 0 }}
-                  />
-                </div>
-              </motion.div>
-            )
-          })}
-
-          </>
-        )}
-      </motion.div>
-
+        {/* Prev / Next controls (reveal on hover) */}
+        <button
+          type="button"
+          onClick={() => scrollByPage(-1)}
+          disabled={atStart}
+          aria-label="Scroll left"
+          className="absolute left-2 top-1/2 -translate-y-1/2 z-20 grid place-items-center w-9 h-9 rounded-full bg-black/40 text-white backdrop-blur-sm opacity-0 group-hover/strip:opacity-100 disabled:!opacity-0 hover:bg-black/60 transition"
+        >
+          <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+          </svg>
+        </button>
+        <button
+          type="button"
+          onClick={() => scrollByPage(1)}
+          disabled={atEnd}
+          aria-label="Scroll right"
+          className="absolute right-2 top-1/2 -translate-y-1/2 z-20 grid place-items-center w-9 h-9 rounded-full bg-black/40 text-white backdrop-blur-sm opacity-0 group-hover/strip:opacity-100 disabled:!opacity-0 hover:bg-black/60 transition"
+        >
+          <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
+        </div>
+      )}
     </div>
   )
 }
