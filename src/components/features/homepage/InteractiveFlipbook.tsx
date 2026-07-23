@@ -422,23 +422,80 @@ export default function InteractiveFlipbook({ className = '' }: { className?: st
     setAtEnd(el.scrollLeft >= el.scrollWidth - el.clientWidth - 1)
   }, [])
 
+  // --- Smooth momentum scrolling ---
+  // Every input nudges a target position; each animation frame a critically
+  // damped spring eases the real scroll toward it. That converts discrete wheel
+  // notches into one continuous glide that accelerates from rest (ease-in) and
+  // settles without bouncing (ease-out). Tune feel with the two constants below.
+  const SPRING_STIFFNESS = 600
+  const SPRING_DAMPING = 48 // ~critical (2*sqrt(stiffness) ≈ 49) → snappy, no bounce
+
+  const targetRef = useRef(0)
+  const velocityRef = useRef(0)
+  const rafRef = useRef(0)
+  const lastTimeRef = useRef(0)
+  const glidingRef = useRef(false)
+
+  const glideStep = useCallback((now: number) => {
+    const el = scrollRef.current
+    if (!el) { glidingRef.current = false; return }
+    // Clamp dt so a stall (background tab) can't fling the spring.
+    const dt = Math.min(0.032, (now - lastTimeRef.current) / 1000) || 0.016
+    lastTimeRef.current = now
+
+    const max = el.scrollWidth - el.clientWidth
+    targetRef.current = Math.max(0, Math.min(max, targetRef.current))
+
+    const x = el.scrollLeft
+    const accel = SPRING_STIFFNESS * (targetRef.current - x) - SPRING_DAMPING * velocityRef.current
+    velocityRef.current += accel * dt
+    let next = x + velocityRef.current * dt
+
+    if (Math.abs(targetRef.current - next) < 0.4 && Math.abs(velocityRef.current) < 6) {
+      el.scrollLeft = targetRef.current
+      velocityRef.current = 0
+      glidingRef.current = false
+      updateEdges()
+      return
+    }
+    if (next <= 0) { next = 0; velocityRef.current = 0 }
+    else if (next >= max) { next = max; velocityRef.current = 0 }
+    el.scrollLeft = next
+    updateEdges()
+    rafRef.current = requestAnimationFrame(glideStep)
+  }, [updateEdges])
+
+  const glideBy = useCallback((delta: number) => {
+    const el = scrollRef.current
+    if (!el) return
+    const max = el.scrollWidth - el.clientWidth
+    // Re-sync to the live position when starting a fresh glide (covers drags or
+    // any native scrolling that happened since the last one).
+    if (!glidingRef.current) targetRef.current = el.scrollLeft
+    targetRef.current = Math.max(0, Math.min(max, targetRef.current + delta))
+    if (!glidingRef.current) {
+      glidingRef.current = true
+      lastTimeRef.current = performance.now()
+      rafRef.current = requestAnimationFrame(glideStep)
+    }
+  }, [glideStep])
+
   // Scroll by roughly one page (falls back to most of the viewport width).
   const scrollByPage = useCallback((dir: number) => {
     const el = scrollRef.current
     if (!el) return
     const page = el.querySelector<HTMLElement>('[data-page]')
     const amount = page ? page.clientWidth : el.clientWidth * 0.8
-    el.scrollBy({ left: dir * amount, behavior: 'smooth' })
-  }, [])
+    glideBy(dir * amount)
+  }, [glideBy])
 
   const onKeyDown = useCallback((e: React.KeyboardEvent<HTMLDivElement>) => {
     if (e.key === 'ArrowRight') { e.preventDefault(); scrollByPage(1) }
     else if (e.key === 'ArrowLeft') { e.preventDefault(); scrollByPage(-1) }
   }, [scrollByPage])
 
-  // Translate a vertical mouse wheel into horizontal movement so the strip is
-  // scrollable without a horizontal wheel/trackpad. Release at either edge so
-  // it never traps the page's own vertical scroll.
+  // Feed a vertical mouse wheel into the smooth glide as horizontal motion.
+  // Release at either edge so it never traps the page's own vertical scroll.
   useEffect(() => {
     if (isMobile) return
     const el = scrollRef.current
@@ -452,7 +509,7 @@ export default function InteractiveFlipbook({ className = '' }: { className?: st
       const atEndEdge = el.scrollLeft >= el.scrollWidth - el.clientWidth - 1
       if ((delta < 0 && atStartEdge) || (delta > 0 && atEndEdge)) return // let the page scroll
       e.preventDefault()
-      el.scrollLeft += delta
+      glideBy(delta)
     }
 
     el.addEventListener('wheel', onWheel, { passive: false })
@@ -460,8 +517,10 @@ export default function InteractiveFlipbook({ className = '' }: { className?: st
     return () => {
       el.removeEventListener('wheel', onWheel)
       window.removeEventListener('resize', updateEdges)
+      cancelAnimationFrame(rafRef.current)
+      glidingRef.current = false
     }
-  }, [isMobile, updateEdges])
+  }, [isMobile, updateEdges, glideBy])
 
   return (
     <div className={`relative w-full h-full ${className}`}>
