@@ -234,28 +234,42 @@ export default function ArtworkCard({ artwork, variant = 'masonry', onZoomToggle
               }`}
             />
 
-            {/* Close button */}
-            <button
-              onClick={handleClose}
-              className={`absolute top-6 right-6 text-white hover:text-accent bg-white/10 hover:bg-white/20 p-2.5 rounded-full transition-all duration-200 cursor-pointer z-50 ${
+            {/* Close & Key Indicator Group */}
+            <div
+              className={`absolute top-6 right-6 z-50 flex items-center gap-2.5 transition-all duration-200 ${
                 isTransitionOpen ? 'opacity-100 scale-100' : 'opacity-0 scale-90 pointer-events-none'
               }`}
-              title="Close (Esc)"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="w-6 h-6"
+              <button
+                onClick={handleClose}
+                className="hidden md:inline-flex items-center px-2.5 py-1.5 text-xs font-mono font-medium text-white bg-white/20 hover:bg-white/30 backdrop-blur-md border border-white/30 hover:border-white/50 rounded-lg shadow-md transition-all active:scale-95 outline-none cursor-pointer"
+                title="Press Escape key to exit"
+                aria-label="Exit lightbox with Escape key"
               >
-                <line x1="18" y1="6" x2="6" y2="18" />
-                <line x1="6" y1="6" x2="18" y2="18" />
-              </svg>
-            </button>
+                <kbd className="font-mono font-black text-[11px] uppercase tracking-wider text-white">ESC</kbd>
+              </button>
+
+              <button
+                onClick={handleClose}
+                className="text-white hover:text-accent bg-white/10 hover:bg-white/20 p-2.5 rounded-full border border-white/10 hover:border-white/30 backdrop-blur-md transition-all duration-200 cursor-pointer"
+                title="Close"
+                aria-label="Close lightbox"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="w-6 h-6"
+                >
+                  <line x1="18" y1="6" x2="6" y2="18" />
+                  <line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
+              </button>
+            </div>
 
             {/* Zooming Image Element */}
             {/* eslint-disable-next-line @next/next/no-img-element */}

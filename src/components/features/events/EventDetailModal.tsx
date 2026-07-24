@@ -176,6 +176,28 @@ export default function EventDetailModal() {
             className="absolute inset-0 bg-black/75 backdrop-blur-md cursor-zoom-out"
           />
 
+          {/* Close Button & ESC Key Indicator — fixed position in the background */}
+          <div className="fixed top-6 right-6 z-50 flex items-center gap-2.5">
+            <button
+              onClick={handleClose}
+              className="hidden md:inline-flex items-center px-2.5 py-1.5 text-xs font-mono font-medium text-white bg-white/20 hover:bg-white/30 backdrop-blur-md border border-white/30 hover:border-white/50 rounded-lg shadow-md transition-all active:scale-95 outline-none cursor-pointer"
+              title="Press Escape key to exit"
+              aria-label="Exit modal with Escape key"
+            >
+              <kbd className="font-mono font-black text-[11px] uppercase tracking-wider text-white">ESC</kbd>
+            </button>
+
+            <button
+              onClick={handleClose}
+              aria-label="Close modal"
+              className="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center border border-white/20 hover:border-white/40 backdrop-blur-md hover:scale-105 active:scale-95 transition-all outline-none cursor-pointer"
+            >
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+
           {/* Lightbox Modal Window */}
           <motion.div
             initial={{ scale: 0.95, opacity: 0, y: 15 }}
@@ -184,16 +206,6 @@ export default function EventDetailModal() {
             transition={{ type: 'spring', damping: 26, stiffness: 220 }}
             className="relative w-full max-w-4xl max-h-[85vh] md:max-h-[90vh] overflow-hidden bg-background text-foreground shadow-2xl flex flex-col text-left z-10"
           >
-            {/* Close Button — fixed to the non-scrolling modal frame */}
-            <button
-              onClick={handleClose}
-              aria-label="Close modal"
-              className="absolute top-4 right-4 z-30 w-10 h-10 rounded-full bg-black/70 hover:bg-black/85 text-white flex items-center justify-center border border-white/20 hover:scale-105 hover:border-white/40 active:scale-95 transition-all outline-none"
-            >
-              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
 
             {/* Scrollable content area */}
             <div className="min-h-0 overflow-y-auto scrollbar-thin">
