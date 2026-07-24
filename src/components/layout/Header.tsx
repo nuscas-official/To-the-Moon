@@ -123,7 +123,7 @@ export function HeaderContent({ user, showAdminLink, isEventModalOpen = false }:
         isScrolled 
           ? 'bg-surface shadow-sm opacity-75' 
           : 'bg-surface'
-      } ${isEventModalOpen ? 'hidden md:block' : ''}`}>
+      } ${isEventModalOpen ? 'hidden' : ''}`}>
         <div className="max-w-8xl mx-auto flex h-16 items-center justify-between px-6 relative">
           {/* Logo & Menu Title on Left */}
           <div className="flex items-center">
