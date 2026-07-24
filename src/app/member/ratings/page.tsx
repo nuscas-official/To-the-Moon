@@ -61,19 +61,19 @@ export default async function MemberRatingsPage() {
       <div className="flex border-b border-border mb-6">
         <Link
           href="/member/articles"
-          className="pb-3 px-4 text-xs uppercase tracking-wider font-extrabold border-b-2 transition-all border-transparent text-text-muted hover:text-accent hover:border-accent/30 hover:bg-accent/[0.02] rounded-t-lg"
+          className="pb-3 px-4 text-xs uppercase tracking-wider font-extrabold border-b-2 transition-all border-transparent text-text-muted hover:text-accent hover:border-accent/30 hover:bg-accent/[0.02] rounded-none"
         >
           My Articles
         </Link>
         <Link
           href="/member/ratings"
-          className="pb-3 px-4 text-xs uppercase tracking-wider font-extrabold border-b-2 transition-all border-accent text-accent bg-accent/[0.04] rounded-t-lg"
+          className="pb-3 px-4 text-xs uppercase tracking-wider font-extrabold border-b-2 transition-all border-accent text-accent bg-accent/[0.04] rounded-none"
         >
           My Ratings
         </Link>
         <Link
           href="/member/settings"
-          className="pb-3 px-4 text-xs uppercase tracking-wider font-extrabold border-b-2 transition-all border-transparent text-text-muted hover:text-accent hover:border-accent/30 hover:bg-accent/[0.02] rounded-t-lg"
+          className="pb-3 px-4 text-xs uppercase tracking-wider font-extrabold border-b-2 transition-all border-transparent text-text-muted hover:text-accent hover:border-accent/30 hover:bg-accent/[0.02] rounded-none"
         >
           Settings
         </Link>

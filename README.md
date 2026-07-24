@@ -1,4 +1,4 @@
-# NUSCAS Website & Member Portal Prototype
+# NUSCAS Website & Member Portal
 
 A modern web application and member portal prototype built for the **NUS Comics and Animation Society (NUSCAS)**. This portal serves as the digital hub for club members, artists, and administrators to interact, submit reviews, manage events, share artwork, and publish blog articles.
 

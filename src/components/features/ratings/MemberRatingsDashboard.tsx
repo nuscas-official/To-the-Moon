@@ -227,7 +227,7 @@ export default function MemberRatingsDashboard({ initialRatings }: MemberRatings
                     )}
                   </div>
 
-                  <span className={`text-[8px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded border mb-1.5 ${
+                  <span className={`text-[8px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded-none border mb-1.5 ${
                     item.type === 'MANGA'
                       ? 'bg-green-50 text-green-700 border-green-200'
                       : 'bg-blue-50 text-blue-700 border-blue-200'
@@ -240,7 +240,7 @@ export default function MemberRatingsDashboard({ initialRatings }: MemberRatings
                   </div>
 
                   {hasRated && (
-                    <span className="mt-2 text-[9px] text-accent font-bold bg-accent/10 px-2 py-0.5 rounded-full border border-accent/20">
+                    <span className="mt-2 text-[9px] text-accent font-bold bg-accent/10 px-2 py-0.5 rounded-none border border-accent/20">
                       Already Rated
                     </span>
                   )}
@@ -302,7 +302,7 @@ export default function MemberRatingsDashboard({ initialRatings }: MemberRatings
 
                     {/* Media Type */}
                     <td className="px-6 py-4">
-                      <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-[8px] font-black uppercase tracking-wider border ${
+                      <span className={`inline-flex items-center rounded-none px-2 py-0.5 text-[8px] font-black uppercase tracking-wider border ${
                         rating.media_type === 'anime'
                           ? 'bg-blue-50 text-blue-700 border-blue-200'
                           : 'bg-green-50 text-green-700 border-green-200'
@@ -326,7 +326,16 @@ export default function MemberRatingsDashboard({ initialRatings }: MemberRatings
 
                     {/* Actions */}
                     <td className="px-6 py-4 text-right">
-                      <div className="flex justify-end gap-3">
+                      <div className="flex justify-end items-center gap-3">
+                        <a
+                          href={`https://anilist.co/${rating.media_type === 'manga' ? 'manga' : 'anime'}/${rating.anilist_id}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-xs uppercase font-extrabold tracking-wider text-neutral-600 hover:text-accent transition-colors cursor-pointer inline-flex items-center gap-1"
+                          title="Open on AniList"
+                        >
+                          AniList ↗
+                        </a>
                         <button
                           type="button"
                           onClick={() => handleOpenForEdit(rating)}
@@ -390,9 +399,20 @@ export default function MemberRatingsDashboard({ initialRatings }: MemberRatings
                     <div className="w-full h-full bg-neutral-200 flex items-center justify-center text-neutral-400" />
                   )}
                 </div>
-                <div className="min-w-0">
-                  <div className="text-[9px] uppercase tracking-wider font-extrabold text-accent mb-0.5">
-                    {activeRating.media_type}
+                <div className="min-w-0 flex-grow">
+                  <div className="flex items-center justify-between gap-2 mb-0.5">
+                    <div className="text-[9px] uppercase tracking-wider font-extrabold text-accent">
+                      {activeRating.media_type}
+                    </div>
+                    <a
+                      href={`https://anilist.co/${activeRating.media_type === 'manga' ? 'manga' : 'anime'}/${activeRating.anilist_id}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-[10px] text-accent hover:underline font-extrabold inline-flex items-center gap-0.5"
+                      title="Open on AniList"
+                    >
+                      AniList ↗
+                    </a>
                   </div>
                   <h4 className="font-extrabold text-neutral-800 text-xs truncate leading-snug">
                     {activeRating.title_en}
@@ -413,7 +433,7 @@ export default function MemberRatingsDashboard({ initialRatings }: MemberRatings
                         key={num}
                         type="button"
                         onClick={() => setActiveRating({ ...activeRating, score: num })}
-                        className={`py-2 rounded-lg font-black text-xs transition-all cursor-pointer ${
+                        className={`py-2 rounded-none font-black text-xs transition-all cursor-pointer ${
                           isSelected
                             ? 'bg-accent text-white shadow shadow-accent/20 scale-105'
                             : 'bg-neutral-100 hover:bg-neutral-200 text-neutral-700'
@@ -437,7 +457,7 @@ export default function MemberRatingsDashboard({ initialRatings }: MemberRatings
                   onChange={(e) => setActiveRating({ ...activeRating, note: e.target.value })}
                   placeholder="Record your thoughts, thoughts on characters, review highlights..."
                   rows={3}
-                  className="w-full rounded-xl border border-border bg-surface px-3 py-2 text-xs text-neutral-800 focus:border-accent focus:ring-1 focus:ring-accent outline-none"
+                  className="w-full rounded-none border border-border bg-surface px-3 py-2 text-xs text-neutral-800 focus:border-accent focus:ring-1 focus:ring-accent outline-none"
                 />
               </div>
 
@@ -446,14 +466,14 @@ export default function MemberRatingsDashboard({ initialRatings }: MemberRatings
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="rounded-lg px-4 py-2 bg-neutral-100 hover:bg-neutral-200 text-neutral-700 font-bold text-[10px] uppercase tracking-wider transition-colors active:scale-95"
+                  className="rounded-none px-4 py-2 bg-neutral-100 hover:bg-neutral-200 text-neutral-700 font-bold text-[10px] uppercase tracking-wider transition-colors active:scale-95"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="px-5 py-2 bg-accent hover:bg-accent-hover rounded-lg text-white font-bold text-[10px] uppercase tracking-wider transition-colors shadow-sm active:scale-95 disabled:opacity-50"
+                  className="px-5 py-2 bg-accent hover:bg-accent-hover rounded-none text-white font-bold text-[10px] uppercase tracking-wider transition-colors shadow-sm active:scale-95 disabled:opacity-50"
                 >
                   {isSubmitting ? 'Saving...' : activeRating.id ? 'Save Changes' : 'Submit Rating'}
                 </button>

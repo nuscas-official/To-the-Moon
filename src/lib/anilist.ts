@@ -96,3 +96,71 @@ export async function searchAniList(query: string): Promise<AniListResult[]> {
     return []
   }
 }
+
+export interface AniListMediaDetail {
+  id: number;
+  cover_image_url: string | null;
+  title_en: string | null;
+}
+
+/**
+ * Fetches media details (including cover image URL) from AniList for a list of AniList IDs.
+ */
+export async function fetchAniListMediaDetails(ids: number[]): Promise<Record<number, AniListMediaDetail>> {
+  if (!ids || ids.length === 0) return {}
+
+  const graphQLQuery = `
+    query ($ids: [Int]) {
+      Page(page: 1, perPage: 50) {
+        media(id_in: $ids) {
+          id
+          title {
+            english
+            romaji
+          }
+          coverImage {
+            large
+            medium
+          }
+        }
+      }
+    }
+  `
+
+  try {
+    const response = await fetch('https://graphql.anilist.co', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: JSON.stringify({
+        query: graphQLQuery,
+        variables: { ids },
+      }),
+      next: { revalidate: 3600 },
+    })
+
+    if (!response.ok) {
+      console.error('AniList GraphQL API error during batch fetch')
+      return {}
+    }
+
+    const json = await response.json()
+    const mediaList = json?.data?.Page?.media || []
+
+    const map: Record<number, AniListMediaDetail> = {}
+    for (const item of mediaList) {
+      map[item.id] = {
+        id: item.id,
+        cover_image_url: item.coverImage?.large || item.coverImage?.medium || null,
+        title_en: item.title?.english || item.title?.romaji || null,
+      }
+    }
+    return map
+  } catch (error) {
+    console.error('Failed to fetch AniList media details:', error)
+    return {}
+  }
+}
+

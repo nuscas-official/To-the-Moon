@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import PublicRatingsView from '@/components/features/ratings/PublicRatingsView'
 import type { Metadata } from 'next'
 import type { RatingAggregate } from '@/types/ratings'
+import { fetchAniListMediaDetails } from '@/lib/anilist'
 
 export const metadata: Metadata = {
   title: "Anime & Manga Ratings",
@@ -15,7 +16,7 @@ const STUB_RATING_AGGREGATES: RatingAggregate[] = [
     anilist_id: 21459,
     media_type: 'anime',
     title_en: 'My Hero Academia',
-    cover_image_url: 'https://images.unsplash.com/photo-1578632767115-351597cf2477?w=150&auto=format&fit=crop&q=60',
+    cover_image_url: 'https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/bx21459-nYh85uj2Fuwr.jpg',
     average_score: 8.2,
     rating_count: 14
   },
@@ -23,7 +24,7 @@ const STUB_RATING_AGGREGATES: RatingAggregate[] = [
     anilist_id: 30002,
     media_type: 'manga',
     title_en: 'Berserk',
-    cover_image_url: 'https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=150&auto=format&fit=crop&q=60',
+    cover_image_url: 'https://s4.anilist.co/file/anilistcdn/media/manga/cover/medium/bx30002-Cul4OeN7bYtn.jpg',
     average_score: 9.6,
     rating_count: 24
   },
@@ -31,15 +32,15 @@ const STUB_RATING_AGGREGATES: RatingAggregate[] = [
     anilist_id: 101922,
     media_type: 'anime',
     title_en: 'Demon Slayer: Kimetsu no Yaiba',
-    cover_image_url: null, // Tests your fallback broken image UI state
+    cover_image_url: 'https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/bx101922-WBsBl0ClmgYL.jpg',
     average_score: 8.7,
     rating_count: 32
   },
   {
-    anilist_id: 40005,
+    anilist_id: 105778,
     media_type: 'manga',
     title_en: 'Chainsaw Man',
-    cover_image_url: 'https://images.unsplash.com/photo-1560169897-fc0cdbdfa4d5?w=150&auto=format&fit=crop&q=60',
+    cover_image_url: 'https://s4.anilist.co/file/anilistcdn/media/manga/cover/medium/bx105778-4X322eb8259e.png',
     average_score: 8.5,
     rating_count: 3
   }
@@ -58,6 +59,28 @@ export default async function RatingsPage() {
   }
 
   const aggregates = (data as RatingAggregate[]) || []
+  let initialAggregates = aggregates.length > 0 ? aggregates : STUB_RATING_AGGREGATES
+
+  // Retrieve actual images from AniList for any items missing cover images or using stub placeholders
+  try {
+    const idsToFetch = initialAggregates.map(item => item.anilist_id)
+    if (idsToFetch.length > 0) {
+      const aniListDetails = await fetchAniListMediaDetails(idsToFetch)
+      initialAggregates = initialAggregates.map(item => {
+        const fetched = aniListDetails[item.anilist_id]
+        if (fetched?.cover_image_url) {
+          return {
+            ...item,
+            cover_image_url: fetched.cover_image_url,
+            title_en: fetched.title_en || item.title_en,
+          }
+        }
+        return item
+      })
+    }
+  } catch (err) {
+    console.error('Error retrieving AniList cover images:', err)
+  }
 
   return (
     <div className="w-full max-w-7xl mx-auto py-6 animate-fade-in text-left">
@@ -70,7 +93,8 @@ export default async function RatingsPage() {
         </p>
       </div>
 
-      <PublicRatingsView initialAggregates={aggregates.length > 0 ? aggregates : STUB_RATING_AGGREGATES} />
+      <PublicRatingsView initialAggregates={initialAggregates} />
     </div>
   )
 }
+

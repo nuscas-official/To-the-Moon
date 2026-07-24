@@ -58,8 +58,8 @@ export default function PublicRatingsView({ initialAggregates }: PublicRatingsVi
     <div className="w-full space-y-6">
       
       {/* Informative Note Banner */}
-      <div className="rounded-2xl border border-accent/20 bg-accent/5 p-4 flex gap-3 items-start text-left">
-        <div className="w-8 h-8 rounded-lg bg-accent/10 flex items-center justify-center text-accent shrink-0">
+      <div className="border border-accent/20 bg-accent/5 p-4 flex gap-3 items-start text-left">
+        <div className="w-8 h-8 bg-accent/10 flex items-center justify-center text-accent shrink-0">
           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
@@ -82,7 +82,7 @@ export default function PublicRatingsView({ initialAggregates }: PublicRatingsVi
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search rated titles..."
-            className="w-full rounded-xl border border-border bg-surface pl-10 pr-4 py-2.5 text-xs text-neutral-800 placeholder-neutral-400 focus:border-accent focus:ring-1 focus:ring-accent outline-none"
+            className="w-full rounded-none border border-border bg-surface pl-10 pr-4 py-2.5 text-xs text-neutral-800 placeholder-neutral-400 focus:border-accent focus:ring-1 focus:ring-accent outline-none"
           />
           <svg className="absolute left-3.5 top-3 w-4 h-4 text-neutral-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -92,13 +92,13 @@ export default function PublicRatingsView({ initialAggregates }: PublicRatingsVi
         {/* Filters and Sorting dropdown */}
         <div className="flex flex-wrap items-center gap-3">
           {/* Media Filter Buttons */}
-          <div className="flex items-center gap-1 bg-neutral-100 rounded-xl p-1 border border-border">
+          <div className="flex items-center gap-1 bg-neutral-100 p-1 border border-border">
             {['all', 'anime', 'manga'].map((type) => (
               <button
                 key={type}
                 type="button"
                 onClick={() => setMediaTypeFilter(type)}
-                className={`px-3 py-1.5 rounded-lg text-[10px] uppercase tracking-wider font-extrabold transition-all ${
+                className={`px-3 py-1.5 text-[10px] uppercase tracking-wider font-extrabold transition-all ${
                   mediaTypeFilter === type 
                     ? 'bg-neutral-900 text-white shadow-sm' 
                     : 'text-text-muted hover:text-neutral-900'
@@ -113,7 +113,7 @@ export default function PublicRatingsView({ initialAggregates }: PublicRatingsVi
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value as SortOption)}
-            className="rounded-xl border border-border bg-surface px-4 py-2 text-xs font-bold text-neutral-700 outline-none focus:border-accent cursor-pointer"
+            className="rounded-none border border-border bg-surface px-4 py-2 text-xs font-bold text-neutral-700 outline-none focus:border-accent cursor-pointer"
           >
             <option value="score_desc">Highest Score</option>
             <option value="count_desc">Most Rated</option>
@@ -124,8 +124,8 @@ export default function PublicRatingsView({ initialAggregates }: PublicRatingsVi
 
       {/* Grid Display */}
       {processedAggregates.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-20 text-center border border-dashed border-neutral-300 rounded-2xl bg-neutral-50/50 p-8">
-          <div className="w-12 h-12 rounded-full bg-neutral-200/60 flex items-center justify-center text-neutral-400 mb-4">
+        <div className="flex flex-col items-center justify-center py-20 text-center border border-dashed border-neutral-300 bg-neutral-50/50 p-8">
+          <div className="w-12 h-12 bg-neutral-200/60 flex items-center justify-center text-neutral-400 mb-4">
             <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
             </svg>
@@ -140,10 +140,10 @@ export default function PublicRatingsView({ initialAggregates }: PublicRatingsVi
           {processedAggregates.map((item) => (
             <div
               key={item.anilist_id}
-              className="group flex items-center gap-4 overflow-hidden rounded-2xl border border-border bg-surface p-4 shadow-sm hover:shadow-md hover:border-accent/30 transition-all duration-300 text-left"
+              className="group flex items-center gap-4 overflow-hidden border border-border bg-surface p-4 shadow-sm hover:shadow-md hover:border-accent/30 transition-all duration-300 text-left"
             >
               {/* Cover Image */}
-              <div className="relative h-24 w-16 flex-shrink-0 overflow-hidden rounded-lg border border-border bg-neutral-100 shadow-inner">
+              <div className="relative h-24 w-16 flex-shrink-0 overflow-hidden border border-border bg-neutral-100 shadow-inner">
                 {item.cover_image_url ? (
                   <Image
                     src={item.cover_image_url}
@@ -164,17 +164,33 @@ export default function PublicRatingsView({ initialAggregates }: PublicRatingsVi
               {/* Title & Aggregates */}
               <div className="flex-grow min-w-0 flex flex-col justify-between h-full py-1">
                 <div>
-                  <div className="flex items-center gap-1.5 mb-1.5">
-                    <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-[8px] font-black uppercase tracking-wider border ${
-                      item.media_type === 'anime'
-                        ? 'bg-blue-50 text-blue-700 border-blue-200'
-                        : 'bg-green-50 text-green-700 border-green-200'
-                    }`}>
-                      {item.media_type}
-                    </span>
-                    <span className="text-[10px] text-text-muted font-bold">
-                      ID: {item.anilist_id}
-                    </span>
+                  <div className="flex items-center justify-between gap-1.5 mb-1.5">
+                    <div className="flex items-center gap-1.5">
+                      <span className={`inline-flex items-center px-2 py-0.5 text-[8px] font-black uppercase tracking-wider border ${
+                        item.media_type === 'anime'
+                          ? 'bg-blue-50 text-blue-700 border-blue-200'
+                          : 'bg-green-50 text-green-700 border-green-200'
+                      }`}>
+                        {item.media_type}
+                      </span>
+                      <span className="text-[10px] text-text-muted font-bold">
+                        ID: {item.anilist_id}
+                      </span>
+                    </div>
+
+                    <a
+                      href={`https://anilist.co/${item.media_type === 'manga' ? 'manga' : 'anime'}/${item.anilist_id}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-neutral-400 hover:text-accent transition-colors p-0.5 inline-flex items-center gap-1 text-[10px] font-bold"
+                      title="Open on AniList"
+                      aria-label={`Open ${item.title_en} on AniList`}
+                    >
+                      <span className="hidden sm:inline text-[9px] uppercase tracking-wider">AniList</span>
+                      <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                      </svg>
+                    </a>
                   </div>
                   
                   <h3 className="text-sm font-black text-neutral-800 line-clamp-2 leading-tight group-hover:text-accent transition-colors" title={item.title_en}>
