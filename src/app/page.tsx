@@ -13,6 +13,10 @@ import ParticleCanvas from '@/components/ParticleCanvas'
 import Image from 'next/image'
 import PageStrip from '@/components/features/homepage/PageStrip'
 import CTASection from '@/components/features/homepage/CTASection'
+import DiagonalEdge from '@/components/features/homepage/DiagonalEdge'
+
+// Shared slant height for every section transition, so the diagonals stay parallel.
+const EDGE = { '--edge': 'clamp(2rem, 5vw, 5rem)' } as React.CSSProperties
 
 export const metadata: Metadata = {
   title: "Home | NUSCAS",
@@ -119,7 +123,10 @@ export default async function Home({ searchParams }: HomeProps) {
       </div>
 
       {/* Outer container remains full-bleed across all screen sizes */}
-      <div className="theme-crimson w-screen relative left-1/2 -translate-x-1/2 bg-background-dark text-text-dark border-y border-border-dark py-14 [--color-text:var(--color-text-dark)] [--color-foreground:var(--color-text-dark)] [--color-border:var(--color-border-dark)] [--color-surface:var(--color-surface-dark)] [--color-text-muted:var(--color-text-muted-dark)] transition-colors duration-300">
+      <div style={EDGE} className="theme-crimson w-screen relative left-1/2 -translate-x-1/2 bg-background-dark text-text-dark pt-[calc(var(--edge)+3.5rem)] pb-[calc(var(--edge)+3.5rem)] [--color-text:var(--color-text-dark)] [--color-foreground:var(--color-text-dark)] [--color-border:var(--color-border-dark)] [--color-surface:var(--color-surface-dark)] [--color-text-muted:var(--color-text-muted-dark)] transition-colors duration-300">
+        <DiagonalEdge position="top" fill="var(--color-background)" line="rgba(200, 35, 51, 0.55)" />
+        <DiagonalEdge position="bottom" fill="var(--color-background)" line="rgba(200, 35, 51, 0.55)" />
+
         <ParticleCanvas
           count={400}
           magnetRadius={100}
@@ -146,7 +153,10 @@ export default async function Home({ searchParams }: HomeProps) {
         <RollingGallery artworks={artworks} />
       </div>
 
-      <div id="blog-section" className="w-screen relative left-1/2 -translate-x-1/2 pt-20 pb-40 bg-white">
+      <div id="blog-section" style={EDGE} className="w-screen relative left-1/2 -translate-x-1/2 pt-[calc(var(--edge)+5rem)] pb-[calc(var(--edge)+10rem)] bg-white overflow-hidden">
+        <DiagonalEdge position="top" fill="var(--color-background)" line="var(--color-border)" />
+        <DiagonalEdge position="bottom" fill="var(--color-background)" line="var(--color-border)" />
+
         <Image
           src="/images/word-field.webp"
           alt=""

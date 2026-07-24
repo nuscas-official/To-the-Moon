@@ -18,7 +18,7 @@ interface AdminSettingsClientProps {
 
 const DEFAULT_SEASONAL_PICK: SeasonalPick = {
   title: '',
-  accent_hex: '#a855f7',
+  accent_hex: '#c82333',
   image_url: ''
 }
 
@@ -203,7 +203,7 @@ export default function AdminSettingsClient({
                   <input
                     type="text"
                     required
-                    placeholder="e.g. #a855f7"
+                    placeholder="e.g. #c82333"
                     value={seasonalPick.accent_hex}
                     onChange={(e) => setSeasonalPick({ ...seasonalPick, accent_hex: e.target.value })}
                     className="w-full pl-4 pr-10 py-2.5 bg-neutral-50 border border-neutral-200 rounded-none focus:outline-none focus:border-accent text-sm font-bold text-neutral-800"
@@ -219,7 +219,7 @@ export default function AdminSettingsClient({
                 {/* HTML Color Picker block */}
                 <input
                   type="color"
-                  value={/^#[0-9A-Fa-f]{6}$/.test(seasonalPick.accent_hex) ? seasonalPick.accent_hex : '#a855f7'}
+                  value={/^#[0-9A-Fa-f]{6}$/.test(seasonalPick.accent_hex) ? seasonalPick.accent_hex : '#c82333'}
                   onChange={(e) => setSeasonalPick({ ...seasonalPick, accent_hex: e.target.value })}
                   className="w-11 h-10 border border-neutral-200 rounded-none cursor-pointer bg-neutral-50 p-1 flex-shrink-0"
                 />

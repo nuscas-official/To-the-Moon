@@ -26,17 +26,57 @@
   }
 }
 
+/* ── Angular geometry ──────────────────────────────────────────────────
+   Corner cuts run on the same slope as the diagonal section edges (see
+   DiagonalEdge), so badges, buttons, frames and section transitions all
+   share one angle. Size is driven by --cut, which inherits — set it once
+   on a wrapper and every nested .clip-cut picks it up. */
+@layer components {
+  .clip-cut {
+    clip-path: polygon(
+      var(--cut, 0.75rem) 0,
+      100% 0,
+      100% calc(100% - var(--cut, 0.75rem)),
+      calc(100% - var(--cut, 0.75rem)) 100%,
+      0 100%,
+      0 var(--cut, 0.75rem)
+    );
+  }
+
+  /* Single cut, for elements that need to stay flush on one diagonal. */
+  .clip-cut-tl {
+    clip-path: polygon(var(--cut, 0.75rem) 0, 100% 0, 100% 100%, 0 100%, 0 var(--cut, 0.75rem));
+  }
+  .clip-cut-br {
+    clip-path: polygon(
+      0 0,
+      100% 0,
+      100% calc(100% - var(--cut, 0.75rem)),
+      calc(100% - var(--cut, 0.75rem)) 100%,
+      0 100%
+    );
+  }
+
+  .cut-xs { --cut: 0.3rem; }
+  .cut-sm { --cut: 0.5rem; }
+  .cut-md { --cut: 0.85rem; }
+  .cut-lg { --cut: 1.25rem; }
+  .cut-xl { --cut: 2rem; }
+
+  /* Angular "border": a plain clip-path on a bordered box loses the stroke
+     across the cuts, so the wrapper paints the frame colour and the inner
+     element re-clips on top of it. Pair with .clip-cut on both. */
+  .angle-frame {
+    padding: var(--frame, 2px);
+    background: var(--frame-color, var(--color-border));
+    transition: background-color var(--transition-normal) ease;
+  }
+}
+
 /* Remove rounded borders in all admin pages */
 .admin-page-root,
 .admin-page-root *:not(.animate-spin) {
   border-radius: 0 !important;
-}
-
-.glass-panel {
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 

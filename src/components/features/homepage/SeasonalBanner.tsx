@@ -12,7 +12,7 @@ interface SeasonalPick {
 
 const FALLBACK_PICK: SeasonalPick = {
   title: "Sousou no Frieren",
-  accent_hex: "#a855f7",
+  accent_hex: "#c82333",
   image_url: "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=1200&auto=format&fit=crop&q=80",
   description: "An elf mage and her former party members' journey. A story about time, legacy, and human connection.",
   type: "Featured Anime"
@@ -56,7 +56,7 @@ export default async function SeasonalBanner({ className = "aspect-video" }: Sea
     <Link
       href="/ratings"
       style={componentStyles}
-      className={`relative w-full overflow-hidden border border-border shadow-xl group flex items-end animate-fade-in hover:border-accent/40 hover:shadow-md transition-all duration-300 ${className}`}
+      className={`clip-cut cut-lg relative w-full overflow-hidden border border-border shadow-xl group flex items-end animate-fade-in hover:border-accent/40 hover:shadow-md transition-all duration-300 ${className}`}
     >
       {/* Background Image Container */}
       <div className="absolute inset-0 z-0 transition-transform duration-500 group-hover:scale-105">
@@ -75,7 +75,7 @@ export default async function SeasonalBanner({ className = "aspect-video" }: Sea
       {/* Content Section */}
       <div className="relative z-20 p-4 sm:p-5 text-left w-full">
         {/* Badge */}
-        <div className="inline-flex items-center gap-1.5 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-white backdrop-blur mb-1 bg-black/25 rounded">
+        <div className="clip-cut cut-xs inline-flex items-center gap-1.5 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-white backdrop-blur mb-1 bg-black/25">
           <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
           {seasonalPick.type}
         </div>

@@ -51,9 +51,6 @@ const config: Config = {
         display: ["var(--font-display)"],
         mono: ["var(--font-mono)"],
       },
-      boxShadow: {
-        neon: "var(--shadow-neon)",
-      },
       animation: {
         "fade-in": "fadeIn var(--transition-normal) ease-out forwards",
         "pulse-glow": "pulseGlow 2s infinite ease-in-out",
@@ -71,7 +68,7 @@ const config: Config = {
         },
         pulseGlow: {
           "0%, 100%": { boxShadow: "0 0 15px var(--color-accent)" },
-          "50%": { boxShadow: "0 0 25px var(--color-accent), 0 0 10px rgba(168, 85, 247, 0.4)" },
+          "50%": { boxShadow: "0 0 25px var(--color-accent), 0 0 10px rgba(200, 35, 51, 0.4)" },
         },
         float: {
           "0%, 100%": { transform: "translateY(0)" },

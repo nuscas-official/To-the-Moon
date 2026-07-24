@@ -108,7 +108,7 @@ export default function WelcomePanel({
             <motion.div 
               layout
               transition={{ type: "spring", stiffness: 300, damping: 30 }}
-              className="inline-block rounded-md bg-accent border border-accent/25 shadow-sm p-1.5 max-w-full"
+              className="clip-cut cut-xs inline-block bg-accent border border-accent/25 shadow-sm p-1.5 max-w-full"
             >
               {/* Invisible ghost text to push the layout width organically */}
               <span className="opacity-0 font-bold text-sm sm:text-base px-1.5 select-none pointer-events-none block leading-normal">
@@ -160,14 +160,14 @@ export default function WelcomePanel({
             <div className="flex flex-wrap gap-3">
               <Link
                 href="/member/ratings"
-                className="rounded-2xl bg-accent hover:bg-accent-hover text-white font-bold text-xs tracking-wider px-4 py-2.5 shadow-sm hover:scale-105 active:scale-95 transition-all duration-200"
+                className="clip-cut cut-sm bg-accent hover:bg-accent-hover text-white font-bold text-xs tracking-wider px-4 py-2.5 shadow-sm hover:scale-105 active:scale-95 transition-all duration-200"
               >
                 Member Area
               </Link>
               {(role === 'committee' || role === 'admin') && (
                 <Link
                   href="/admin/posts"
-                  className="rounded-2xl bg-neutral-500 hover:bg-neutral-900 text-white font-bold text-xs tracking-wider px-4 py-2.5 hover:scale-105 active:scale-95 transition-all duration-200"
+                  className="clip-cut cut-sm bg-neutral-500 hover:bg-neutral-900 text-white font-bold text-xs tracking-wider px-4 py-2.5 hover:scale-105 active:scale-95 transition-all duration-200"
                 >
                   Admin Area
                 </Link>

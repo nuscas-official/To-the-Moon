@@ -15,7 +15,7 @@ export default function ErrorBoundary({ error, reset }: ErrorProps) {
 
   return (
     <div className="min-h-[60vh] flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 py-16 text-center animate-fade-in">
-      <div className="max-w-md w-full space-y-6 glass-panel rounded-2xl p-8 sm:p-10 border border-border/60 shadow-lg relative overflow-hidden">
+      <div className="max-w-md w-full space-y-6 rounded-2xl p-8 sm:p-10 border border-border/60 shadow-lg relative overflow-hidden">
         {/* Decorative elements */}
         <div className="absolute -top-10 -left-10 w-24 h-24 bg-accent/10 rounded-full blur-2xl pointer-events-none" />
         <div className="absolute -bottom-10 -right-10 w-24 h-24 bg-accent/20 rounded-full blur-2xl pointer-events-none" />

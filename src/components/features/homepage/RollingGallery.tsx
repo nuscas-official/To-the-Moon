@@ -48,7 +48,7 @@ export default function RollingGallery({ artworks }: RollingGalleryProps) {
   const row2Items = getRepeatedArtworks(secondRowArtworks.length > 0 ? secondRowArtworks : firstRowArtworks)
 
   return (
-    <section className="w-full py-16 border-t border-border/60 relative overflow-hidden bg-background transition-colors duration-300">
+    <section className="w-full py-16 relative overflow-hidden bg-background transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-8 mb-8 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
           <span className="text-xl font-display tracking-widest text-accent">

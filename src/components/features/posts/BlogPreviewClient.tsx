@@ -93,7 +93,7 @@ function BlogCard({ post, featured = false, rotation = 0, scale = 1 }: BlogCardP
         ['--card-scale' as string]: `${scale}`,
       }}
     >
-      <div className="club-card card--variant-gold flex flex-col h-full">
+      <div className="club-card card--variant-gold rounded-2xl overflow-hidden flex flex-col h-full">
 
         {/* Adjust visual balance if the card is featured */}
         <div className={`relative w-full overflow-hidden border-b border-border flex-shrink-0 ${featured ? 'h-48 lg:h-60' : 'h-36'}`}>
@@ -114,12 +114,12 @@ function BlogCard({ post, featured = false, rotation = 0, scale = 1 }: BlogCardP
           )}
 
           {isNew && (
-            <span className="absolute top-2 left-2 text-[9px] uppercase font-extrabold tracking-wider bg-accent text-white px-2 py-0.5 rounded-sm shadow">
+            <span className="rounded-md absolute top-2 left-2 text-[9px] uppercase font-extrabold tracking-wider bg-accent text-white px-2 py-0.5 shadow">
               NEW
             </span>
           )}
 
-          <span className={`absolute top-2 right-2 text-[9px] uppercase font-extrabold tracking-wider px-2 py-0.5 rounded-sm border backdrop-blur-sm ${typeStyle.classes}`}>
+          <span className={`rounded-md absolute top-2 right-2 text-[9px] uppercase font-extrabold tracking-wider px-2 py-0.5 border backdrop-blur-sm ${typeStyle.classes}`}>
             {typeStyle.label}
           </span>
         </div>

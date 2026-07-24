@@ -40,6 +40,9 @@ const containerVariants = {
   },
 }
 
+// Slight per-card tilt so the three departments don't sit on a dead-level line
+const CARD_ROTATIONS = [-1.5, 0.8, 1.4]
+
 const cardVariants = {
   hidden: { opacity: 0, y: 35 },
   visible: {
@@ -71,35 +74,38 @@ export default function ClubDepartments() {
         viewport={{ once: true, margin: "-60px" }}
         className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch"
       >
-        {DEPARTMENTS.map((dept) => (
-          <motion.div
-            key={dept.id}
-            variants={cardVariants}
-            className="group relative overflow-hidden rounded-2xl p-8 text-center flex flex-col items-center"
-          >
+        {DEPARTMENTS.map((dept, index) => (
+          <motion.div key={dept.id} variants={cardVariants} className="h-full">
+            {/* The static tilt lives on a plain element — framer-motion owns
+                the inline transform on the animated wrapper above */}
+            <div
+              style={{ ['--card-rot' as string]: `${CARD_ROTATIONS[index % CARD_ROTATIONS.length]}deg` }}
+              className="group relative h-full overflow-hidden p-8 text-center flex flex-col items-center origin-center transition-transform duration-300 ease-out md:[transform:rotate(var(--card-rot))] md:hover:[transform:rotate(0deg)]"
+            >
 
-            {/* Circle Image Wrapper - Added scale transformation on group-hover */}
-            <div className="relative w-40 h-40 rounded-full flex items-center justify-center overflow-hidden transition-transform duration-300 ease-out mb-6 shadow-inner transform group-hover:scale-110">
-              <Image
-                src={dept.imageSrc}
-                alt={dept.name}
-                width={160}
-                height={160}
-                className="object-cover"
-              />
-            </div>
+              {/* Angular Image Frame - Added scale transformation on group-hover */}
+              <div className="clip-cut cut-xl relative w-40 h-40 flex items-center justify-center overflow-hidden transition-transform duration-300 ease-out mb-6 shadow-inner transform group-hover:scale-110">
+                <Image
+                  src={dept.imageSrc}
+                  alt={dept.name}
+                  width={160}
+                  height={160}
+                  className="object-cover"
+                />
+              </div>
 
-            {/* Department Name */}
-            <h3 className="text-xl font-black text-foreground group-hover:text-accent transition-all duration-300 transform group-hover:-translate-y-2 tracking-tight">
-              {dept.name}
-            </h3>
+              {/* Department Name */}
+              <h3 className="text-xl font-black text-foreground group-hover:text-accent transition-all duration-300 transform group-hover:-translate-y-2 tracking-tight">
+                {dept.name}
+              </h3>
 
-            {/* Smooth Reveal Description (CSS Grid row technique) */}
-            <div className="w-full grid grid-rows-[1fr] md:grid-rows-[1fr] opacity-100 md:opacity-0 group-hover:md:grid-rows-[1fr] group-hover:md:opacity-100 group-hover:-translate-y-1 transition-all duration-500 ease-out overflow-hidden">
-              <div className="min-h-0">
-                <p className="text-md text-text-muted leading-relaxed max-w-xs mx-auto">
-                  {dept.description}
-                </p>
+              {/* Smooth Reveal Description (CSS Grid row technique) */}
+              <div className="w-full grid grid-rows-[1fr] md:grid-rows-[1fr] opacity-100 md:opacity-0 group-hover:md:grid-rows-[1fr] group-hover:md:opacity-100 group-hover:-translate-y-1 transition-all duration-500 ease-out overflow-hidden">
+                <div className="min-h-0">
+                  <p className="text-md text-text-muted leading-relaxed max-w-xs mx-auto">
+                    {dept.description}
+                  </p>
+                </div>
               </div>
             </div>
           </motion.div>

@@ -53,7 +53,7 @@ export default function CTASection({ className = '' }: CTASectionProps) {
               href="https://au.cglink.me/2sg/s152"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full bg-accent text-background transition-all duration-200 hover:opacity-90 hover:scale-[1.03] focus:outline-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+              className="clip-cut cut-md inline-flex items-center justify-center gap-2 px-8 py-4 bg-accent text-background transition-all duration-200 hover:opacity-90 hover:scale-[1.03] focus:outline-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             >
               Join NUSCAS on NUSync
               <ArrowUpRight className="w-5 h-5" aria-hidden="true" />
@@ -66,10 +66,12 @@ export default function CTASection({ className = '' }: CTASectionProps) {
               href="https://mail.google.com/mail/?view=cm&fs=1&to=nuscomicssoc@gmail.com&su=Question%20about%20NUSCAS&body=Hi%20NUSCAS%20team%2C"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full border border-border text-foreground transition-all duration-200 hover:border-foreground hover:scale-[1.03] focus:outline-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+              className="angle-frame clip-cut cut-md inline-flex items-center justify-center transition-all duration-200 hover:[--frame-color:var(--color-foreground)] hover:scale-[1.03] focus:outline-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             >
-              Ask us about something!
-              <Mail className="w-5 h-5" aria-hidden="true" />
+              <span className="clip-cut inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-background text-foreground">
+                Ask us about something!
+                <Mail className="w-5 h-5" aria-hidden="true" />
+              </span>
             </Link>
             <span className="text-xs text-text-muted">Opens email to NUSCAS</span>
           </div>

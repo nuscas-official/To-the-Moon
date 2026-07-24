@@ -190,7 +190,7 @@ export function HeaderContent({ user, showAdminLink, isEventModalOpen = false }:
             </div>
 
             {/* Divider */}
-            <div className="h-4 w-[1px] borderbg-" />
+            <div className="h-4 w-[1px] bg-border" />
 
             {/* Auth Button */}
             <div className="flex items-center">

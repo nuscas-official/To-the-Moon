@@ -111,12 +111,8 @@ export default function MangaCollage() {
         return (
           <motion.div
             key={shard.id}
-            className={`${shard.gridClass} relative w-full h-full overflow-hidden group bg-neutral-900`}
-            style={{
-              clipPath: shard.polygon,
-            }}
+            className={`${shard.gridClass} relative w-full h-full overflow-hidden rounded-lg group bg-neutral-900`}
             whileHover={{
-              clipPath: 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)',
               scale: 1.05,
               zIndex: 30,
             }}

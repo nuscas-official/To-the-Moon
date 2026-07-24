@@ -40,7 +40,7 @@ const socialChannels = [
 export default function SocialLinks({ className = '' }: SocialLinksProps) {
   return (
     <div className={`w-full flex flex-col justify-stretch animate-fade-in ${className}`}>
-      <div className="relative overflow-hidden border border-border bg-surface/40 backdrop-blur-md shadow-sm p-4 sm:p-5 lg:p-6 text-left flex flex-col justify-between min-h-[220px] h-full transition-all duration-300 hover:shadow-md hover:border-accent/40 group">
+      <div className="clip-cut cut-lg relative overflow-hidden border border-border bg-surface/40 backdrop-blur-md shadow-sm p-4 sm:p-5 lg:p-6 text-left flex flex-col justify-between min-h-[220px] h-full transition-all duration-300 hover:shadow-md hover:border-accent/40 group">
         
         {/* Decorative background element */}
         <div className="absolute top-0 right-0 w-32 h-32 bg-accent/5 rounded-full blur-3xl pointer-events-none -mr-8 -mt-8" />
@@ -66,12 +66,12 @@ export default function SocialLinks({ className = '' }: SocialLinksProps) {
               href={channel.url}
               target="_blank"
               rel="noopener noreferrer"
-              className={`flex items-center justify-between p-2.5 rounded-xl border border-border/50 bg-surface/20 transition-all duration-300 ${channel.bgColor} ${channel.borderColor} group/link`}
+              className={`clip-cut cut-sm flex items-center justify-between p-2.5 border border-border/50 bg-surface/20 transition-all duration-300 ${channel.bgColor} ${channel.borderColor} group/link`}
               whileHover={{ scale: 1.02, x: 2 }}
               whileTap={{ scale: 0.98 }}
             >
               <div className="flex items-center gap-3">
-                <div className={`p-1.5 rounded-lg bg-surface/80 border border-border/50 group-hover/link:scale-110 transition-transform duration-300 ${channel.iconColor}`}>
+                <div className={`clip-cut cut-xs p-1.5 bg-surface/80 border border-border/50 group-hover/link:scale-110 transition-transform duration-300 ${channel.iconColor}`}>
                   {channel.icon}
                 </div>
                 <div>

@@ -53,6 +53,10 @@ const DEPARTMENTS = [
   { name: 'Palette', activeClass: 'bg-pink-50 border-pink-300 text-pink-800 ring-1 ring-pink-300 font-extrabold shadow-sm' },
 ]
 
+// Per-card tilt (deg) so the grid reads as a pinned-up board rather than a
+// spreadsheet. Index 0 is the featured card and stays square to the page.
+const CARD_ROTATIONS = [0, -1.4, 1.1, -0.8, 1.6, -1.2, 0.9, -1.7]
+
 // A NUSCAS (general club) event has no organizing department assigned
 function matchesDept(event: ClubEvent, dept: string): boolean {
   if (dept === 'NUSCAS') return !event.departments || event.departments.length === 0
@@ -110,7 +114,7 @@ export default function EventsListClient({ events }: EventsListClientProps) {
           <button
             type="button"
             onClick={() => setSelectedDept(null)}
-            className={`px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all ${
+            className={`clip-cut cut-sm px-3 py-1.5 text-xs font-bold uppercase tracking-wider transition-all ${
               selectedDept === null
                 ? 'bg-foreground text-surface shadow-sm'
                 : 'bg-surface hover:bg-neutral-500/10 text-text-muted'
@@ -123,7 +127,7 @@ export default function EventsListClient({ events }: EventsListClientProps) {
               key={dept.name}
               type="button"
               onClick={() => setSelectedDept(dept.name === selectedDept ? null : dept.name)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all border ${
+              className={`clip-cut cut-sm px-3 py-1.5 text-xs font-bold uppercase tracking-wider transition-all border ${
                 selectedDept === dept.name
                   ? dept.activeClass
                   : 'bg-surface border-border text-text-muted hover:bg-neutral-500/10 hover:text-foreground'
@@ -135,16 +139,23 @@ export default function EventsListClient({ events }: EventsListClientProps) {
         </motion.div>
       )}
 
-      {/* Grid of Event Cards — up to 2 rows of 4 */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      {/* Grid of Event Cards — the first event runs 2x2 as a hero, the rest
+          fill the gaps around it via dense auto-placement */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:auto-rows-fr lg:[grid-auto-flow:dense]">
         {hasEvents ? (
-          events.map((event) => (
-            <EventCard
+          events.map((event, index) => (
+            <div
               key={event.id}
-              event={event}
-              detailsLabel="View"
-              dimmed={selectedDept !== null && !matchesDept(event, selectedDept)}
-            />
+              className={index === 0 ? 'sm:col-span-2 lg:row-span-2' : ''}
+            >
+              <EventCard
+                event={event}
+                detailsLabel="View"
+                featured={index === 0}
+                rotation={CARD_ROTATIONS[index % CARD_ROTATIONS.length]}
+                dimmed={selectedDept !== null && !matchesDept(event, selectedDept)}
+              />
+            </div>
           ))
         ) : (
           [1, 2, 3, 4].map((i) => (

@@ -16,7 +16,7 @@ export default function EventsLoading() {
       {/* Grid/List of Event Cards */}
       <div className="space-y-6 animate-pulse">
         {Array.from({ length: 3 }).map((_, i) => (
-          <div key={i} className="glass-panel border border-border/60 p-6 flex flex-col md:flex-row gap-6">
+          <div key={i} className="border border-border/60 p-6 flex flex-col md:flex-row gap-6">
             {/* Mock Event Image */}
             <div className="w-full md:w-48 h-32 bg-neutral-200 dark:bg-neutral-800 flex-shrink-0" />
             

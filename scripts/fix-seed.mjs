@@ -33,7 +33,7 @@ async function run() {
   
   const seasonalPick = {
     title: "Sousou no Frieren",
-    accent_hex: "#a855f7", // Violet
+    accent_hex: "#c82333", // Crimson
     image_url: "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=1200&auto=format&fit=crop&q=80"
   }
 

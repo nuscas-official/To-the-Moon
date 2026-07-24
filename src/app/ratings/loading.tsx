@@ -10,7 +10,7 @@ export default function RatingsLoading() {
       {/* Grid of Skeleton Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-pulse">
         {Array.from({ length: 6 }).map((_, i) => (
-          <div key={i} className="glass-panel border border-border/60 p-5 flex gap-4 h-[120px]">
+          <div key={i} className="border border-border/60 p-5 flex gap-4 h-[120px]">
             {/* Mock Cover Image */}
             <div className="w-16 h-20 bg-neutral-200 dark:bg-neutral-800 flex-shrink-0" />
             

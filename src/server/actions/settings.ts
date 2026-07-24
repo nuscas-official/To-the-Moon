@@ -36,7 +36,7 @@ export async function updateSeasonalPickAction(data: SeasonalPickInput) {
     return { success: false, error: 'Anime title is required.' }
   }
   if (!data.accent_hex?.trim() || !/^#[0-9A-Fa-f]{3,6}$/.test(data.accent_hex)) {
-    return { success: false, error: 'A valid Accent Hex Color (e.g. #a855f7) is required.' }
+    return { success: false, error: 'A valid Accent Hex Color (e.g. #c82333) is required.' }
   }
   if (!data.image_url?.trim() || !/^(https?:\/\/|\/).+/.test(data.image_url)) {
     return { success: false, error: 'A valid Banner Image URL or path is required.' }
