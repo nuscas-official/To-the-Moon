@@ -11,7 +11,7 @@ import RollingGallery from '@/components/features/homepage/RollingGallery'
 import type { Metadata } from 'next'
 import ParticleCanvas from '@/components/ParticleCanvas'
 import Image from 'next/image'
-import InteractiveFlipbook from '@/components/features/homepage/InteractiveFlipbook'
+import PageStrip from '@/components/features/homepage/PageStrip'
 import CTASection from '@/components/features/homepage/CTASection'
 
 export const metadata: Metadata = {
@@ -103,7 +103,7 @@ export default async function Home({ searchParams }: HomeProps) {
       {/* Hero Section: Unified Grid Layout */}
       <div className="grid grid-cols-1 lg:grid-cols-12 items-stretch my-4 gap-2">
         <div className="lg:col-span-8 flex">
-          <InteractiveFlipbook className="h-full min-h-[350px] lg:min-h-[480px]" />
+          <PageStrip className="h-full min-h-[350px] lg:min-h-[480px]" />
         </div>
 
         <div className="lg:col-span-4 flex flex-col gap-2 justify-between">
