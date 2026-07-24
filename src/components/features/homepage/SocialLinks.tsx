@@ -48,12 +48,8 @@ export default function SocialLinks({ className = '' }: SocialLinksProps) {
         {/* Header/Title */}
         <div className="relative z-10">
           <div className="flex items-center gap-2 mb-1.5">
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-accent"></span>
-            </span>
             <span className="text-[10px] font-mono tracking-widest uppercase font-bold text-text-muted">
-              Connect With Us
+              Our Socials
             </span>
           </div>
         </div>
@@ -71,7 +67,7 @@ export default function SocialLinks({ className = '' }: SocialLinksProps) {
               whileTap={{ scale: 0.98 }}
             >
               <div className="flex items-center gap-3">
-                <div className={`clip-cut cut-xs p-1.5 bg-surface/80 border border-border/50 group-hover/link:scale-110 transition-transform duration-300 ${channel.iconColor}`}>
+                <div className={`clip-cut cut-xs p-1.5 bg-surface/80 group-hover/link:scale-110 transition-transform duration-300 ${channel.iconColor}`}>
                   {channel.icon}
                 </div>
                 <div>

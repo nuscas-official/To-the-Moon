@@ -15,7 +15,7 @@ import PageStrip from '@/components/features/homepage/PageStrip'
 import CTASection from '@/components/features/homepage/CTASection'
 import DiagonalEdge from '@/components/features/homepage/DiagonalEdge'
 
-// Shared slant height for every section transition, so the diagonals stay parallel.
+// Shared slant height for every section transition, so the diagonals stay consistent.
 const EDGE = { '--edge': 'clamp(2rem, 5vw, 5rem)' } as React.CSSProperties
 
 export const metadata: Metadata = {
@@ -105,7 +105,7 @@ export default async function Home({ searchParams }: HomeProps) {
       )}
 
       {/* Hero Section: Unified Grid Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 items-stretch my-4 gap-2">
+      <div className="grid grid-cols-1 lg:grid-cols-12 items-stretch my-12 gap-2">
         <div className="lg:col-span-8 flex">
           <PageStrip className="h-full min-h-[350px] lg:min-h-[480px]" />
         </div>
@@ -124,8 +124,9 @@ export default async function Home({ searchParams }: HomeProps) {
 
       {/* Outer container remains full-bleed across all screen sizes */}
       <div style={EDGE} className="theme-crimson w-screen relative left-1/2 -translate-x-1/2 bg-background-dark text-text-dark pt-[calc(var(--edge)+3.5rem)] pb-[calc(var(--edge)+3.5rem)] [--color-text:var(--color-text-dark)] [--color-foreground:var(--color-text-dark)] [--color-border:var(--color-border-dark)] [--color-surface:var(--color-surface-dark)] [--color-text-muted:var(--color-text-muted-dark)] transition-colors duration-300">
-        <DiagonalEdge position="top" fill="var(--color-background)" line="rgba(200, 35, 51, 0.55)" />
-        <DiagonalEdge position="bottom" fill="var(--color-background)" line="rgba(200, 35, 51, 0.55)" />
+        {/* Boundary 1 of the alternating run: leans right, then flips each transition down the page. */}
+        <DiagonalEdge position="top" slant="right" fill="var(--color-background)" line="rgba(200, 35, 51, 0.55)" />
+        <DiagonalEdge position="bottom" slant="left" fill="var(--color-background)" line="rgba(200, 35, 51, 0.55)" />
 
         <ParticleCanvas
           count={400}
@@ -154,8 +155,9 @@ export default async function Home({ searchParams }: HomeProps) {
       </div>
 
       <div id="blog-section" style={EDGE} className="w-screen relative left-1/2 -translate-x-1/2 pt-[calc(var(--edge)+5rem)] pb-[calc(var(--edge)+10rem)] bg-white overflow-hidden">
-        <DiagonalEdge position="top" fill="var(--color-background)" line="var(--color-border)" />
-        <DiagonalEdge position="bottom" fill="var(--color-background)" line="var(--color-border)" />
+        {/* Picks the run back up: right again after the gallery's left-leaning boundary. */}
+        <DiagonalEdge position="top" slant="right" fill="var(--color-background)" line="var(--color-border)" />
+        <DiagonalEdge position="bottom" slant="left" fill="var(--color-background)" line="var(--color-border)" />
 
         <Image
           src="/images/word-field.webp"

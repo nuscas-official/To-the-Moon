@@ -5,6 +5,12 @@ interface DiagonalEdgeProps {
   fill: string
   /** Optional hairline drawn along the diagonal. */
   line?: string
+  /**
+   * Which way the diagonal leans. 'right' drops from the left edge down to the
+   * right; 'left' mirrors it. Alternating this between consecutive section
+   * boundaries gives the page a zig-zag rhythm instead of a stack of parallels.
+   */
+  slant?: 'right' | 'left'
   /** Wedge height. Defaults to the --edge value set on the parent section. */
   height?: string
   className?: string
@@ -13,17 +19,30 @@ interface DiagonalEdgeProps {
 /**
  * Paints a triangular wedge over the top or bottom edge of a section so the
  * boundary with its neighbour reads as a diagonal instead of a flat 180° line.
- * Both positions share the same slope, so stacked edges stay parallel.
+ * Top and bottom share the same slope for a given slant, so the two edges of a
+ * section stay parallel unless you deliberately mirror one of them.
  */
 export default function DiagonalEdge({
   position,
   fill,
   line,
+  slant = 'right',
   height = 'var(--edge)',
   className = '',
 }: DiagonalEdgeProps) {
   const isTop = position === 'top'
-  const points = isTop ? '0,0 100,0 0,100' : '0,100 100,100 100,0'
+  const isRight = slant === 'right'
+
+  const points = isTop
+    ? isRight
+      ? '0,0 100,0 0,100'
+      : '0,0 100,0 100,100'
+    : isRight
+      ? '0,100 100,100 100,0'
+      : '0,100 100,100 0,0'
+
+  // Hypotenuse of the wedge: "\" for a right slant, "/" for a left one.
+  const [x1, y1, x2, y2] = isRight ? [100, 0, 0, 100] : [0, 0, 100, 100]
 
   return (
     <div
@@ -35,10 +54,10 @@ export default function DiagonalEdge({
         <polygon points={points} fill={fill} />
         {line && (
           <line
-            x1="100"
-            y1="0"
-            x2="0"
-            y2="100"
+            x1={x1}
+            y1={y1}
+            x2={x2}
+            y2={y2}
             stroke={line}
             strokeWidth="1"
             vectorEffect="non-scaling-stroke"
