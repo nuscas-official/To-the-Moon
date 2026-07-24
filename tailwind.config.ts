@@ -58,7 +58,6 @@ const config: Config = {
         "fade-in": "fadeIn var(--transition-normal) ease-out forwards",
         "pulse-glow": "pulseGlow 2s infinite ease-in-out",
         "float": "float 6s ease-in-out infinite",
-        "chaos-vibe": "chaosVibe 0.5s infinite linear",
         "slide-up": "slideUp var(--transition-normal) ease-out forwards",
       },
       keyframes: {
@@ -78,12 +77,6 @@ const config: Config = {
           "0%, 100%": { transform: "translateY(0)" },
           "50%": { transform: "translateY(-10px)" },
         },
-        chaosVibe: {
-          "0%, 100%": { transform: "skew(0deg) translate(0px, 0px)" },
-          "25%": { transform: "skew(1deg) translate(1px, -1px)" },
-          "50%": { transform: "skew(-1deg) translate(-1px, 1px)" },
-          "75%": { transform: "skew(0.5deg) translate(-1px, -1px)" },
-        }
       },
     },
   },

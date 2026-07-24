@@ -385,7 +385,7 @@ export default function EventDetailModal() {
                         {photos.map((photo) => (
                           <div
                             key={photo.id}
-                            className="group relative h-48 overflow-hidden border border-border bg-neutral-100 shadow-sm hover:shadow-md transition-all duration-300 chaos-card-active"
+                            className="group relative h-48 overflow-hidden border border-border bg-neutral-100 shadow-sm hover:shadow-md transition-all duration-300"
                           >
                             <Image
                               src={photo.storage_key}

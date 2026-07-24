@@ -93,7 +93,7 @@ function BlogCard({ post, featured = false, rotation = 0, scale = 1 }: BlogCardP
         ['--card-scale' as string]: `${scale}`,
       }}
     >
-      <div className="club-card card--variant-gold flex flex-col chaos-card-active h-full">
+      <div className="club-card card--variant-gold flex flex-col h-full">
 
         {/* Adjust visual balance if the card is featured */}
         <div className={`relative w-full overflow-hidden border-b border-border flex-shrink-0 ${featured ? 'h-48 lg:h-60' : 'h-36'}`}>

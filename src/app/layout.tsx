@@ -5,7 +5,6 @@ import "./globals.css";
 import { createClient } from '@/lib/supabase/server'
 import Header from '@/components/layout/Header'
 import { getUserRole } from '@/lib/supabase/role'
-import ChaosProvider from '@/components/providers/ChaosProvider'
 import ThemeProvider from '@/components/providers/ThemeProvider'
 import RoleSyncListener from '@/components/features/auth/RoleSyncListener'
 import Footer from '@/components/layout/Footer'
@@ -83,32 +82,30 @@ export default async function RootLayout({
         className="antialiased min-h-full flex flex-col bg-background text-foreground transition-colors duration-300 overflow-x-hidden"
       >
         <ThemeProvider>
-          <ChaosProvider>
-            <RoleSyncListener user={user} currentRole={role} />
-            {/* Skip to content link for a11y */}
-            <a
-              href="#main-content"
-              className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[100] bg-accent text-accent-foreground px-4 py-2 rounded-md shadow-lg font-medium outline-none ring-2 ring-accent transition-all"
-            >
-              Skip to content
-            </a>
+          <RoleSyncListener user={user} currentRole={role} />
+          {/* Skip to content link for a11y */}
+          <a
+            href="#main-content"
+            className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[100] bg-accent text-accent-foreground px-4 py-2 rounded-md shadow-lg font-medium outline-none ring-2 ring-accent transition-all"
+          >
+            Skip to content
+          </a>
 
-            {/* Header/Navbar (Sidebar Navigation) */}
-            <Header user={user} showAdminLink={showAdminLink} />
+          {/* Header/Navbar (Sidebar Navigation) */}
+          <Header user={user} showAdminLink={showAdminLink} />
 
-            {/* Main Content Area */}
-            <main id="main-content" className="flex-grow max-w-[90rem] mx-auto w-full px-4 sm:px-6 lg:px-8 pb-8 outline-none">
-              {children}
-            </main>
+          {/* Main Content Area */}
+          <main id="main-content" className="flex-grow max-w-[90rem] mx-auto w-full px-4 sm:px-6 lg:px-8 pb-8 outline-none">
+            {children}
+          </main>
 
-            {/* Event Lightbox Details Modal */}
-            <Suspense fallback={null}>
-              <EventDetailModal />
-            </Suspense>
+          {/* Event Lightbox Details Modal */}
+          <Suspense fallback={null}>
+            <EventDetailModal />
+          </Suspense>
 
-            {/* Interactive Footer */}
-            <Footer />
-          </ChaosProvider>
+          {/* Interactive Footer */}
+          <Footer />
         </ThemeProvider>
       </body>
     </html>

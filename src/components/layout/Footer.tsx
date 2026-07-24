@@ -1,33 +1,27 @@
 'use client'
 
-import { useChaos } from '@/components/providers/ChaosProvider'
+import Link from 'next/link'
 
 export default function Footer() {
-  const { chaosMode, triggerChaosClick } = useChaos()
   const currentYear = new Date().getFullYear()
 
   return (
     <footer className="bg-surface mt-auto transition-colors duration-300">
       <div className="max-w-7xl mx-auto pt-8 px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-6 text-xs text-text-muted">
         
-        {/* Left Side: Copyright & Chaos indicator */}
+        {/* Left Side: Copyright */}
         <div className="flex items-center gap-1">
-          <span>&copy; {currentYear}</span>
-          <button
-            onClick={triggerChaosClick}
-            className="tracking-wider text-neutral-800 hover:text-accent focus:outline-none transition-colors select-none"
-            title="Click three times to unleash something..."
-          >
-            NUS Comics and Animation Society.
-          </button>
-          <span>All rights reserved.</span>
+          <span>&copy; {currentYear} NUS Comics and Animation Society. All rights reserved.</span>
+        </div>
 
-          {chaosMode && (
-            <span className="inline-flex items-center gap-1 text-xs font-bold text-accent animate-pulse uppercase tracking-wider bg-accent/10 px-2.5 py-0.5 rounded-full border border-accent/20">
-              <span className="w-1.5 h-1.5 rounded-full bg-accent animate-ping" />
-              Chaos Active
-            </span>
-          )}
+        {/* Right Side: Navigation Links */}
+        <div className="flex items-center gap-4">
+          <Link
+            href="/privacy"
+            className="hover:text-accent transition-colors underline-offset-4 hover:underline"
+          >
+            Privacy Policy
+          </Link>
         </div>
       </div>
 

@@ -14,9 +14,6 @@
     @apply font-bold tracking-tight text-foreground;
   }
 
-  .chaos-mode h1, .chaos-mode h2, .chaos-mode h3, .chaos-mode h4, .chaos-mode h5, .chaos-mode h6 {
-    @apply text-white;
-  }
 
   /* Accessible visible focus outline for keyboard navigation */
   button:focus-visible,
@@ -36,12 +33,6 @@
   border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
-.chaos-mode .glass-panel {
-  background: rgba(11, 15, 25, 0.8);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 0, 127, 0.15);
-}
 
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
@@ -60,54 +51,6 @@
   background: var(--color-accent);
 }
 
-/* Chaos Mode Cursor Suppression */
-.chaos-mode,
-.chaos-mode * {
-  cursor: none !important;
-}
-
-/* Neon Cursor Trail Elements */
-.chaos-cursor {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  background-color: #ff007f;
-  box-shadow: 0 0 10px #ff007f, 0 0 20px rgba(255, 0, 127, 0.5), 0 0 30px rgba(255, 0, 127, 0.3);
-  pointer-events: none;
-  z-index: 999999;
-  transform: translate(-50%, -50%);
-  will-change: transform;
-}
-
-.chaos-cursor-trail {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background-color: #00f2fe;
-  box-shadow: 0 0 8px #00f2fe, 0 0 16px rgba(0, 242, 254, 0.5);
-  pointer-events: none;
-  z-index: 999998;
-  transform: translate(-50%, -50%);
-  opacity: 0.7;
-  will-change: transform;
-  transition: transform 0.05s ease-out;
-}
-
-/* Exaggerated Animations for Chaos Mode cards */
-.chaos-card-active {
-  transition: transform var(--transition-normal) cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow var(--transition-normal) ease;
-}
-
-.chaos-mode .chaos-card-active:hover {
-  @apply shadow-neon;
-  animation: chaosVibe 0.3s infinite linear;
-}
 
 /* Keyframe Animations */
 @keyframes fadeIn {
@@ -126,9 +69,6 @@
   @apply text-neutral-800 text-sm leading-relaxed;
 }
 
-.chaos-mode .markdown-body {
-  @apply text-neutral-200;
-}
 
 .markdown-body p {
   @apply mb-4 leading-relaxed;
@@ -138,25 +78,16 @@
   @apply text-2xl font-black mt-8 mb-4 tracking-tight text-neutral-900 border-b border-border pb-2;
 }
 
-.chaos-mode .markdown-body h1 {
-  @apply text-white border-neutral-800;
-}
 
 .markdown-body h2 {
   @apply text-xl font-bold mt-6 mb-3 tracking-tight text-neutral-900;
 }
 
-.chaos-mode .markdown-body h2 {
-  @apply text-white;
-}
 
 .markdown-body h3 {
   @apply text-lg font-bold mt-4 mb-2 text-neutral-800;
 }
 
-.chaos-mode .markdown-body h3 {
-  @apply text-neutral-100;
-}
 
 .markdown-body ul {
   @apply list-disc list-inside pl-2 mb-4 space-y-1;
@@ -174,9 +105,6 @@
   @apply bg-neutral-100 px-1.5 py-0.5 rounded text-xs font-mono text-neutral-900 border border-neutral-200;
 }
 
-.chaos-mode .markdown-body code {
-  @apply bg-neutral-900 text-neutral-100 border-neutral-800;
-}
 
 .markdown-body pre {
   @apply bg-neutral-950 text-neutral-100 p-4 rounded-xl font-mono text-xs overflow-x-auto my-6 border border-neutral-800;
@@ -194,18 +122,11 @@
   @apply border-t border-border my-8;
 }
 
-.chaos-mode .markdown-body hr {
-  @apply border-neutral-800;
-}
 
 .markdown-body img {
   @apply rounded-xl max-w-full h-auto my-6 border border-border;
 }
 
-/* Invert elements in Chaos Mode (dark neon theme) */
-.chaos-mode .chaos-invert {
-  filter: invert(1);
-}
 
 /* Theme Transition Smoothing (Delays and stretches UI changes to align with 2-3s video sunsets/sunrises) */
 .theme-transitioning,

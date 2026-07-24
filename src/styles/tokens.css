@@ -131,23 +131,6 @@
   --color-accent-muted: rgba(255, 255, 255, 0.15);
 }
 
-.chaos-mode {
-  --color-background: #020617;
-  --color-foreground: #f8fafc;
-  --color-surface: #0b0f19;
-  --color-surface-raised: #111827;
-  --color-surface-hover: #1e293b;
-  --color-text: #f8fafc;
-  --color-text-muted: #94a3b8;
-  --color-border: #334155;
-  
-  --color-accent: #ff007f;
-  --color-accent-muted: #4c0519;
-  --color-accent-hover: #ff3399;
-  --color-accent-foreground: #ffffff;
-  
-  --shadow-neon: 0 0 20px #ff007f, 0 0 40px rgba(255, 0, 127, 0.3);
-}
 /* For overriding */
 .theme-nuscas {
   --card-bg: #1d3d6f;

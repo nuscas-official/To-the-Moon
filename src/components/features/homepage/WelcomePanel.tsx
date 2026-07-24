@@ -89,7 +89,7 @@ export default function WelcomePanel({
   const displayText = items[reasonIndex]
 
   return (
-    <div className={`club-card flex flex-col justify-between px-6 py-4 sm:px-8 border border-border shadow-sm chaos-card-active relative !overflow-visible ${className}`}>
+    <div className={`club-card flex flex-col justify-between px-6 py-4 sm:px-8 border border-border shadow-sm relative !overflow-visible ${className}`}>
       <div className="absolute md:-top-8 md:-right-12 -top-4 -right-4 md:w-24 md:h-24 w-20 h-20 pointer-events-none select-none z-10">
         <Image
           src="/images/anitan-thumbs-up.webp"

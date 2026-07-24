@@ -143,7 +143,7 @@ export default function ArtworkCard({ artwork, variant = 'masonry', onZoomToggle
         className={
           isMarquee
             ? "relative flex-shrink-0 w-60 sm:w-72 aspect-[4/3] overflow-hidden border border-border bg-surface cursor-zoom-in group shadow-sm hover:shadow-xl hover:shadow-accent/5 transition-all duration-300 active:scale-98 hover:-translate-y-1"
-            : "break-inside-avoid relative group border border-border bg-surface overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 cursor-zoom-in hover:-translate-y-0.5 active:scale-[0.99] chaos-card-active mb-6 w-full"
+            : "break-inside-avoid relative group border border-border bg-surface overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 cursor-zoom-in hover:-translate-y-0.5 active:scale-[0.99] mb-6 w-full"
         }
       >
         {/* Image Container & Image */}

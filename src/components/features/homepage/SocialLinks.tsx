@@ -40,7 +40,7 @@ const socialChannels = [
 export default function SocialLinks({ className = '' }: SocialLinksProps) {
   return (
     <div className={`w-full flex flex-col justify-stretch animate-fade-in ${className}`}>
-      <div className="relative overflow-hidden border border-border bg-surface/40 backdrop-blur-md shadow-sm p-4 sm:p-5 lg:p-6 text-left flex flex-col justify-between min-h-[220px] h-full transition-all duration-300 hover:shadow-md hover:border-accent/40 group chaos-card-active">
+      <div className="relative overflow-hidden border border-border bg-surface/40 backdrop-blur-md shadow-sm p-4 sm:p-5 lg:p-6 text-left flex flex-col justify-between min-h-[220px] h-full transition-all duration-300 hover:shadow-md hover:border-accent/40 group">
         
         {/* Decorative background element */}
         <div className="absolute top-0 right-0 w-32 h-32 bg-accent/5 rounded-full blur-3xl pointer-events-none -mr-8 -mt-8" />

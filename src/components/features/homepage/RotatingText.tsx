@@ -60,7 +60,7 @@ export default function RotatingText({
   return (
     <div className={`w-full h-full flex flex-col justify-stretch animate-fade-in ${className}`}>
       {/* Sleek, professional rotating text container */}
-      <div className="relative overflow-hidden rounded-2xl border border-border/80 bg-surface/40 backdrop-blur-md shadow-sm p-6 sm:p-8 text-center flex flex-col justify-between min-h-[200px] h-full transition-all duration-300 hover:shadow-md hover:border-accent/40 group chaos-card-active">
+      <div className="relative overflow-hidden rounded-2xl border border-border/80 bg-surface/40 backdrop-blur-md shadow-sm p-6 sm:p-8 text-center flex flex-col justify-between min-h-[200px] h-full transition-all duration-300 hover:shadow-md hover:border-accent/40 group">
         
         {/* Pulsing indicator badge */}
         <div className="flex items-center justify-center gap-2 mb-4">

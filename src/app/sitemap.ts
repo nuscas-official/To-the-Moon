@@ -22,7 +22,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     .neq('status', 'cancelled')
 
   // Static routes
-  const routes = ['', '/blog', '/events', '/ratings', '/gallery', '/vn'].map((route) => ({
+  const routes = ['', '/blog', '/events', '/ratings', '/gallery', '/vn', '/privacy'].map((route) => ({
     url: `${siteUrl}${route}`,
     lastModified: new Date().toISOString(),
     changeFrequency: 'daily' as const,

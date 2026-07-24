@@ -140,7 +140,7 @@ export default function PublicRatingsView({ initialAggregates }: PublicRatingsVi
           {processedAggregates.map((item) => (
             <div
               key={item.anilist_id}
-              className="group flex items-center gap-4 overflow-hidden rounded-2xl border border-border bg-surface p-4 shadow-sm hover:shadow-md hover:border-accent/30 transition-all duration-300 chaos-card-active text-left"
+              className="group flex items-center gap-4 overflow-hidden rounded-2xl border border-border bg-surface p-4 shadow-sm hover:shadow-md hover:border-accent/30 transition-all duration-300 text-left"
             >
               {/* Cover Image */}
               <div className="relative h-24 w-16 flex-shrink-0 overflow-hidden rounded-lg border border-border bg-neutral-100 shadow-inner">

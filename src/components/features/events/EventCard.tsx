@@ -135,7 +135,7 @@ export default function EventCard({ event, detailsLabel = 'View', dimmed = false
     >
       <TiltWrapper
         variants={cardVariants}
-        className="group flex flex-col justify-between overflow-hidden border-2 border-border bg-surface shadow-sm hover:shadow-xl hover:shadow-accent/5 hover:border-accent/30 transition-[border-color,box-shadow,background-color] duration-300 chaos-card-active text-left cursor-pointer"
+        className="group flex flex-col justify-between overflow-hidden border-2 border-border bg-surface shadow-sm hover:shadow-xl hover:shadow-accent/5 hover:border-accent/30 transition-[border-color,box-shadow,background-color] duration-300 text-left cursor-pointer"
       >
         {/* Cover Image */}
         <div className="relative h-32 w-full bg-neutral-100 overflow-hidden border-b border-border">

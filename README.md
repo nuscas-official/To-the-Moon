@@ -8,7 +8,7 @@ A modern web application and member portal prototype built for the **NUS Comics 
 
 - **Framework**: [Next.js 14](https://nextjs.org/) (App Router, Server Actions, API routes, optimized pre-rendering)
 - **Language**: [TypeScript](https://www.typescriptlang.org/) for static type-safety
-- **Styling**: [Tailwind CSS](https://tailwindcss.com/) with a custom design token system supporting **Light Mode** and a dark, neon **"Chaos Mode"** theme
+- **Styling**: [Tailwind CSS](https://tailwindcss.com/) with a custom design token system
 - **Database & Auth**: [Supabase](https://supabase.com/) (PostgreSQL database, Row Level Security policies, and Google OAuth)
 - **Object Storage**: [Cloudflare R2](https://www.cloudflare.com/developer-platform/r2/) (S3-compatible, ultra-low cost media hosting)
 - **Image Processing**: Client-side HTML5 Canvas scaling (to bypass server payload limits) + Server-side [Sharp](https://sharp.pixelplumbing.com/) (for sanitization, formatting, and optimization)
@@ -28,7 +28,7 @@ A modern web application and member portal prototype built for the **NUS Comics 
 - **Media Gallery**: A collaborative gallery for members to share illustrations and fan art, integrated directly with Cloudflare R2 storage.
 - **Blog Engine**: Publish newsletters, guides, or editorials using custom MDX rendering, featuring cover image uploads.
 - **Telegram Bot Webhook**: Fully integrated chatbot enabling members to query recommendations and update their ratings directly from Telegram.
-- **Adaptive Design**: Fully responsive visual aesthetics featuring subtle micro-animations and an interactive "Chaos Mode" easter egg theme.
+- **Adaptive Design**: Fully responsive visual aesthetics featuring subtle micro-animations.
 
 ---
 

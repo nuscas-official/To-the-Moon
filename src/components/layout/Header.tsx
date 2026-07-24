@@ -60,7 +60,7 @@ export function HeaderContent({ user, showAdminLink, isEventModalOpen = false }:
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20)
       
-      const darkSections = document.querySelectorAll('.bg-background-dark')
+      const darkSections = document.querySelectorAll('.bg-background-dark, .theme-crimson')
       let overDark = false
       
       darkSections.forEach((section) => {
@@ -119,10 +119,10 @@ export function HeaderContent({ user, showAdminLink, isEventModalOpen = false }:
   return (
     <>
       {/* Top Sticky Header Bar */}
-      <header className={`sticky top-0 z-[60] w-full transition-all duration-300 ${
+      <header className={`sticky top-0 z-[60] w-full transition-all duration-300 bg-transparent shadow-none ${
         isScrolled 
-          ? 'bg-surface shadow-sm opacity-75' 
-          : 'bg-surface'
+          ? 'md:bg-surface md:shadow-sm md:opacity-75' 
+          : 'md:bg-surface'
       } ${isEventModalOpen ? 'hidden' : ''}`}>
         <div className="max-w-8xl mx-auto flex h-16 items-center justify-between px-6 relative">
           {/* Logo & Menu Title on Left */}
@@ -214,8 +214,8 @@ export function HeaderContent({ user, showAdminLink, isEventModalOpen = false }:
             <img
               src="/images/hamburger_lines.webp"
               alt="Open Menu"
-              className={`h-12 w-12 object-contain z-10 chaos-invert transition-all duration-500 absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 ${isOpen ? 'opacity-0 rotate-180 scale-50 pointer-events-none' : 'opacity-100 rotate-0 scale-100 group-hover:scale-90'
-                } ${isOverDark && !isOpen ? 'md:invert' : ''}`}
+              className={`h-12 w-12 object-contain z-10 transition-all duration-500 absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 ${isOpen ? 'opacity-0 rotate-180 scale-50 pointer-events-none' : 'opacity-100 rotate-0 scale-100 group-hover:scale-90'
+                } ${isOverDark && !isOpen ? 'invert' : ''}`}
             />
 
             {/* Close Icon (SVG) */}
