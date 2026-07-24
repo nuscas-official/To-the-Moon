@@ -11,15 +11,15 @@ const RichTextEditor = dynamic(
   {
     ssr: false,
     loading: () => (
-      <div className="w-full min-h-[400px] border border-border rounded-xl bg-surface animate-pulse flex flex-col">
+      <div className="w-full min-h-[400px] border border-border bg-surface animate-pulse flex flex-col">
         <div className="h-10 bg-neutral-100 border-b border-border w-full flex items-center px-4 gap-2">
-          <div className="h-5 w-16 bg-neutral-200 rounded animate-pulse" />
-          <div className="h-5 w-24 bg-neutral-200 rounded animate-pulse" />
+          <div className="h-5 w-16 bg-neutral-200 animate-pulse" />
+          <div className="h-5 w-24 bg-neutral-200 animate-pulse" />
         </div>
         <div className="p-6 flex-grow space-y-3">
-          <div className="h-4 bg-neutral-200 rounded w-1/3 animate-pulse" />
-          <div className="h-4 bg-neutral-200 rounded w-full animate-pulse" />
-          <div className="h-4 bg-neutral-200 rounded w-5/6 animate-pulse" />
+          <div className="h-4 bg-neutral-200 w-1/3 animate-pulse" />
+          <div className="h-4 bg-neutral-200 w-full animate-pulse" />
+          <div className="h-4 bg-neutral-200 w-5/6 animate-pulse" />
         </div>
       </div>
     )
@@ -150,7 +150,7 @@ export default function ArticleForm({ initialData, showPublishOption, onSave }: 
       
       {/* Error Alert */}
       {error && (
-        <div className="p-4 rounded-xl border border-red-200 bg-red-50 text-red-700 text-xs font-bold uppercase tracking-wide">
+        <div className="p-4 border border-red-200 bg-red-50 text-red-700 text-xs font-bold uppercase tracking-wide">
           {error}
         </div>
       )}
@@ -160,7 +160,7 @@ export default function ArticleForm({ initialData, showPublishOption, onSave }: 
         <button
           type="button"
           onClick={() => setActiveTab('write')}
-          className={`px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider ${
+          className={`px-4 py-2 text-xs font-bold uppercase tracking-wider ${
             activeTab === 'write' ? 'bg-neutral-900 text-white' : 'bg-neutral-100 text-text-muted'
           }`}
         >
@@ -169,7 +169,7 @@ export default function ArticleForm({ initialData, showPublishOption, onSave }: 
         <button
           type="button"
           onClick={() => setActiveTab('preview')}
-          className={`px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider ${
+          className={`px-4 py-2 text-xs font-bold uppercase tracking-wider ${
             activeTab === 'preview' ? 'bg-neutral-900 text-white' : 'bg-neutral-100 text-text-muted'
           }`}
         >
@@ -194,7 +194,7 @@ export default function ArticleForm({ initialData, showPublishOption, onSave }: 
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="Enter a catchy title..."
-              className="w-full px-4 py-3 rounded-xl border border-border bg-surface text-sm focus:outline-none focus:border-accent font-bold text-neutral-800"
+              className="w-full px-4 py-3 border border-border bg-surface text-sm focus:outline-none focus:border-accent font-bold text-neutral-800"
               required
             />
           </div>
@@ -211,7 +211,7 @@ export default function ArticleForm({ initialData, showPublishOption, onSave }: 
                 id="article-type-mobile"
                 value={type}
                 onChange={(e) => setType(e.target.value as 'news' | 'review' | 'essay' | 'interview')}
-                className="w-full px-4 py-3 rounded-xl border border-border bg-surface text-sm focus:outline-none focus:border-accent font-bold text-neutral-700 appearance-none animate-none"
+                className="w-full px-4 py-3 border border-border bg-surface text-sm focus:outline-none focus:border-accent font-bold text-neutral-700 appearance-none animate-none"
               >
                 <option value="news">News</option>
                 <option value="review">Review</option>
@@ -226,7 +226,7 @@ export default function ArticleForm({ initialData, showPublishOption, onSave }: 
                 Cover Image
               </label>
               {coverImageKey ? (
-                <div className="relative h-28 w-full rounded-xl border border-border bg-neutral-100 overflow-hidden group">
+                <div className="relative h-28 w-full border border-border bg-neutral-100 overflow-hidden group">
                   <Image 
                     fill 
                     unoptimized 
@@ -238,7 +238,7 @@ export default function ArticleForm({ initialData, showPublishOption, onSave }: 
                     <button
                       type="button"
                       onClick={handleRemoveCover}
-                      className="px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white font-bold text-[10px] uppercase tracking-wider rounded-lg transition-colors shadow-sm"
+                      className="px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white font-bold text-[10px] uppercase tracking-wider transition-colors shadow-sm"
                     >
                       Remove Cover
                     </button>
@@ -246,11 +246,11 @@ export default function ArticleForm({ initialData, showPublishOption, onSave }: 
                 </div>
               ) : (
                 <div className="flex flex-col space-y-2">
-                  <div className="flex rounded-lg bg-neutral-100 p-1 border border-border max-w-xs">
+                  <div className="flex bg-neutral-100 p-1 border border-border max-w-xs">
                     <button
                       type="button"
                       onClick={() => setImageSource('upload')}
-                      className={`flex-1 py-1 text-[10px] font-black uppercase tracking-wider rounded-md transition-all ${
+                      className={`flex-1 py-1 text-[10px] font-black uppercase tracking-wider transition-all ${
                         imageSource === 'upload'
                           ? 'bg-white text-neutral-900 shadow-sm'
                           : 'text-neutral-500 hover:text-neutral-900'
@@ -261,7 +261,7 @@ export default function ArticleForm({ initialData, showPublishOption, onSave }: 
                     <button
                       type="button"
                       onClick={() => setImageSource('url')}
-                      className={`flex-1 py-1 text-[10px] font-black uppercase tracking-wider rounded-md transition-all ${
+                      className={`flex-1 py-1 text-[10px] font-black uppercase tracking-wider transition-all ${
                         imageSource === 'url'
                           ? 'bg-white text-neutral-900 shadow-sm'
                           : 'text-neutral-500 hover:text-neutral-900'
@@ -272,7 +272,7 @@ export default function ArticleForm({ initialData, showPublishOption, onSave }: 
                   </div>
 
                   {imageSource === 'upload' ? (
-                    <div className="border border-dashed border-border rounded-xl p-3 bg-surface flex flex-col items-center justify-center text-center hover:border-accent transition-colors relative min-h-[90px]">
+                    <div className="border border-dashed border-border p-3 bg-surface flex flex-col items-center justify-center text-center hover:border-accent transition-colors relative min-h-[90px]">
                       <input
                         type="file"
                         accept="image/*"
@@ -299,7 +299,7 @@ export default function ArticleForm({ initialData, showPublishOption, onSave }: 
                         setCoverImageKey(e.target.value)
                       }}
                       placeholder="https://images.unsplash.com/..."
-                      className="w-full px-3 py-2 rounded-xl border border-border bg-surface text-xs focus:outline-none focus:border-accent text-neutral-700 font-bold"
+                      className="w-full px-3 py-2 border border-border bg-surface text-xs focus:outline-none focus:border-accent text-neutral-700 font-bold"
                     />
                   )}
                 </div>
@@ -327,7 +327,7 @@ export default function ArticleForm({ initialData, showPublishOption, onSave }: 
                 type="button"
                 disabled={loading || uploading}
                 onClick={() => handleSubmit('draft')}
-                className="px-5 py-3 rounded-xl border border-border bg-white hover:bg-neutral-50 text-neutral-800 font-bold text-xs uppercase tracking-wider transition-all shadow-sm active:scale-95 disabled:opacity-50"
+                className="px-5 py-3 border border-border bg-white hover:bg-neutral-50 text-neutral-800 font-bold text-xs uppercase tracking-wider transition-all shadow-sm active:scale-95 disabled:opacity-50"
               >
                 {loading ? 'Saving...' : 'Save Draft'}
               </button>
@@ -339,7 +339,7 @@ export default function ArticleForm({ initialData, showPublishOption, onSave }: 
                 type="button"
                 disabled={loading || uploading}
                 onClick={() => handleSubmit('pending_review')}
-                className="px-5 py-3 rounded-xl bg-neutral-900 hover:bg-neutral-800 text-white font-bold text-xs uppercase tracking-wider transition-all shadow-sm active:scale-95 disabled:opacity-50"
+                className="px-5 py-3 bg-neutral-900 hover:bg-neutral-800 text-white font-bold text-xs uppercase tracking-wider transition-all shadow-sm active:scale-95 disabled:opacity-50"
               >
                 {loading ? 'Submitting...' : 'Submit for Review'}
               </button>
@@ -351,7 +351,7 @@ export default function ArticleForm({ initialData, showPublishOption, onSave }: 
                 type="button"
                 disabled={loading || uploading}
                 onClick={() => handleSubmit('published')}
-                className="px-5 py-3 rounded-xl bg-accent hover:bg-accent-hover text-white font-bold text-xs uppercase tracking-wider transition-all shadow-sm active:scale-95 disabled:opacity-50"
+                className="px-5 py-3 bg-accent hover:bg-accent-hover text-white font-bold text-xs uppercase tracking-wider transition-all shadow-sm active:scale-95 disabled:opacity-50"
               >
                 {loading ? 'Publishing...' : 'Publish Now'}
               </button>
@@ -366,7 +366,7 @@ export default function ArticleForm({ initialData, showPublishOption, onSave }: 
                   router.push('/member/articles')
                 }
               }}
-              className="px-5 py-3 rounded-xl text-text-muted hover:text-neutral-800 font-bold text-xs uppercase tracking-wider transition-colors ml-auto"
+              className="px-5 py-3 text-text-muted hover:text-neutral-800 font-bold text-xs uppercase tracking-wider transition-colors ml-auto"
             >
               Cancel
             </button>
@@ -389,7 +389,7 @@ export default function ArticleForm({ initialData, showPublishOption, onSave }: 
                 id="article-type-desktop"
                 value={type}
                 onChange={(e) => setType(e.target.value as 'news' | 'review' | 'essay' | 'interview')}
-                className="w-full px-4 py-3 rounded-xl border border-border bg-surface text-sm focus:outline-none focus:border-accent font-bold text-neutral-700 appearance-none animate-none"
+                className="w-full px-4 py-3 border border-border bg-surface text-sm focus:outline-none focus:border-accent font-bold text-neutral-700 appearance-none animate-none"
               >
                 <option value="news">News</option>
                 <option value="review">Review</option>
@@ -404,7 +404,7 @@ export default function ArticleForm({ initialData, showPublishOption, onSave }: 
                 Cover Image
               </label>
               {coverImageKey ? (
-                <div className="relative h-28 w-full rounded-xl border border-border bg-neutral-100 overflow-hidden group">
+                <div className="relative h-28 w-full border border-border bg-neutral-100 overflow-hidden group">
                   <Image 
                     fill 
                     unoptimized 
@@ -416,7 +416,7 @@ export default function ArticleForm({ initialData, showPublishOption, onSave }: 
                     <button
                       type="button"
                       onClick={handleRemoveCover}
-                      className="px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white font-bold text-[10px] uppercase tracking-wider rounded-lg transition-colors shadow-sm"
+                      className="px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white font-bold text-[10px] uppercase tracking-wider transition-colors shadow-sm"
                     >
                       Remove Cover
                     </button>
@@ -424,11 +424,11 @@ export default function ArticleForm({ initialData, showPublishOption, onSave }: 
                 </div>
               ) : (
                 <div className="flex flex-col space-y-2">
-                  <div className="flex rounded-lg bg-neutral-100 p-1 border border-border max-w-xs">
+                  <div className="flex bg-neutral-100 p-1 border border-border max-w-xs">
                     <button
                       type="button"
                       onClick={() => setImageSource('upload')}
-                      className={`flex-1 py-1 text-[10px] font-black uppercase tracking-wider rounded-md transition-all ${
+                      className={`flex-1 py-1 text-[10px] font-black uppercase tracking-wider transition-all ${
                         imageSource === 'upload'
                           ? 'bg-white text-neutral-900 shadow-sm'
                           : 'text-neutral-500 hover:text-neutral-900'
@@ -439,7 +439,7 @@ export default function ArticleForm({ initialData, showPublishOption, onSave }: 
                     <button
                       type="button"
                       onClick={() => setImageSource('url')}
-                      className={`flex-1 py-1 text-[10px] font-black uppercase tracking-wider rounded-md transition-all ${
+                      className={`flex-1 py-1 text-[10px] font-black uppercase tracking-wider transition-all ${
                         imageSource === 'url'
                           ? 'bg-white text-neutral-900 shadow-sm'
                           : 'text-neutral-500 hover:text-neutral-900'
@@ -450,7 +450,7 @@ export default function ArticleForm({ initialData, showPublishOption, onSave }: 
                   </div>
 
                   {imageSource === 'upload' ? (
-                    <div className="border border-dashed border-border rounded-xl p-3 bg-surface flex flex-col items-center justify-center text-center hover:border-accent transition-colors relative min-h-[90px]">
+                    <div className="border border-dashed border-border p-3 bg-surface flex flex-col items-center justify-center text-center hover:border-accent transition-colors relative min-h-[90px]">
                       <input
                         type="file"
                         accept="image/*"
@@ -459,7 +459,7 @@ export default function ArticleForm({ initialData, showPublishOption, onSave }: 
                         className="absolute inset-0 w-full h-full opacity-0 cursor-pointer disabled:cursor-not-allowed"
                       />
                       <svg className="w-5 h-5 text-neutral-400 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                       </svg>
                       <p className="text-[10px] font-semibold text-neutral-700">
                         {uploading ? uploadProgress : 'Click or drag image to upload'}
@@ -477,7 +477,7 @@ export default function ArticleForm({ initialData, showPublishOption, onSave }: 
                         setCoverImageKey(e.target.value)
                       }}
                       placeholder="https://images.unsplash.com/..."
-                      className="w-full px-3 py-2 rounded-xl border border-border bg-surface text-xs focus:outline-none focus:border-accent text-neutral-700 font-bold"
+                      className="w-full px-3 py-2 border border-border bg-surface text-xs focus:outline-none focus:border-accent text-neutral-700 font-bold"
                     />
                   )}
                 </div>
@@ -487,10 +487,10 @@ export default function ArticleForm({ initialData, showPublishOption, onSave }: 
           </div>
 
           {/* Live MDX Preview */}
-          <div className="flex flex-col border border-border bg-neutral-50/60 rounded-2xl p-6 overflow-y-auto max-h-[600px] flex-grow min-h-[400px]">
+          <div className="flex flex-col border border-border bg-neutral-50/60 p-6 overflow-y-auto max-h-[600px] flex-grow min-h-[400px]">
             <div className="border-b border-border/80 pb-3 mb-4 flex items-center justify-between">
               <span className="text-xs uppercase tracking-widest font-black text-text-muted">Live Preview</span>
-              <span className="text-[10px] bg-neutral-200 text-neutral-600 px-2 py-0.5 rounded font-mono">MDX Mode</span>
+              <span className="text-[10px] bg-neutral-200 text-neutral-600 px-2 py-0.5 font-mono">MDX Mode</span>
             </div>
 
             <div className="markdown-body w-full flex-grow text-left">

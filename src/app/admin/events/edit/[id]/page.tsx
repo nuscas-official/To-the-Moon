@@ -117,7 +117,7 @@ export default async function AdminEditEventPage({ params }: AdminEditEventPageP
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         {/* Event Details Form (7 cols on lg) */}
         <div className="lg:col-span-7">
-          <div className="rounded-2xl border border-border bg-surface p-6 sm:p-8 shadow-sm">
+          <div className="rounded-none border border-border bg-surface p-6 sm:p-8 shadow-sm">
             <h2 className="text-base font-black text-neutral-900 mb-6 border-b border-border pb-4">
               Event Configuration
             </h2>

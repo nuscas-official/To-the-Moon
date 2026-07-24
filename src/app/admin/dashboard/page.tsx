@@ -143,7 +143,7 @@ export default async function AdminDashboardPage() {
       {/* 1. Stats Cards Grid */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
         {/* Members count */}
-        <div className="p-5 rounded-2xl border border-border bg-surface shadow-sm fanzine-dot-grid flex flex-col justify-between min-h-[120px]">
+        <div className="p-5 rounded-none border border-border bg-surface shadow-sm fanzine-dot-grid flex flex-col justify-between min-h-[120px]">
           <div className="flex items-center justify-between text-neutral-400">
             <span className="text-[10px] uppercase tracking-widest font-black">Active Members</span>
             <svg className="w-5 h-5 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -156,7 +156,7 @@ export default async function AdminDashboardPage() {
         </div>
 
         {/* Published Posts count */}
-        <div className="p-5 rounded-2xl border border-border bg-surface shadow-sm fanzine-dot-grid flex flex-col justify-between min-h-[120px]">
+        <div className="p-5 rounded-none border border-border bg-surface shadow-sm fanzine-dot-grid flex flex-col justify-between min-h-[120px]">
           <div className="flex items-center justify-between text-neutral-400">
             <span className="text-[10px] uppercase tracking-widest font-black">Published Posts</span>
             <svg className="w-5 h-5 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -169,7 +169,7 @@ export default async function AdminDashboardPage() {
         </div>
 
         {/* Upcoming Events count */}
-        <div className="p-5 rounded-2xl border border-border bg-surface shadow-sm fanzine-dot-grid flex flex-col justify-between min-h-[120px]">
+        <div className="p-5 rounded-none border border-border bg-surface shadow-sm fanzine-dot-grid flex flex-col justify-between min-h-[120px]">
           <div className="flex items-center justify-between text-neutral-400">
             <span className="text-[10px] uppercase tracking-widest font-black">Upcoming Events</span>
             <svg className="w-5 h-5 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -182,7 +182,7 @@ export default async function AdminDashboardPage() {
         </div>
 
         {/* Total Anime Ratings count */}
-        <div className="p-5 rounded-2xl border border-border bg-surface shadow-sm fanzine-dot-grid flex flex-col justify-between min-h-[120px]">
+        <div className="p-5 rounded-none border border-border bg-surface shadow-sm fanzine-dot-grid flex flex-col justify-between min-h-[120px]">
           <div className="flex items-center justify-between text-neutral-400">
             <span className="text-[10px] uppercase tracking-widest font-black">Anime Ratings</span>
             <svg className="w-5 h-5 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -222,7 +222,7 @@ export default async function AdminDashboardPage() {
           <h2 className="text-lg font-black text-neutral-900 uppercase tracking-wider">
             Activity Feed
           </h2>
-          <div className="border border-border bg-surface rounded-2xl p-5 shadow-sm space-y-5">
+          <div className="border border-border bg-surface rounded-none p-5 shadow-sm space-y-5">
             {logs.length === 0 ? (
               <div className="text-center py-8 text-xs text-text-muted">
                 No recent activity logged.
@@ -232,7 +232,7 @@ export default async function AdminDashboardPage() {
                 {logs.map((log, idx) => (
                   <div key={idx} className="relative text-xs">
                     {/* Activity marker point */}
-                    <span className="absolute -left-[21.5px] top-1.5 w-2 h-2 rounded-full bg-accent border border-white" />
+                    <span className="absolute -left-[21.5px] top-1.5 w-2 h-2 bg-accent border border-white" />
                     <p className="font-semibold text-neutral-800 leading-relaxed">
                       {log.text}
                     </p>

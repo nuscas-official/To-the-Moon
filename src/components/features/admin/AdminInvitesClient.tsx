@@ -109,7 +109,7 @@ export default function AdminInvitesClient({ initialInvites }: AdminInvitesClien
           <button
             onClick={handleGenerateInvite}
             disabled={isLoading}
-            className="rounded-xl bg-accent hover:bg-accent-hover disabled:bg-neutral-200 text-white disabled:text-neutral-500 font-bold text-xs uppercase tracking-wider px-6 py-3.5 shadow-sm active:scale-95 disabled:scale-100 transition-all flex items-center justify-center gap-1.5"
+            className="rounded-none bg-accent hover:bg-accent-hover disabled:bg-neutral-200 text-white disabled:text-neutral-500 font-bold text-xs uppercase tracking-wider px-6 py-3.5 shadow-sm active:scale-95 disabled:scale-100 transition-all flex items-center justify-center gap-1.5"
           >
             {isLoading ? (
               <>
@@ -125,7 +125,7 @@ export default function AdminInvitesClient({ initialInvites }: AdminInvitesClien
           </button>
 
           {newInviteUrl && (
-            <div className="flex-1 flex gap-2 items-center rounded-xl border border-emerald-200 bg-emerald-50/50 p-2 pl-4 animate-fade-in">
+            <div className="flex-1 flex gap-2 items-center rounded-none border border-emerald-200 bg-emerald-50/50 p-2 pl-4 animate-fade-in">
               <input
                 type="text"
                 readOnly
@@ -138,7 +138,7 @@ export default function AdminInvitesClient({ initialInvites }: AdminInvitesClien
                   setCopied(true)
                   setTimeout(() => setCopied(false), 2000)
                 }}
-                className="rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[10px] uppercase tracking-wider px-3.5 py-2 shadow-sm transition-all"
+                className="rounded-none bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[10px] uppercase tracking-wider px-3.5 py-2 shadow-sm transition-all"
               >
                 {copied ? 'Copied!' : 'Copy'}
               </button>
@@ -190,7 +190,7 @@ export default function AdminInvitesClient({ initialInvites }: AdminInvitesClien
                       {invite.generator?.display_name || 'System'}
                     </td>
                     <td className="px-6 py-4">
-                      <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-semibold border ${status.style}`}>
+                      <span className={`inline-flex items-center gap-1 rounded-none px-2 py-0.5 text-xs font-semibold border ${status.style}`}>
                         {status.text}
                       </span>
                     </td>
@@ -219,7 +219,7 @@ export default function AdminInvitesClient({ initialInvites }: AdminInvitesClien
                         <button
                           onClick={() => handleRevokeInvite(invite.id)}
                           disabled={isProcessing}
-                          className="rounded-lg bg-red-50 hover:bg-red-100 border border-red-200 text-red-600 font-bold text-xs uppercase tracking-wider px-3 py-1.5 transition-all active:scale-95 disabled:scale-100 disabled:opacity-50"
+                          className="rounded-none bg-red-50 hover:bg-red-100 border border-red-200 text-red-600 font-bold text-xs uppercase tracking-wider px-3 py-1.5 transition-all active:scale-95 disabled:scale-100 disabled:opacity-50"
                         >
                           {isProcessing ? 'Revoking...' : 'Revoke'}
                         </button>

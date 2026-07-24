@@ -87,7 +87,7 @@ export default function AdminPostTable({ initialPosts }: AdminPostTableProps) {
               key={status}
               type="button"
               onClick={() => setFilterStatus(status)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all ${
+              className={`px-3 py-1.5 rounded-none text-xs font-bold uppercase tracking-wider transition-all ${
                 filterStatus === status 
                   ? 'bg-neutral-900 text-white' 
                   : 'bg-neutral-100 hover:bg-neutral-200 text-text-muted'
@@ -100,7 +100,7 @@ export default function AdminPostTable({ initialPosts }: AdminPostTableProps) {
 
         <Link
           href="/admin/posts/new"
-          className="px-5 py-2.5 rounded-xl bg-accent hover:bg-accent-hover text-white font-bold text-xs uppercase tracking-wider transition-colors shadow-sm active:scale-95 text-center"
+          className="px-5 py-2.5 rounded-none bg-accent hover:bg-accent-hover text-white font-bold text-xs uppercase tracking-wider transition-colors shadow-sm active:scale-95 text-center"
         >
           + Create New Post
         </Link>
@@ -110,7 +110,7 @@ export default function AdminPostTable({ initialPosts }: AdminPostTableProps) {
       {/* Reject Reason Dialog Modal Popup */}
       {rejectId && mounted && createPortal(
         <div className="fixed inset-0 z-[9999] bg-neutral-950/40 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-surface border border-border p-6 max-w-md w-full space-y-4 shadow-xl">
+          <div className="bg-surface border border-border p-6 max-w-md w-full space-y-4 shadow-xl rounded-none">
             <h3 className="text-lg font-black text-neutral-900">Reject Article Submission</h3>
             <p className="text-xs text-text-muted leading-relaxed">
               Provide a constructive reason for rejecting this draft. The article status will revert to &ldquo;Draft&rdquo; so the member can revise and re-submit.
@@ -120,7 +120,7 @@ export default function AdminPostTable({ initialPosts }: AdminPostTableProps) {
               onChange={(e) => setRejectReason(e.target.value)}
               placeholder="e.g. Please revise your review format to separate visual novel descriptions from character ratings..."
               rows={4}
-              className="w-full p-3 border border-border text-sm focus:outline-none focus:border-accent text-neutral-800"
+              className="w-full p-3 border border-border text-sm focus:outline-none focus:border-accent text-neutral-800 rounded-none"
             />
             <div className="flex justify-end gap-2 pt-2">
               <button
@@ -134,7 +134,7 @@ export default function AdminPostTable({ initialPosts }: AdminPostTableProps) {
                 type="button"
                 onClick={() => handleAction(rejectId, 'reject')}
                 disabled={!rejectReason.trim()}
-                className="px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white font-bold text-xs uppercase tracking-wider disabled:opacity-50 disabled:pointer-events-none disabled:cursor-not-allowed"
+                className="px-4 py-2 rounded-none bg-red-600 hover:bg-red-700 text-white font-bold text-xs uppercase tracking-wider disabled:opacity-50 disabled:pointer-events-none disabled:cursor-not-allowed"
               >
                 Reject Draft
               </button>
@@ -192,12 +192,12 @@ export default function AdminPostTable({ initialPosts }: AdminPostTableProps) {
                       {post.author?.display_name || 'Member'}
                     </td>
                     <td className="p-4 sm:p-5">
-                      <span className="text-[10px] uppercase font-black tracking-wider text-accent bg-accent/5 px-2 py-0.5 rounded border border-accent/10">
+                      <span className="text-[10px] uppercase font-black tracking-wider text-accent bg-accent/5 px-2 py-0.5 rounded-none border border-accent/10">
                         {post.type}
                       </span>
                     </td>
                     <td className="p-4 sm:p-5">
-                      <span className={`text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded border ${statusColors[post.status] || ''}`}>
+                      <span className={`text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-none border ${statusColors[post.status] || ''}`}>
                         {post.status.replace('_', ' ')}
                       </span>
                     </td>
@@ -211,7 +211,7 @@ export default function AdminPostTable({ initialPosts }: AdminPostTableProps) {
                             type="button"
                             disabled={isActionLoading}
                             onClick={() => handleAction(post.id, 'publish')}
-                            className="px-2.5 py-1.5 rounded-md bg-emerald-600 hover:bg-emerald-505 hover:bg-emerald-700 text-white font-bold text-[10px] uppercase tracking-wider disabled:opacity-50"
+                            className="px-2.5 py-1.5 rounded-none bg-emerald-600 hover:bg-emerald-505 hover:bg-emerald-700 text-white font-bold text-[10px] uppercase tracking-wider disabled:opacity-50"
                           >
                             Approve
                           </button>
@@ -219,7 +219,7 @@ export default function AdminPostTable({ initialPosts }: AdminPostTableProps) {
                             type="button"
                             disabled={isActionLoading}
                             onClick={() => setRejectId(post.id)}
-                            className="px-2.5 py-1.5 rounded-md bg-red-600 hover:bg-red-700 text-white font-bold text-[10px] uppercase tracking-wider opacity-60 hover:opacity-100 transition-opacity disabled:opacity-50 disabled:pointer-events-none"
+                            className="px-2.5 py-1.5 rounded-none bg-red-600 hover:bg-red-700 text-white font-bold text-[10px] uppercase tracking-wider opacity-60 hover:opacity-100 transition-opacity disabled:opacity-50 disabled:pointer-events-none"
                           >
                             Reject
                           </button>
@@ -231,7 +231,7 @@ export default function AdminPostTable({ initialPosts }: AdminPostTableProps) {
                           type="button"
                           disabled={isActionLoading}
                           onClick={() => handleAction(post.id, 'archive')}
-                          className="px-2.5 py-1.5 rounded bg-neutral-900 hover:bg-neutral-800 text-white font-bold text-[10px] uppercase tracking-wider disabled:opacity-50"
+                          className="px-2.5 py-1.5 rounded-none bg-neutral-900 hover:bg-neutral-800 text-white font-bold text-[10px] uppercase tracking-wider disabled:opacity-50"
                         >
                           Archive
                         </button>
@@ -239,7 +239,7 @@ export default function AdminPostTable({ initialPosts }: AdminPostTableProps) {
 
                       <Link
                         href={`/admin/posts/edit/${post.id}`}
-                        className="inline-block px-2.5 py-1.5 rounded bg-white hover:bg-neutral-50 text-neutral-800 border border-border font-bold text-[10px] uppercase tracking-wider"
+                        className="inline-block px-2.5 py-1.5 rounded-none bg-white hover:bg-neutral-50 text-neutral-800 border border-border font-bold text-[10px] uppercase tracking-wider"
                       >
                         Edit
                       </Link>
@@ -252,7 +252,7 @@ export default function AdminPostTable({ initialPosts }: AdminPostTableProps) {
                             handleAction(post.id, 'delete')
                           }
                         }}
-                        className="px-2.5 py-1.5 rounded hover:bg-red-50 text-red-600 font-bold text-[10px] uppercase tracking-wider disabled:opacity-50"
+                        className="px-2.5 py-1.5 rounded-none hover:bg-red-50 text-red-600 font-bold text-[10px] uppercase tracking-wider disabled:opacity-50"
                       >
                         Delete
                       </button>

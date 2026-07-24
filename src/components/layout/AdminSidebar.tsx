@@ -74,7 +74,7 @@ export default function AdminSidebar({ userDisplayName, userRole }: AdminSidebar
                       ? 'border-accent text-accent font-black'
                       : 'border-border text-text-muted hover:text-neutral-900 hover:border-neutral-400 font-bold'
                   }`
-                : `px-4 py-2.5 rounded-xl font-bold ${
+                : `px-4 py-2.5 rounded-none font-bold ${
                     isActive
                       ? isParentActive
                         ? 'bg-neutral-100 text-neutral-900 font-black dark:bg-neutral-800 dark:text-white shadow-sm'
@@ -96,14 +96,14 @@ export default function AdminSidebar({ userDisplayName, userRole }: AdminSidebar
   return (
     <>
       {/* Mobile Top Bar (toggleable) */}
-      <div className="flex md:hidden items-center justify-between border border-border bg-surface px-4 py-3 rounded-xl mb-4 shadow-sm">
+      <div className="flex md:hidden items-center justify-between border border-border bg-surface px-4 py-3 rounded-none mb-4 shadow-sm">
         <div className="flex items-center gap-2">
-          <span className="w-2.5 h-2.5 rounded-full bg-accent animate-pulse" />
+          <span className="w-2.5 h-2.5 rounded-none bg-accent animate-pulse" />
           <span className="text-xs font-black uppercase tracking-wider text-neutral-800">Admin Control</span>
         </div>
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="p-1.5 rounded-lg border border-border text-neutral-600 hover:bg-neutral-50 active:scale-95 transition-all"
+          className="p-1.5 rounded-none border border-border text-neutral-600 hover:bg-neutral-50 active:scale-95 transition-all"
         >
           {isOpen ? (
             <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -119,14 +119,14 @@ export default function AdminSidebar({ userDisplayName, userRole }: AdminSidebar
 
       {/* Mobile Dropdown Menu (animated) */}
       {isOpen && (
-        <div className="md:hidden border border-border bg-surface rounded-xl p-4 mb-6 shadow-md animate-fade-in flex flex-col gap-4">
+        <div className="md:hidden border border-border bg-surface rounded-none p-4 mb-6 shadow-md animate-fade-in flex flex-col gap-4">
           <div className="flex items-center gap-3 pb-3 border-b border-border/80">
-            <div className="w-8 h-8 rounded-full bg-accent/10 flex items-center justify-center font-bold text-accent text-sm">
+            <div className="w-8 h-8 rounded-none bg-accent/10 flex items-center justify-center font-bold text-accent text-sm">
               {userDisplayName.charAt(0).toUpperCase()}
             </div>
             <div>
               <div className="text-sm font-black text-neutral-900">{userDisplayName}</div>
-              <div className="inline-flex items-center rounded bg-accent/10 px-1.5 py-0.5 text-[10px] font-bold text-accent uppercase mt-0.5">
+              <div className="inline-flex items-center rounded-none bg-accent/10 px-1.5 py-0.5 text-[10px] font-bold text-accent uppercase mt-0.5">
                 {userRole}
               </div>
             </div>
@@ -139,8 +139,8 @@ export default function AdminSidebar({ userDisplayName, userRole }: AdminSidebar
       <aside className="hidden md:flex flex-col w-60 flex-shrink-0 border-r border-border/80 pr-6 text-left self-stretch justify-between">
         <div className="space-y-6">
           {/* Header metadata */}
-          <div className="flex items-center gap-3 p-2 rounded-xl bg-neutral-50 border border-neutral-100">
-            <div className="w-10 h-10 rounded-xl bg-accent text-white flex items-center justify-center font-black text-lg shadow-sm shadow-accent/20">
+          <div className="flex items-center gap-3 p-2 rounded-none bg-neutral-50 border border-neutral-100">
+            <div className="w-10 h-10 rounded-none bg-accent text-white flex items-center justify-center font-black text-lg shadow-sm shadow-accent/20">
               {userDisplayName.charAt(0).toUpperCase()}
             </div>
             <div className="min-w-0">
@@ -148,7 +148,7 @@ export default function AdminSidebar({ userDisplayName, userRole }: AdminSidebar
                 {userDisplayName}
               </div>
               <div className="mt-0.5">
-                <span className="inline-flex items-center rounded-md bg-accent/10 px-2 py-0.5 text-[9px] font-black text-accent uppercase tracking-wider border border-accent/20">
+                <span className="inline-flex items-center rounded-none bg-accent/10 px-2 py-0.5 text-[9px] font-black text-accent uppercase tracking-wider border border-accent/20">
                   {userRole}
                 </span>
               </div>

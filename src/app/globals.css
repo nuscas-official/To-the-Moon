@@ -26,6 +26,12 @@
   }
 }
 
+/* Remove rounded borders in all admin pages */
+.admin-page-root,
+.admin-page-root *:not(.animate-spin) {
+  border-radius: 0 !important;
+}
+
 .glass-panel {
   background: rgba(255, 255, 255, 0.7);
   backdrop-filter: blur(12px);

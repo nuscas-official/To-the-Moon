@@ -13,8 +13,8 @@ export default async function AdminTestPage() {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-[60vh] text-center p-8 bg-white rounded-2xl border border-slate-200 shadow-sm max-w-xl mx-auto my-12">
-      <div className="rounded-full bg-red-50 p-3 text-red-600">
+    <div className="flex flex-col items-center justify-center min-h-[60vh] text-center p-8 bg-white rounded-none border border-slate-200 shadow-sm max-w-xl mx-auto my-12">
+      <div className="rounded-none bg-red-50 p-3 text-red-600">
         <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
         </svg>
@@ -31,7 +31,7 @@ export default async function AdminTestPage() {
         <div><strong className="text-slate-800">Display Name:</strong> {user.user_metadata?.name || 'Admin'}</div>
         <div>
           <strong className="text-slate-800">Assigned Role:</strong>{' '}
-          <span className="uppercase font-bold text-xs bg-red-50 text-red-700 border border-red-100 rounded px-2 py-0.5">
+          <span className="uppercase font-bold text-xs bg-red-50 text-red-700 border border-red-100 rounded-none px-2 py-0.5">
             {role}
           </span>
         </div>

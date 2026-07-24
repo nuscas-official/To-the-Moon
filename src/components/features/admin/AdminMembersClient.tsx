@@ -107,7 +107,7 @@ export default function AdminMembersClient({ initialUsers, currentUserId }: Admi
                           {user.display_name}
                         </span>
                         {isSelf && (
-                          <span className="rounded bg-accent/10 px-1.5 py-0.5 text-[10px] font-extrabold text-accent uppercase tracking-wider border border-accent/20">
+                          <span className="rounded-none bg-accent/10 px-1.5 py-0.5 text-[10px] font-extrabold text-accent uppercase tracking-wider border border-accent/20">
                             You
                           </span>
                         )}
@@ -119,7 +119,7 @@ export default function AdminMembersClient({ initialUsers, currentUserId }: Admi
                         value={user.role}
                         disabled={isLoading || isSelf}
                         onChange={(e) => handleRoleChange(user.id, e.target.value as 'member' | 'committee' | 'admin')}
-                        className="rounded-lg border border-border bg-background px-2.5 py-1.5 text-xs font-semibold text-neutral-900 focus:outline-none focus:ring-1 focus:ring-accent focus:border-accent disabled:opacity-50 transition-all cursor-pointer"
+                        className="rounded-none border border-border bg-background px-2.5 py-1.5 text-xs font-semibold text-neutral-900 focus:outline-none focus:ring-1 focus:ring-accent focus:border-accent disabled:opacity-50 transition-all cursor-pointer"
                       >
                         <option value="member">Member</option>
                         <option value="committee">Committee (EXCO)</option>
@@ -128,13 +128,13 @@ export default function AdminMembersClient({ initialUsers, currentUserId }: Admi
                     </td>
                     <td className="px-6 py-4">
                       <span
-                        className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold border ${
+                        className={`inline-flex items-center gap-1.5 rounded-none px-2.5 py-1 text-xs font-semibold border ${
                           user.is_active
                             ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
                             : 'bg-red-50 text-red-700 border-red-200'
                         }`}
                       >
-                        <span className={`w-1.5 h-1.5 rounded-full ${user.is_active ? 'bg-emerald-500' : 'bg-red-500'}`} />
+                        <span className={`w-1.5 h-1.5 rounded-none ${user.is_active ? 'bg-emerald-500' : 'bg-red-500'}`} />
                         {user.is_active ? 'Active' : 'Deactivated'}
                       </span>
                     </td>
@@ -149,7 +149,7 @@ export default function AdminMembersClient({ initialUsers, currentUserId }: Admi
                       <button
                         onClick={() => handleToggleActive(user.id, user.is_active)}
                         disabled={isLoading || isSelf}
-                        className={`rounded-lg px-3 py-1.5 text-xs font-bold uppercase tracking-wider transition-all active:scale-95 disabled:scale-100 disabled:opacity-50 ${
+                        className={`rounded-none px-3 py-1.5 text-xs font-bold uppercase tracking-wider transition-all active:scale-95 disabled:scale-100 disabled:opacity-50 ${
                           user.is_active
                             ? 'bg-red-50 border border-red-200 text-red-600 hover:bg-red-100'
                             : 'bg-emerald-50 border border-emerald-200 text-emerald-700 hover:bg-emerald-100'

@@ -28,7 +28,7 @@ interface RichTextEditorProps {
 
 export default function RichTextEditor({ markdown, onChange }: RichTextEditorProps) {
   return (
-    <div className="border border-border rounded-xl bg-surface overflow-hidden text-neutral-800 focus-within:border-accent transition-colors shadow-sm">
+    <div className="border border-border bg-surface overflow-hidden text-neutral-800 focus-within:border-accent transition-colors shadow-sm">
       <MDXEditor
         markdown={markdown}
         onChange={onChange}

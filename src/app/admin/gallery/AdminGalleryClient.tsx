@@ -213,7 +213,7 @@ export default function AdminGalleryClient({ initialArtworks }: AdminGalleryClie
               <button
                 type="button"
                 onClick={() => setImageSource('url')}
-                className={`flex-1 py-1.5 text-[10px] font-black uppercase tracking-wider rounded-lg transition-all ${
+                className={`flex-1 py-1.5 text-[10px] font-black uppercase tracking-wider rounded-none transition-all ${
                   imageSource === 'url'
                     ? 'bg-white text-neutral-900 shadow-sm'
                     : 'text-neutral-500 hover:text-neutral-900'
@@ -282,7 +282,7 @@ export default function AdminGalleryClient({ initialArtworks }: AdminGalleryClie
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="e.g. Anikun's Flower"
                 disabled={processing}
-                className="w-full rounded-md border border-border bg-surface px-4 py-2 text-xs text-neutral-800 placeholder-neutral-400 focus:border-accent focus:ring-1 focus:ring-accent outline-none"
+                className="w-full rounded-none border border-border bg-surface px-4 py-2 text-xs text-neutral-800 placeholder-neutral-400 focus:border-accent focus:ring-1 focus:ring-accent outline-none"
               />
             </div>
 
@@ -298,7 +298,7 @@ export default function AdminGalleryClient({ initialArtworks }: AdminGalleryClie
                 onChange={(e) => setArtistCredit(e.target.value)}
                 placeholder="e.g. @artist_hand / John NUSCAS"
                 disabled={processing}
-                className="w-full rounded-md border border-border bg-surface px-4 py-2 text-xs text-neutral-800 placeholder-neutral-400 focus:border-accent focus:ring-1 focus:ring-accent outline-none"
+                className="w-full rounded-none border border-border bg-surface px-4 py-2 text-xs text-neutral-800 placeholder-neutral-400 focus:border-accent focus:ring-1 focus:ring-accent outline-none"
                 required
               />
             </div>
@@ -319,7 +319,7 @@ export default function AdminGalleryClient({ initialArtworks }: AdminGalleryClie
                     value={consentMethod}
                     onChange={(e) => setConsentMethod(e.target.value as 'telegram_message' | 'in_person' | 'email')}
                     disabled={processing}
-                    className="w-full rounded-md border border-border bg-surface px-4 py-2 text-xs text-neutral-800 focus:border-accent focus:ring-1 focus:ring-accent outline-none"
+                    className="w-full rounded-none border border-border bg-surface px-4 py-2 text-xs text-neutral-800 focus:border-accent focus:ring-1 focus:ring-accent outline-none"
                   >
                     <option value="telegram_message">Telegram Message</option>
                     <option value="in_person">In Person</option>
@@ -338,7 +338,7 @@ export default function AdminGalleryClient({ initialArtworks }: AdminGalleryClie
                     value={consentedAt}
                     onChange={(e) => setConsentedAt(e.target.value)}
                     disabled={processing}
-                    className="w-full rounded-md border border-border bg-surface px-4 py-2 text-xs text-neutral-800 focus:border-accent focus:ring-1 focus:ring-accent outline-none"
+                    className="w-full rounded-none border border-border bg-surface px-4 py-2 text-xs text-neutral-800 focus:border-accent focus:ring-1 focus:ring-accent outline-none"
                     required
                   />
                 </div>
@@ -355,7 +355,7 @@ export default function AdminGalleryClient({ initialArtworks }: AdminGalleryClie
                     placeholder="e.g. Telegram message log ID, email thread ref, or signature context"
                     rows={3}
                     disabled={processing}
-                    className="w-full rounded-md border border-border bg-surface px-4 py-2 text-xs text-neutral-800 placeholder-neutral-400 focus:border-accent focus:ring-1 focus:ring-accent outline-none resize-none"
+                    className="w-full rounded-none border border-border bg-surface px-4 py-2 text-xs text-neutral-800 placeholder-neutral-400 focus:border-accent focus:ring-1 focus:ring-accent outline-none resize-none"
                   />
                 </div>
               </div>
@@ -364,7 +364,7 @@ export default function AdminGalleryClient({ initialArtworks }: AdminGalleryClie
             <button
               type="submit"
               disabled={processing}
-              className="w-full py-3 rounded-xl bg-accent hover:bg-accent-hover text-white font-bold text-xs uppercase tracking-wider transition-all shadow-sm active:scale-95 disabled:opacity-50 mt-4"
+              className="w-full py-3 rounded-none bg-accent hover:bg-accent-hover text-white font-bold text-xs uppercase tracking-wider transition-all shadow-sm active:scale-95 disabled:opacity-50 mt-4"
             >
               {processing ? 'Processing...' : 'Upload & Curate Artwork'}
             </button>
@@ -410,7 +410,7 @@ export default function AdminGalleryClient({ initialArtworks }: AdminGalleryClie
                     )}
 
                     {/* Status Badge */}
-                    <span className={`absolute top-3 right-3 text-[9px] uppercase font-black tracking-wider px-2 py-1 rounded-md border ${
+                    <span className={`absolute top-3 right-3 text-[9px] uppercase font-black tracking-wider px-2 py-1 rounded-none border ${
                       art.status === 'visible'
                         ? 'bg-emerald-100 text-emerald-800 border-emerald-200'
                         : 'bg-neutral-100 text-neutral-600 border-neutral-200'
@@ -432,7 +432,7 @@ export default function AdminGalleryClient({ initialArtworks }: AdminGalleryClie
 
                     {/* Consent log box */}
                     {art.consent && (
-                      <div className="rounded-lg bg-neutral-100 p-2.5 text-[10px] text-neutral-600 border border-neutral-200 space-y-1">
+                      <div className="rounded-none bg-neutral-100 p-2.5 text-[10px] text-neutral-600 border border-neutral-200 space-y-1">
                         <div className="flex justify-between font-bold text-neutral-700 uppercase tracking-wider text-[8px] border-b border-neutral-200 pb-1">
                           <span>Consent Audit</span>
                           <span>{art.consent.consent_method.replace('_', ' ')}</span>
@@ -454,7 +454,7 @@ export default function AdminGalleryClient({ initialArtworks }: AdminGalleryClie
                     {art.status === 'visible' && (
                       <button
                         onClick={() => handleTakedown(art.id)}
-                        className="w-full py-2 bg-neutral-900 hover:bg-red-700 text-white hover:text-white rounded-lg text-[10px] font-extrabold uppercase tracking-wider transition-colors active:scale-95"
+                        className="w-full py-2 bg-neutral-900 hover:bg-red-700 text-white hover:text-white rounded-none text-[10px] font-extrabold uppercase tracking-wider transition-colors active:scale-95"
                       >
                         Takedown & Delete File
                       </button>

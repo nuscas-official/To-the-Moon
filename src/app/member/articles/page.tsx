@@ -63,7 +63,7 @@ export default async function MemberArticlesPage() {
         
         <Link
           href="/member/articles/new"
-          className="px-5 py-2.5 rounded-xl bg-accent text-white font-bold text-xs uppercase tracking-wider hover:bg-accent-hover transition-colors shadow-sm active:scale-95"
+          className="px-5 py-2.5 bg-accent text-white font-bold text-xs uppercase tracking-wider hover:bg-accent-hover transition-colors shadow-sm active:scale-95"
         >
           + Write New Article
         </Link>
@@ -73,19 +73,19 @@ export default async function MemberArticlesPage() {
       <div className="flex border-b border-border mb-6">
         <Link
           href="/member/articles"
-          className="pb-3 px-4 text-xs uppercase tracking-wider font-extrabold border-b-2 transition-all border-accent text-accent bg-accent/[0.04] rounded-t-lg"
+          className="pb-3 px-4 text-xs uppercase tracking-wider font-extrabold border-b-2 transition-all border-accent text-accent bg-accent/[0.04]"
         >
           My Articles
         </Link>
         <Link
           href="/member/ratings"
-          className="pb-3 px-4 text-xs uppercase tracking-wider font-extrabold border-b-2 transition-all border-transparent text-text-muted hover:text-accent hover:border-accent/30 hover:bg-accent/[0.02] rounded-t-lg"
+          className="pb-3 px-4 text-xs uppercase tracking-wider font-extrabold border-b-2 transition-all border-transparent text-text-muted hover:text-accent hover:border-accent/30 hover:bg-accent/[0.02]"
         >
           My Ratings
         </Link>
         <Link
           href="/member/settings"
-          className="pb-3 px-4 text-xs uppercase tracking-wider font-extrabold border-b-2 transition-all border-transparent text-text-muted hover:text-accent hover:border-accent/30 hover:bg-accent/[0.02] rounded-t-lg"
+          className="pb-3 px-4 text-xs uppercase tracking-wider font-extrabold border-b-2 transition-all border-transparent text-text-muted hover:text-accent hover:border-accent/30 hover:bg-accent/[0.02]"
         >
           Settings
         </Link>
@@ -112,7 +112,7 @@ export default async function MemberArticlesPage() {
                         <Link href={`/member/articles/edit/${post.id}`}>{post.title}</Link>
                       </h3>
                       <div className="flex items-center gap-2 text-xs text-text-muted mt-1.5 font-medium">
-                        <span className="uppercase text-[10px] font-black text-accent bg-accent/10 px-2 py-0.5 rounded border border-accent/20">{post.type}</span>
+                        <span className="uppercase text-[10px] font-black text-accent bg-accent/10 px-2 py-0.5 border border-accent/20">{post.type}</span>
                         <span>&bull;</span>
                         <span>Saved {new Date(post.created_at).toLocaleDateString('en-SG')}</span>
                       </div>
@@ -121,7 +121,7 @@ export default async function MemberArticlesPage() {
                     <div className="flex items-center gap-2">
                       <Link
                         href={`/member/articles/edit/${post.id}`}
-                        className="px-4 py-2 rounded-lg bg-neutral-900 hover:bg-neutral-800 text-white font-bold text-xs uppercase tracking-wider transition-colors border border-neutral-900"
+                        className="px-4 py-2 bg-neutral-900 hover:bg-neutral-800 text-white font-bold text-xs uppercase tracking-wider transition-colors border border-neutral-900"
                       >
                         Edit Draft
                       </Link>
@@ -152,12 +152,12 @@ export default async function MemberArticlesPage() {
                         {post.title}
                       </h3>
                       <div className="flex items-center gap-2 text-xs text-text-muted mt-1.5 font-medium">
-                        <span className="uppercase text-[10px] font-black text-amber-600 bg-amber-50 px-2 py-0.5 rounded border border-amber-200">{post.type}</span>
+                        <span className="uppercase text-[10px] font-black text-amber-600 bg-amber-50 px-2 py-0.5 border border-amber-200">{post.type}</span>
                         <span>&bull;</span>
                         <span>Submitted {new Date(post.created_at).toLocaleDateString('en-SG')}</span>
                       </div>
                     </div>
-                    <span className="text-[10px] uppercase font-bold tracking-wider text-amber-700 bg-amber-50 border border-amber-200 rounded px-2.5 py-1">
+                    <span className="text-[10px] uppercase font-bold tracking-wider text-amber-700 bg-amber-50 border border-amber-200 px-2.5 py-1">
                       Under Review
                     </span>
                   </div>
@@ -188,7 +188,7 @@ export default async function MemberArticlesPage() {
                           <Link href={`/blog/${post.slug}`} target="_blank">{post.title}</Link>
                         </h3>
                         <div className="flex items-center gap-2 text-xs text-text-muted mt-1.5 font-medium">
-                          <span className="uppercase text-[10px] font-black text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">{post.type}</span>
+                          <span className="uppercase text-[10px] font-black text-emerald-600 bg-emerald-50 px-2 py-0.5 border border-emerald-200">{post.type}</span>
                           <span>&bull;</span>
                           <span>Published {pDate}</span>
                         </div>
@@ -197,7 +197,7 @@ export default async function MemberArticlesPage() {
                       <Link
                         href={`/blog/${post.slug}`}
                         target="_blank"
-                        className="px-4 py-2 rounded-lg bg-white hover:bg-neutral-50 text-neutral-800 border border-border font-bold text-xs uppercase tracking-wider transition-all flex items-center gap-1"
+                        className="px-4 py-2 bg-white hover:bg-neutral-50 text-neutral-800 border border-border font-bold text-xs uppercase tracking-wider transition-all flex items-center gap-1"
                       >
                         <span>View Live</span>
                         <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -218,7 +218,7 @@ export default async function MemberArticlesPage() {
             <h2 className="text-xs uppercase tracking-widest font-black text-neutral-400">
               Archived ({archived.length})
             </h2>
-            <div className="overflow-hidden rounded-xl border border-border bg-neutral-50/50 shadow-sm opacity-60">
+            <div className="overflow-hidden border border-border bg-neutral-50/50 shadow-sm opacity-60">
               <div className="divide-y divide-border">
                 {archived.map(post => (
                   <div key={post.id} className="p-4 sm:p-5 flex items-center justify-between gap-4">
@@ -228,7 +228,7 @@ export default async function MemberArticlesPage() {
                       </h3>
                       <p className="text-xs text-text-muted mt-1">Archived category: {post.type}</p>
                     </div>
-                    <span className="text-[10px] uppercase font-bold tracking-wider text-neutral-600 bg-neutral-100 border border-neutral-200 rounded px-2 py-0.5">
+                    <span className="text-[10px] uppercase font-bold tracking-wider text-neutral-600 bg-neutral-100 border border-neutral-200 px-2 py-0.5">
                       Archived
                     </span>
                   </div>

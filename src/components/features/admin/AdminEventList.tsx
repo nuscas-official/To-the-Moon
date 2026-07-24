@@ -72,7 +72,7 @@ export default function AdminEventList({ initialEvents }: AdminEventListProps) {
                 key={status}
                 type="button"
                 onClick={() => setFilterStatus(status)}
-                className={`px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all ${
+                className={`px-3 py-1.5 rounded-none text-[10px] font-bold uppercase tracking-wider transition-all ${
                   filterStatus === status 
                     ? 'bg-neutral-900 text-white' 
                     : 'bg-neutral-100 hover:bg-neutral-200 text-text-muted'
@@ -89,7 +89,7 @@ export default function AdminEventList({ initialEvents }: AdminEventListProps) {
             <button
               type="button"
               onClick={() => setFilterDept(null)}
-              className={`px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all ${
+              className={`px-3 py-1.5 rounded-none text-[10px] font-bold uppercase tracking-wider transition-all ${
                 filterDept === null
                   ? 'bg-neutral-900 text-white'
                   : 'bg-neutral-100 hover:bg-neutral-200 text-text-muted'
@@ -106,7 +106,7 @@ export default function AdminEventList({ initialEvents }: AdminEventListProps) {
                 key={dept.name}
                 type="button"
                 onClick={() => setFilterDept(dept.name)}
-                className={`px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all border ${
+                className={`px-3 py-1.5 rounded-none text-[10px] font-bold uppercase tracking-wider transition-all border ${
                   filterDept === dept.name
                     ? dept.activeClass
                     : 'bg-surface border-border text-text-muted hover:bg-neutral-100 hover:text-neutral-900'
@@ -120,7 +120,7 @@ export default function AdminEventList({ initialEvents }: AdminEventListProps) {
 
         <Link
           href="/admin/events/new"
-          className="px-5 py-2.5 rounded-xl bg-accent hover:bg-accent-hover text-white font-bold text-xs uppercase tracking-wider transition-colors shadow-sm active:scale-95 text-center self-start md:self-center"
+          className="px-5 py-2.5 rounded-none bg-accent hover:bg-accent-hover text-white font-bold text-xs uppercase tracking-wider transition-colors shadow-sm active:scale-95 text-center self-start md:self-center"
         >
           + Create New Event
         </Link>
@@ -185,7 +185,7 @@ export default function AdminEventList({ initialEvents }: AdminEventListProps) {
                           {event.departments && event.departments.length > 0 && (
                             <div className="flex flex-wrap gap-1 mt-1">
                               {event.departments.length === 3 ? (
-                                <span className="text-[9px] px-1.5 py-0.5 font-extrabold uppercase tracking-wider rounded border bg-amber-50 text-amber-700 border-amber-200 shadow-sm">
+                                <span className="text-[9px] px-1.5 py-0.5 font-extrabold uppercase tracking-wider rounded-none border bg-amber-50 text-amber-700 border-amber-200 shadow-sm">
                                   Joint
                                 </span>
                               ) : (
@@ -199,7 +199,7 @@ export default function AdminEventList({ initialEvents }: AdminEventListProps) {
                                     classes = "bg-pink-50 text-pink-700 border-pink-100";
                                   }
                                   return (
-                                    <span key={dept} className={`text-[9px] px-1.5 py-0.5 font-extrabold uppercase tracking-wider rounded border ${classes}`}>
+                                    <span key={dept} className={`text-[9px] px-1.5 py-0.5 font-extrabold uppercase tracking-wider rounded-none border ${classes}`}>
                                       {dept}
                                     </span>
                                   );
@@ -224,7 +224,7 @@ export default function AdminEventList({ initialEvents }: AdminEventListProps) {
 
                     {/* Status Badge */}
                     <td className="px-6 py-4">
-                      <span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-extrabold uppercase tracking-wider border ${
+                      <span className={`inline-flex items-center gap-1 rounded-none px-2.5 py-1 text-xs font-extrabold uppercase tracking-wider border ${
                         event.status === 'upcoming' 
                           ? 'bg-green-50 text-green-700 border-green-200' 
                           : event.status === 'past' 
