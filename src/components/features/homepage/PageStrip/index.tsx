@@ -2,11 +2,16 @@
 
 import React, { useState, useEffect, useRef, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { pages } from './pages'
+import { milestones } from './milestones'
+import TimelineNode from './TimelineNode'
+import Cover from './Cover'
 
 export default function PageStrip({ className = '' }: { className?: string }) {
   // Mobile keeps the original single-page swipe carousel; desktop uses the strip.
   const [isMobile, setIsMobile] = useState(false)
+
+  // Closed cover that swings open (gatefold) to reveal the timeline
+  const [coverOpen, setCoverOpen] = useState(false)
 
   // Mobile carousel state
   const [activePageIndex, setActivePageIndex] = useState(0)
@@ -27,7 +32,7 @@ export default function PageStrip({ className = '' }: { className?: string }) {
     return () => window.removeEventListener('resize', checkMobile)
   }, [])
 
-  const totalPages = pages.length
+  const totalPages = milestones.length
 
   // --- Mobile navigation (single-page swipe carousel) ---
   const nextPageMobile = useCallback(() => {
@@ -170,8 +175,6 @@ export default function PageStrip({ className = '' }: { className?: string }) {
     }
   }, [isMobile, updateEdges, glideBy])
 
-  const ActivePage = pages[activePageIndex]
-
   return (
     <div className={`relative w-full h-full ${className}`}>
       {isMobile ? (
@@ -197,7 +200,7 @@ export default function PageStrip({ className = '' }: { className?: string }) {
               className="absolute inset-0 w-full h-full"
             >
               <div className="w-full h-full [&>div]:border-r-0 [&>div]:border-l-0 [&>div]:border-neutral-800">
-                <ActivePage />
+                <TimelineNode milestone={milestones[activePageIndex]} index={activePageIndex} />
               </div>
             </motion.div>
           </AnimatePresence>
@@ -213,13 +216,13 @@ export default function PageStrip({ className = '' }: { className?: string }) {
             tabIndex={0}
             className="flex w-full h-full overflow-x-auto overflow-y-hidden outline-none [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
           >
-            {pages.map((Page, i) => (
+            {milestones.map((m, i) => (
               <div
                 key={i}
                 data-page
                 className="flex-none h-full aspect-[3/4] border-r border-neutral-800/15 last:border-r-0 [&>div]:border-0"
               >
-                <Page />
+                <TimelineNode milestone={m} index={i} />
               </div>
             ))}
           </div>
@@ -257,6 +260,9 @@ export default function PageStrip({ className = '' }: { className?: string }) {
           </button>
         </div>
       )}
+
+      {/* Closed cover that swings open to reveal the timeline */}
+      <Cover open={coverOpen} onOpen={() => setCoverOpen(true)} isMobile={isMobile} />
     </div>
   )
 }
