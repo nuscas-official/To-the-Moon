@@ -10,7 +10,7 @@ import ClubDepartments from '@/components/features/homepage/ClubDepartments'
 import RollingGallery from '@/components/features/homepage/RollingGallery'
 import type { Metadata } from 'next'
 import ParticleCanvas from '@/components/ParticleCanvas'
-import Image from 'next/image'
+import WordFieldCanvas from '@/components/WordFieldCanvas'
 import PageStrip from '@/components/features/homepage/PageStrip'
 import CTASection from '@/components/features/homepage/CTASection'
 import DiagonalEdge from '@/components/features/homepage/DiagonalEdge'
@@ -159,14 +159,9 @@ export default async function Home({ searchParams }: HomeProps) {
         <DiagonalEdge position="top" slant="right" fill="var(--color-background)" line="var(--color-border)" />
         <DiagonalEdge position="bottom" slant="left" fill="var(--color-background)" line="var(--color-border)" />
 
-        <Image
-          src="/images/word-field.webp"
-          alt=""
-          aria-hidden="true"
-          fill
-          sizes="100vw"
-          className="object-cover pointer-events-none select-none"
-        />
+        {/* Repeated-word texture drawn to canvas — crisper than the old webp at
+            any DPR. Mobile gets fewer, larger words (see component) for perf. */}
+        <WordFieldCanvas fontSize={12} rowGap={40} wordGap={40} skipChance={0.12} color="#000000" />
 
         <div className="relative z-10 max-w-7xl mx-auto pt-8 pb-4 px-6 sm:px-8 lg:px-8">
           <BlogPreview />

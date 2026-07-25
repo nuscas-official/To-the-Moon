@@ -18,6 +18,13 @@ interface WordFieldCanvasProps {
   fontSize?: number
   rowGap?: number
   wordGap?: number
+  // Below `breakpoint` (px wide), fall back to these so mobile draws fewer,
+  // larger words — cheaper to paint and legible on a small screen. Each
+  // defaults to a scaled-up version of its desktop counterpart when omitted.
+  mobileFontSize?: number
+  mobileRowGap?: number
+  mobileWordGap?: number
+  breakpoint?: number
   opacity?: number
   skipChance?: number
   // Text color; defaults to the section's --color-accent when omitted
@@ -45,12 +52,21 @@ function mulberry32(seed: number) {
  * `wordGap` is the constant horizontal gap left *after* each word; the step
  * between words is that gap plus the word's own measured width, so long and
  * short words are spaced consistently regardless of length.
+ *
+ * Drawing to canvas (rather than a pre-baked image) keeps the text crisp at
+ * any device-pixel ratio — the point of preferring this over a webp. Below
+ * `breakpoint` the mobile config kicks in: fewer, larger words so a phone
+ * paints less while staying legible.
  */
 export default function WordFieldCanvas({
   words = DEFAULT_WORDS,
   fontSize = 8,
   rowGap = 64,
   wordGap = 70,
+  mobileFontSize,
+  mobileRowGap,
+  mobileWordGap,
+  breakpoint = 640,
   opacity = 0.15,
   skipChance = 0.18,
   color,
@@ -74,48 +90,69 @@ export default function WordFieldCanvas({
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
     ctx.clearRect(0, 0, width, height)
 
+    // On narrow viewports, draw fewer and larger words. Missing mobile values
+    // scale off the desktop ones (1.9x type, wider gaps) so callers only need
+    // to override when they want something other than that default.
+    const isMobile = width < breakpoint
+    const size = isMobile ? mobileFontSize ?? fontSize * 1.9 : fontSize
+    const rGap = isMobile ? mobileRowGap ?? rowGap * 1.6 : rowGap
+    const wGap = isMobile ? mobileWordGap ?? wordGap * 1.6 : wordGap
+
     const style = getComputedStyle(canvas)
     const accent = style.getPropertyValue('--color-accent').trim() || '#ed475b'
     const fontFamily = style.getPropertyValue('--font-serif').trim() || 'serif'
 
-    ctx.font = `700 ${fontSize}px ${fontFamily}`
+    ctx.font = `700 ${size}px ${fontFamily}`
     ctx.textBaseline = 'middle'
     ctx.fillStyle = color ?? accent
     ctx.globalAlpha = opacity
 
     const rand = mulberry32(1113)
-    for (let y = rowGap * 0.75; y < height; y += rowGap) {
+    for (let y = rGap * 0.75; y < height; y += rGap) {
       // Stagger each row's start so columns never align between rows
-      let x = -wordGap - rand() * wordGap * 2
-      while (x < width + wordGap) {
+      let x = -wGap - rand() * wGap * 2
+      while (x < width + wGap) {
         // Consume all randomness in a fixed order to keep the layout deterministic
         const word = words[Math.floor(rand() * words.length)]
         const skip = rand() < skipChance
-        const jx = (rand() - 0.5) * wordGap * 0.4
-        const jy = (rand() - 0.5) * rowGap * 0.2
+        const jx = (rand() - 0.5) * wGap * 0.4
+        const jy = (rand() - 0.5) * rGap * 0.2
 
         // Measure this word so spacing adapts to its length — long words get
         // the same trailing gap as short ones instead of crowding neighbors
         const w = ctx.measureText(word).width
         if (!skip) ctx.fillText(word, x + jx, y + jy)
-        x += w + wordGap
+        x += w + wGap
       }
     }
-  }, [words, fontSize, rowGap, wordGap, opacity, skipChance, color])
+  }, [words, fontSize, rowGap, wordGap, mobileFontSize, mobileRowGap, mobileWordGap, breakpoint, opacity, skipChance, color])
 
   useEffect(() => {
     const canvas = canvasRef.current
     if (!canvas) return
 
-    const ro = new ResizeObserver(draw)
+    // Coalesce burst resize callbacks into a single redraw next frame so
+    // dragging the window (or mobile URL-bar show/hide) doesn't thrash paints.
+    let raf = 0
+    const scheduleDraw = () => {
+      cancelAnimationFrame(raf)
+      raf = requestAnimationFrame(draw)
+    }
+
+    const ro = new ResizeObserver(scheduleDraw)
     ro.observe(canvas)
     draw()
 
+    // measureText uses the fallback font until the serif finishes loading;
+    // redraw once it's ready so spacing reflects the real glyph widths.
+    document.fonts?.ready.then(draw).catch(() => {})
+
     // Redraw when the theme changes so the accent color stays in sync
-    const themeObserver = new MutationObserver(draw)
+    const themeObserver = new MutationObserver(scheduleDraw)
     themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] })
 
     return () => {
+      cancelAnimationFrame(raf)
       ro.disconnect()
       themeObserver.disconnect()
     }
