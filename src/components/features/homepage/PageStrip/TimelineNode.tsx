@@ -51,15 +51,16 @@ export default function TimelineNode({
 
       {/* Content stacked above the rail */}
       <div
-        className="absolute inset-x-0 top-0 flex flex-col items-center text-center px-4 pt-4 pb-3 gap-1.5"
+        className="absolute inset-x-0 top-0 flex flex-col items-center text-center px-4 pt-4 pb-3 gap-1.5 md:justify-center"
         style={{ height: RAIL_TOP }}
       >
         <span className="text-[9px] font-mono text-accent uppercase tracking-widest">
           Milestone {String(index + 1).padStart(2, '0')}
         </span>
 
-        {/* Polaroid-style framed placeholder image; flex-1 lets it absorb spare height */}
-        <div className="relative flex-1 min-h-0 w-full max-w-[170px] my-1">
+        {/* Polaroid-style framed image. Mobile fills spare height; desktop pins a
+            landscape 4:3 frame. */}
+        <div className="relative w-full max-w-[170px] md:max-w-[260px] flex-1 min-h-0 md:flex-none md:aspect-[4/3] my-1">
           <div className="w-full h-full bg-white border border-[#dcd1ba] p-1.5 shadow-sm">
             <div className="relative w-full h-full overflow-hidden">
               <Image
@@ -73,8 +74,8 @@ export default function TimelineNode({
           </div>
         </div>
 
-        <h3 className="text-sm font-serif italic font-black leading-tight">{title}</h3>
-        <p className="text-[10px] text-[#685f5d] leading-snug max-w-[230px] line-clamp-2">
+        <p className="text-xl font-display leading-tight">{title}</p>
+        <p className="text-[12px] text-[#685f5d] max-w-[260px] line-clamp-3">
           {caption}
         </p>
       </div>

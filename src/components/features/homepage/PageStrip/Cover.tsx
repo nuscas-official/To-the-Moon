@@ -22,13 +22,13 @@ const GOLD = '#c5a059'
 function Identity() {
   return (
     <>
-      <div className="relative w-14 h-14 rounded-full overflow-hidden border border-[#c5a059]/40 bg-white/95">
+      <div className="relative w-32 h-32 rounded-full overflow-hidden border border-[#c5a059]/40 bg-white/95">
         <Image src="/images/anikun-flower.webp" alt="NUSCAS mascot" fill className="object-cover p-1.5" />
       </div>
-      <div className="space-y-1">
-        <p className="font-serif text-2xl tracking-[0.06em] leading-none">NUSCAS</p>
-        <p className="text-[8px] font-mono uppercase tracking-[0.25em]" style={{ color: GOLD }}>
-          Est. 2015
+      <div className="space-y-2">
+        <p className="font-serif text-3xl tracking-[0.06em] leading-none">NUSCAS</p>
+        <p className="text-[10px] font-mono uppercase tracking-[0.25em]" style={{ color: GOLD }}>
+          Est. 1999
         </p>
       </div>
     </>
@@ -38,12 +38,11 @@ function Identity() {
 function Purpose() {
   return (
     <>
-      <span className="text-[9px] font-mono uppercase tracking-[0.3em]" style={{ color: GOLD }}>
+      <span className="text-[12px] font-mono uppercase tracking-[0.3em]" style={{ color: GOLD }}>
         Our Story
       </span>
-      <p className="text-[11px] leading-relaxed max-w-[210px] text-[#f2ead9]/85">
-        The NUS Comics &amp; Animation Society — a decade of art, animation, and the people who
-        drew it. This is our home on the web, and the timeline of how we got here.
+      <p className="text-[14px] leading-relaxed max-w-[280px] text-[#f2ead9]/85 text-justify">
+        NUS Comics &amp; Animation Society — over 25 years of fun and creativity in everything ACG-related. From a small group friends to a thriving club with hundreds of members and a robust alumni network, this is how we got here.
       </p>
       <span
         className="mt-1 inline-flex items-center gap-1.5 px-3 py-1.5 border text-[10px] font-mono uppercase tracking-widest"

@@ -2,17 +2,14 @@
 
 import Image from 'next/image'
 import { motion } from 'framer-motion'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 interface Department {
   id: string
   name: string
   description: string
   imageSrc: string
-  /* Revealed on the back face once a department is opened. Placeholder shots
-     for now — real department photos drop straight into `gallery`. */
   gallery: string[]
-  /* Short activity tags pulled from each department's own copy. */
   highlights: string[]
 }
 
@@ -20,38 +17,47 @@ const DEPARTMENTS: Department[] = [
   {
     id: 'casuals',
     name: 'CASuals',
-    description: "Gaming Gauntlets, Cosplay, Concert Watchalongs, Japan Tips, Escape Room, Game Shows, Beyblade, Anime Debates and the Anime Awards, everything ACG-adjacent is under CASuals. With practically no restrictions, CASuals is where 'Wouldn't it be funny if...' becomes 'We're doing this.'",
-    imageSrc: '/images/silksong_placeholder.webp',
+    description: "Gaming Gauntlets, Cosplay, VTuber Concerts, Japan, Escape Room, Game Shows, Beyblade, Anime Awards, everything ACG-adjacent is under CASuals. With practically no restrictions, CASuals is where 'Wouldn't it be funny if...' becomes 'We're doing this.'",
+    imageSrc: '/images/departments/anime-awards.webp',
     gallery: [
-      '/images/silksong_placeholder.webp',
-      '/images/silksong_placeholder.webp',
-      '/images/silksong_placeholder.webp',
+      '/images/departments/uma-musume.webp',
+      '/images/departments/wig-styling.webp',
+      '/images/departments/acg-gameshow.webp',
+      '/images/departments/vtuber-concert.webp',
+      '/images/departments/japan-trip-session.webp',
+      '/images/departments/cosplay-photog.webp',
     ],
-    highlights: ['Anisong Quiz', 'Japan Travel', 'Anime Awards', 'Gaming Gauntlet', "Cosplay Makeup", "Wig Styling"],
+    highlights: ['Anisong Quiz', 'Japan Travel', 'VTuber Concerts', 'Gaming Gauntlet', 'Anime Awards', "Cosplay and Photography"],
   },
   {
     id: 'topics',
     name: 'TOPICS',
     description: "Explore the finer points of writing and storytelling through Media Analysis, Reviews and Fanfiction in NUSCAS' writing-focused department. Beyond writing, TOPICS is also responsible for running the NUSCAS Instagram and keeping the club's online presence alive. Also, look forward to the annual TOPICS D&D!",
-    imageSrc: '/images/silksong_placeholder.webp',
+    imageSrc: '/images/departments/topics-dnd.webp',
     gallery: [
       '/images/silksong_placeholder.webp',
       '/images/silksong_placeholder.webp',
       '/images/silksong_placeholder.webp',
+      '/images/silksong_placeholder.webp',
+      '/images/silksong_placeholder.webp',
+      '/images/silksong_placeholder.webp',
     ],
-    highlights: ['Media Analysis', 'Reviews', 'Fanfiction', 'D&D', 'Instagram'],
+    highlights: ['Media Analysis', 'Reviews', 'Fanfiction', 'Roleplay', 'D&D', 'Instagram'],
   },
   {
     id: 'palette',
     name: 'Palette',
     description: "Nurture your artistic flair with lessons on art and graphic design. Palette is the art-focused department of NUSCAS and the beating heart behind everything booth-related. With a vibrant community of artists from all walks of life, Palette offers activities beyond drawing, including crochet, Gunpla, bookbinding, and much more.",
-    imageSrc: '/images/silksong_placeholder.webp',
+    imageSrc: '/images/departments/anitan-anikun-art-corner.webp',
     gallery: [
       '/images/silksong_placeholder.webp',
       '/images/silksong_placeholder.webp',
       '/images/silksong_placeholder.webp',
+      '/images/silksong_placeholder.webp',
+      '/images/silksong_placeholder.webp',
+      '/images/silksong_placeholder.webp',
     ],
-    highlights: ['Character Design', 'Crochet', 'Gunpla', 'Bookbinding'],
+    highlights: ['Character Design', 'Painting', 'Crochet', 'Gunpla', 'Boothing'],
   },
 ]
 
@@ -97,6 +103,26 @@ export default function ClubDepartments() {
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const anySelected = selectedId !== null
 
+  const handleClose = () => {
+    if (document.activeElement instanceof HTMLElement) {
+      document.activeElement.blur()
+    }
+    setSelectedId(null)
+  }
+
+  // Listen to Escape key press to close department flipcard when open
+  useEffect(() => {
+    if (!selectedId) return
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        handleClose()
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [selectedId])
+
   return (
     <section className="w-full space-y-8 animate-fade-in">
       {/* Section Header */}
@@ -119,7 +145,7 @@ export default function ClubDepartments() {
         {DEPARTMENTS.map((dept) => {
           const isSelected = selectedId === dept.id
           // Desktop widths: opened card takes the canvas, the rest tuck in.
-          const grow = isSelected ? 2.6 : anySelected ? 0.5 : 1
+          const grow = isSelected ? 2.4 : anySelected ? 0.72 : 1
 
           return (
             <motion.div
@@ -141,7 +167,7 @@ export default function ClubDepartments() {
                     transformStyle: 'preserve-3d',
                     transform: isSelected ? 'rotateY(180deg)' : 'rotateY(0deg)',
                   }}
-                  className="relative h-[28rem] w-full transition-transform duration-[600ms] ease-[cubic-bezier(0.22,1,0.36,1)] md:h-[24rem]"
+                  className="relative h-[28rem] w-full transition-transform duration-[600ms] ease-[cubic-bezier(0.22,1,0.36,1)] md:h-[28rem]"
                 >
                   {/* ── FRONT: the sealed emblem ─────────────────────────── */}
                   <button
@@ -151,15 +177,16 @@ export default function ClubDepartments() {
                     aria-label={`Open ${dept.name}`}
                     style={FACE_STYLE}
                     className={[
-                      'group absolute inset-0 clip-cut cut-lg overflow-hidden',
+                      'group absolute inset-0 overflow-hidden',
                       'flex flex-col items-center justify-center p-8 text-center',
                       'focus:outline-none focus-visible:ring-2 focus-visible:ring-accent',
                       isSelected ? 'pointer-events-none' : 'cursor-pointer',
                     ].join(' ')}
                   >
-                    {/* Emblem */}
-                    <div className="clip-cut cut-xl relative mb-6 flex h-32 w-32 items-center justify-center overflow-hidden shadow-inner transition-transform duration-300 ease-out group-hover:scale-110">
-                      <Image src={dept.imageSrc} alt={dept.name} width={128} height={128} className="object-cover" />
+                    {/* Emblem — fluid so it scales with the card instead of
+                        being clipped when a sibling shrinks aside. */}
+                    <div className="relative mb-5 aspect-square w-[80%] max-w-56 overflow-hidden rounded-full shadow-inner transition-transform duration-300 ease-out group-hover:scale-110">
+                      <Image src={dept.imageSrc} alt={dept.name} fill unoptimized sizes="(min-width: 768px) 224px, 70vw" className="object-cover" />
                     </div>
 
                     {/* Name */}
@@ -183,7 +210,7 @@ export default function ClubDepartments() {
                     aria-hidden={!isSelected}
                     style={{ ...FACE_STYLE, transform: 'rotateY(180deg)' }}
                     className={[
-                      'absolute inset-0 clip-cut cut-lg overflow-hidden bg-accent/5 p-6 md:p-8',
+                      'absolute inset-0 overflow-hidden bg-accent/5 p-6 md:p-8',
                       'flex flex-col shadow-[0_0_0_2px_var(--color-accent)]',
                       isSelected ? '' : 'pointer-events-none',
                     ].join(' ')}
@@ -193,43 +220,55 @@ export default function ClubDepartments() {
                       <h3 className="text-xl font-black tracking-tight text-accent md:text-2xl">
                         {dept.name}
                       </h3>
-                      <button
-                        type="button"
-                        onClick={() => setSelectedId(null)}
-                        aria-label={`Close ${dept.name}`}
-                        className="clip-cut cut-xs flex h-8 w-8 items-center justify-center text-text-muted transition-colors duration-200 hover:bg-accent/10 hover:text-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
-                      >
-                        <CloseIcon />
-                      </button>
+                      <div className="flex items-center gap-2">
+                        <button
+                          type="button"
+                          onClick={handleClose}
+                          className="hidden md:inline-flex items-center px-2.5 py-1.5 text-xs font-mono font-medium text-text-muted hover:text-accent bg-accent/10 hover:bg-accent/20 border border-accent/20 hover:border-accent/40 rounded-lg shadow-sm transition-all active:scale-95 outline-none cursor-pointer"
+                          title="Press Escape key to exit"
+                          aria-label={`Exit ${dept.name} with Escape key`}
+                        >
+                          <kbd className="font-mono font-black text-[11px] uppercase tracking-wider">ESC</kbd>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={handleClose}
+                          aria-label={`Close ${dept.name}`}
+                          className="flex h-8 w-8 items-center justify-center text-text-muted transition-colors duration-200 hover:bg-accent/10 hover:text-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-accent cursor-pointer"
+                        >
+                          <CloseIcon />
+                        </button>
+                      </div>
                     </div>
 
-                    {/* Canvas — stacked on mobile, two-column on desktop. */}
-                    <div className="mt-4 flex flex-1 flex-col gap-5 overflow-y-auto md:flex-row md:gap-8">
-                      <p className="text-left text-sm leading-relaxed text-text-muted md:flex-[2] md:text-base">
-                        {dept.description}
-                      </p>
-
-                      <div className="flex flex-col gap-4 md:flex-[3]">
-                        {/* Photo strip */}
-                        <div className="grid grid-cols-3 gap-2">
-                          {dept.gallery.map((src, i) => (
-                            <div key={i} className="clip-cut cut-sm relative aspect-square overflow-hidden ring-1 ring-accent/40">
-                              <Image src={src} alt="" fill sizes="(min-width: 768px) 160px, 30vw" className="object-cover" />
-                            </div>
-                          ))}
-                        </div>
-
-                        {/* Highlight chips */}
+                    {/* Canvas — stacked on mobile, two-column on desktop.
+                        Left holds the copy + tags; the right side is a 6-photo
+                        mosaic that fills the canvas height on desktop. */}
+                    <div className="mt-4 flex flex-1 flex-col gap-5 overflow-y-auto md:flex-row md:gap-8 md:overflow-hidden">
+                      {/* Copy + highlight chips */}
+                      <div className="flex flex-col gap-4 md:flex-[3] md:min-h-0 md:overflow-y-auto">
+                        <p className="text-left text-xs leading-relaxed text-text-muted md:text-sm">
+                          {dept.description}
+                        </p>
                         <div className="flex flex-wrap gap-2">
                           {dept.highlights.map((tag) => (
                             <span
                               key={tag}
-                              className="clip-cut cut-xs border border-accent/30 bg-background/60 px-2 py-1 text-xs text-text-muted"
+                              className="border border-accent/30 bg-background/60 px-2 py-1 text-xs text-text-muted"
                             >
                               {tag}
                             </span>
                           ))}
                         </div>
+                      </div>
+
+                      {/* Photo mosaic — 2 cols on mobile, 3×2 filling height on desktop */}
+                      <div className="grid grid-cols-2 gap-2 md:flex-[7] md:min-h-0 md:grid-cols-3 md:grid-rows-2">
+                        {dept.gallery.slice(0, 6).map((src, i) => (
+                          <div key={i} className="relative aspect-square overflow-hidden ring-1 ring-accent/40 md:aspect-auto">
+                            <Image src={src} alt="" fill unoptimized sizes="(min-width: 768px) 200px, 45vw" className="object-cover" />
+                          </div>
+                        ))}
                       </div>
                     </div>
                   </div>

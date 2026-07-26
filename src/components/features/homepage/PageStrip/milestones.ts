@@ -1,20 +1,8 @@
-// The milestones that make up the horizontal timeline, in chronological order.
-// Each becomes one portrait node card on a continuous rail (see TimelineNode).
-//
-// This is placeholder content — swap `year`, `title`, `caption` (and later the
-// per-node `image`) for the real club history. The strip scrolls, so add or
-// remove entries freely; 12–15 reads well across several "slides" of scrolling.
-
 export interface Milestone {
-  /** Big label sitting under the rail tick, e.g. "2020". */
   year: string
-  /** Milestone headline, e.g. "COVID HAPPENS". */
   title: string
-  /** One- or two-line supporting blurb shown above the rail. */
   caption: string
-  /** Framed image for the node. All default to the shared placeholder for now. */
   image: string
-  /** Alt text for the framed image. */
   imageAlt?: string
 }
 
@@ -22,87 +10,87 @@ const PLACEHOLDER = '/images/silksong_placeholder.webp'
 
 export const milestones: Milestone[] = [
   {
-    year: '2015',
-    title: 'THE FOUNDING',
-    caption: 'A handful of students and one shared obsession. Placeholder origin story goes here.',
+    year: '1999',
+    title: 'The Founding',
+    caption: 'A small group of friends united to celebrate Japanese animation, giving like-minded people a place to have fun',
     image: PLACEHOLDER,
   },
   {
-    year: '2016',
-    title: 'FIRST SHOWCASE',
-    caption: 'The debut exhibition. Placeholder note about the very first public showing.',
+    year: '2000\'s',
+    title: 'The Foundation',
+    caption: 'We grew into a society boasting more than 100 members, a dedicated committee and a strong alumni network.',
+    image: PLACEHOLDER,
+  },
+  {
+    year: '2010\'s',
+    title: 'The 3 Departments',
+    caption: 'Our 3 Depts Palette, TOPICS, and CASuals host a wide variety of activities and events Members get to learn new skills and meet new friends.',
     image: PLACEHOLDER,
   },
   {
     year: '2017',
-    title: 'GOING WEEKLY',
-    caption: 'Regular sessions begin. Placeholder blurb about the community finding its rhythm.',
-    image: PLACEHOLDER,
-  },
-  {
-    year: '2018',
-    title: 'THE BIG COLLAB',
+    title: 'First CAS BBQ',
     caption: 'First cross-club project. Placeholder text describing the collaboration.',
     image: PLACEHOLDER,
   },
   {
     year: '2019',
-    title: 'AWARD SEASON',
+    title: 'NUSCAS Population Explosion',
     caption: 'Recognition arrives. Placeholder milestone about the first award won.',
     image: PLACEHOLDER,
   },
   {
     year: '2020',
-    title: 'COVID HAPPENS',
-    caption: 'Everything moves online. Placeholder note about the pivot to virtual meetups.',
+    title: 'COVID Happens',
+    caption: 'Everything moves online.',
     image: PLACEHOLDER,
   },
   {
     year: '2021',
-    title: 'THE EXCO WHO STEPPED UP',
-    caption: 'They were not the step-EXCO — they were the EXCO who stepped up. Placeholder.',
+    title: 'The EXCO who stepped up',
+    caption: 'They were not the step-EXCO — they were the EXCO who stepped up.',
     image: PLACEHOLDER,
   },
   {
     year: '2022',
-    title: 'PHYSICAL SESSIONS REOPEN',
-    caption: 'Orientation Day 1, completed. Placeholder blurb about returning in person.',
+    title: 'NUSCAS reopens physical sessions',
+    caption: 'Building the foundation of NUSCAS sessions in the 2020\'s',
     image: PLACEHOLDER,
   },
   {
     year: '2023',
-    title: 'RECORD SIGN-UPS',
-    caption: 'Membership hits an all-time high. Placeholder growth milestone.',
+    title: 'NUSCAS discovers 3D printing',
+    caption: 'NUSCAS x NUS Hackers Blender Workshop',
+    image: PLACEHOLDER,
+  },
+  {
+    year: '2023',
+    title: 'First BBQ after COVID',
+    caption: 'NUSCAS crowns its first Demon King',
     image: PLACEHOLDER,
   },
   {
     year: '2024',
-    title: 'NEW STUDIO SPACE',
-    caption: 'A room of our own. Placeholder note about the dedicated space.',
+    title: 'NUSCAS releases new shirt design!',
+    caption: 'T-Shirt and Jackets designed by members!',
     image: PLACEHOLDER,
   },
   {
     year: '2025',
-    title: 'THE ANTHOLOGY',
-    caption: 'First published collection. Placeholder text about the anthology release.',
+    title: 'NUSCAS returns to EOY!',
+    caption: 'Back to boothing!',
     image: PLACEHOLDER,
   },
   {
     year: '2026',
-    title: 'TENTH ANNIVERSARY',
-    caption: 'A decade in. Placeholder blurb celebrating ten years of the club.',
-    image: PLACEHOLDER,
+    title: 'The Inagural Anime Awards',
+    caption: 'Celebrating the best of anime, past and present.',
+    image: '/images/departments/anime-awards.webp',
   },
   {
-    year: '2027',
-    title: 'GOING NATIONAL',
-    caption: 'Chapters beyond campus. Placeholder milestone about expansion.',
-    image: PLACEHOLDER,
-  },
-  {
-    year: '2028',
-    title: 'WHAT COMES NEXT',
-    caption: 'The story keeps scrolling. Placeholder for the road ahead.',
+    year: 'The Future',
+    title: 'Unfinished',
+    caption: 'We leave it to you!',
     image: PLACEHOLDER,
   },
 ]
