@@ -12,7 +12,7 @@ export const revalidate = 60 // Cache for 60 seconds (ISR)
 
 export async function generateMetadata() {
   return {
-    title: 'Art Gallery | NUSCAS',
+    title: 'Art Gallery',
     description: 'A showcase of creative fanart, illustrations, and digital artworks by NUSCAS club members.',
     openGraph: {
       title: 'NUSCAS Member Art Gallery',

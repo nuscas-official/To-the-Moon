@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import Link from 'next/link'
 import AuthButton from '@/components/features/auth/AuthButton'
 import { type User } from '@supabase/supabase-js'
@@ -63,9 +63,11 @@ export default function WelcomePanel({
   texts = []
 }: WelcomePanelProps) {
   // If custom texts are provided, prioritize them but preserve the main title at index 0
-  const items = texts.length > 0 
-    ? ["NUS Comics & Animation Society", ...texts] 
-    : FALLBACK_REASONS
+  const items = useMemo(() => {
+    return texts.length > 0 
+      ? ["NUS Comics & Animation Society", ...texts] 
+      : FALLBACK_REASONS
+  }, [texts])
 
   const [reasonIndex, setReasonIndex] = useState(0)
 

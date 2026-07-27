@@ -5,7 +5,7 @@ import type { RatingAggregate } from '@/types/ratings'
 import { fetchAniListMediaDetails } from '@/lib/anilist'
 
 export const metadata: Metadata = {
-  title: "Anime & Manga Ratings",
+  title: "Ratings",
   description: "Browse the community rating aggregates and top picks submitted by members of the university anime club.",
 }
 

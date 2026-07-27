@@ -2,7 +2,7 @@
 
 import Image from 'next/image'
 import { motion } from 'framer-motion'
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 
 interface Department {
   id: string
@@ -151,7 +151,7 @@ export default function ClubDepartments() {
   // Drive a flip: mount the 3D layer at the current rotation first, then on the
   // next frame change the target so the rotateY transition actually animates,
   // then drop back to a flat layer once the animation has finished.
-  const flipTo = (nextId: string | null) => {
+  const flipTo = useCallback((nextId: string | null) => {
     setFlipping(true) // mount the 3D layer at the current rotation, no transition
     setFlipTransition(false)
     requestAnimationFrame(() =>
@@ -165,14 +165,14 @@ export default function ClubDepartments() {
       setFlipping(false)
       setFlipTransition(false)
     }, 720)
-  }
+  }, [])
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     if (document.activeElement instanceof HTMLElement) {
       document.activeElement.blur()
     }
     flipTo(null)
-  }
+  }, [flipTo])
 
   // Clear any pending settle timer on unmount.
   useEffect(
@@ -193,7 +193,7 @@ export default function ClubDepartments() {
     }
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [selectedId])
+  }, [selectedId, handleClose])
 
   return (
     <section className="w-full space-y-8 animate-fade-in">

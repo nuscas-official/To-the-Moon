@@ -34,13 +34,13 @@ const azeretMono = Azeret_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "NUSCAS | University Anime Club",
+    default: "NUSCAS",
     template: "%s | NUSCAS"
   },
   description: "The official website and member portal of NUSCAS.",
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://to-the-moon-gold.vercel.app"),
   openGraph: {
-    title: "NUSCAS | University Anime Club",
+    title: "NUSCAS",
     description: "The official website and member portal of NUSCAS.",
     url: "/",
     siteName: "NUSCAS",
@@ -57,7 +57,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "NUSCAS | University Anime Club",
+    title: "NUSCAS",
     description: "The official website and member portal of NUSCAS.",
     images: ["/og-image.png"],
   },

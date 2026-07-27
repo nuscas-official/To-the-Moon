@@ -6,8 +6,6 @@ export interface Milestone {
   imageAlt?: string
 }
 
-const PLACEHOLDER = '/images/silksong_placeholder.webp'
-
 export const milestones: Milestone[] = [
   {
     year: '1999',

@@ -4,7 +4,7 @@ import type { Metadata } from 'next'
 import Image from 'next/image'
 
 export const metadata: Metadata = {
-  title: "Blog & Articles",
+  title: "Blog",
   description: "Browse news, essays, interviews, and reviews written by members of the university anime club.",
 }
 
