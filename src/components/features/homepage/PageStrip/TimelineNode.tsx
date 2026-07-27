@@ -6,7 +6,7 @@ import type { Milestone } from './milestones'
 // Content lives above it; the year label sits below it. Because every card uses
 // the same value and the rail spans full width, the line reads as one unbroken
 // timeline running across all the edge-to-edge cards.
-const RAIL_TOP = '70%'
+const RAIL_TOP = '81%'
 
 /**
  * One milestone as a portrait "timeline node": a framed image, title and caption
@@ -59,8 +59,8 @@ export default function TimelineNode({
         </span>
 
         {/* Polaroid-style framed image. Mobile fills spare height; desktop pins a
-            landscape 4:3 frame. */}
-        <div className="relative w-full max-w-[170px] md:max-w-[260px] flex-1 min-h-0 md:flex-none md:aspect-[4/3] my-1">
+            square 1:1 frame. */}
+        <div className="relative w-full max-w-[170px] md:max-w-[220px] flex-1 min-h-0 md:flex-none md:aspect-square my-1">
           <div className="w-full h-full bg-white border border-[#dcd1ba] p-1.5 shadow-sm">
             <div className="relative w-full h-full overflow-hidden">
               <Image
