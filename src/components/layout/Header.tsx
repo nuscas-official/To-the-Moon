@@ -49,7 +49,7 @@ const navItems = [
   { label: 'VNs', href: '/vn' },
 ];
 
-export function HeaderContent({ user, showAdminLink, isEventModalOpen = false }: HeaderProps) {
+function HeaderContent({ user, showAdminLink, isEventModalOpen = false }: HeaderProps) {
   const [isOpen, setIsOpen] = useState(false)
   const pathname = usePathname()
   const [isOverDark, setIsOverDark] = useState(false)

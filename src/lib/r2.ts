@@ -7,9 +7,9 @@ const bucketName = process.env.CLOUDFLARE_R2_BUCKET_NAME || ''
 const publicUrl = process.env.CLOUDFLARE_R2_PUBLIC_URL || ''
 
 // Mock mode helper
-export const isR2Mock = !accountId || accountId.includes('placeholder')
+const isR2Mock = !accountId || accountId.includes('placeholder')
 
-export const s3Client = isR2Mock ? null : new S3Client({
+const s3Client = isR2Mock ? null : new S3Client({
   region: 'auto',
   endpoint: `https://${accountId}.r2.cloudflarestorage.com`,
   credentials: {
@@ -93,7 +93,7 @@ export async function deleteFromR2(key: string): Promise<void> {
 /**
  * Returns the public CDN URL for a key.
  */
-export function getPublicUrl(key: string): string {
+function getPublicUrl(key: string): string {
   const cleanKey = key.startsWith('/') ? key.slice(1) : key
 
   if (isR2Mock) {

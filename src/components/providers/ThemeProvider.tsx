@@ -1,46 +1,20 @@
 'use client'
 
-import React, { createContext, useContext, useState, useEffect } from 'react'
+import React, { useEffect } from 'react'
 
-type ThemeType = 'default'
-
-interface ThemeContextType {
-  theme: ThemeType;
-  setTheme: (theme: ThemeType) => void;
-}
-
-const ThemeContext = createContext<ThemeContextType>({
-  theme: 'default',
-  setTheme: () => {},
-})
-
-export function useTheme() {
-  return useContext(ThemeContext)
-}
-
+/**
+ * The site is single-theme. This provider only runs a one-time cleanup of theme
+ * state left over from the previous multi-theme design (stale localStorage keys
+ * and document classes), then renders its children untouched.
+ */
 export default function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setThemeState] = useState<ThemeType>('default')
-
-  // Initialize theme from localStorage on mount
   useEffect(() => {
-    // Clean up any old theme storage and document classes on mount since we are single-theme now
     localStorage.removeItem('theme')
     const html = document.documentElement
-    html.classList.remove('theme-winter')
-    html.classList.remove('theme-spring')
-    html.classList.remove('theme-summer')
-    html.classList.remove('theme-autumn')
-    html.classList.remove('theme-lumine')
-    html.classList.remove('theme-aether')
+    for (const cls of ['theme-winter', 'theme-spring', 'theme-summer', 'theme-autumn', 'theme-lumine', 'theme-aether']) {
+      html.classList.remove(cls)
+    }
   }, [])
 
-  const setTheme = (newTheme: ThemeType) => {
-    setThemeState(newTheme)
-  }
-
-  return (
-    <ThemeContext.Provider value={{ theme, setTheme }}>
-      {children}
-    </ThemeContext.Provider>
-  )
+  return <>{children}</>
 }
