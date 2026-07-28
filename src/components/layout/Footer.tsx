@@ -22,6 +22,14 @@ export default function Footer() {
           >
             Privacy Policy
           </Link>
+          <a
+            href="https://mail.google.com/mail/?view=cm&fs=1&to=nuscomicssoc@gmail.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-accent transition-colors underline-offset-4 hover:underline"
+          >
+            Contact Us
+          </a>
         </div>
       </div>
 

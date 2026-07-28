@@ -168,7 +168,14 @@ export default function PrivacyPage() {
             If you have questions regarding this Privacy Policy or wish to submit a data protection / deletion request, please reach out to the NUSCAS Executive Committee:
           </p>
           <p className="font-semibold text-accent">
-            contact@nuscomics.org
+            <a
+              href="https://mail.google.com/mail/?view=cm&fs=1&to=nuscomicssoc@gmail.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:underline transition-colors"
+            >
+              nuscomicssoc@gmail.com
+            </a>
           </p>
         </section>
       </div>
@@ -181,6 +188,14 @@ export default function PrivacyPage() {
         >
           &larr; Back to Home
         </Link>
+        <a
+          href="https://mail.google.com/mail/?view=cm&fs=1&to=nuscomicssoc@gmail.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-sm font-semibold text-accent hover:underline transition-colors"
+        >
+          Contact Us
+        </a>
       </div>
 
     </div>
