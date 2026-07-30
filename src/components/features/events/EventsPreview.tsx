@@ -21,8 +21,10 @@ export default async function EventsPreview() {
     const supabase = createClient()
     const { data, error } = await supabase
       .from('events')
-      .select('*')
+      .select('id, title, slug, description, starts_at, ends_at, location, status, cover_image_key, departments')
       .neq('status', 'cancelled')
+      .order('starts_at', { ascending: false })
+      .limit(24)
 
     if (!error && data) {
       const allEvents = data as ClubEvent[]

@@ -57,7 +57,9 @@ function HeaderContent({ user, showAdminLink, isEventModalOpen = false }: Header
 
   // Detect if header is scrolled over a dark section and check if scrolled down
   useEffect(() => {
-    const handleScroll = () => {
+    let ticking = false
+
+    const updateScrollState = () => {
       setIsScrolled(window.scrollY > 20)
       
       const darkSections = document.querySelectorAll('.bg-background-dark, .theme-crimson')
@@ -72,13 +74,21 @@ function HeaderContent({ user, showAdminLink, isEventModalOpen = false }: Header
       })
       
       setIsOverDark(overDark)
+      ticking = false
     }
 
-    window.addEventListener('scroll', handleScroll, { passive: true })
-    handleScroll()
+    const onScroll = () => {
+      if (!ticking) {
+        requestAnimationFrame(updateScrollState)
+        ticking = true
+      }
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true })
+    updateScrollState()
 
     return () => {
-      window.removeEventListener('scroll', handleScroll)
+      window.removeEventListener('scroll', onScroll)
     }
   }, [pathname])
 

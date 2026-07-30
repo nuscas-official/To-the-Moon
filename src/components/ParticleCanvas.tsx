@@ -57,20 +57,25 @@ export default function ParticleCanvas({
   const lastMoveRef = useRef(0)
   const rafRef = useRef<number>(0)
   const colorRef = useRef('#ed475b')
+  const rgbRef = useRef<[number, number, number]>([237, 71, 91])
 
-  // Reads the current --color-accent CSS variable from the canvas element
+  // Reads the current --color-accent CSS variable from the canvas element and parses RGB integers
   const refreshColor = useCallback(() => {
     if (!canvasRef.current) return
     const raw = getComputedStyle(canvasRef.current)
       .getPropertyValue('--color-accent')
       .trim()
-    if (raw) colorRef.current = raw
+    if (raw) {
+      colorRef.current = raw
+      rgbRef.current = parseRgb(raw)
+    }
   }, [])
 
   // (Re-)initialise particles spread uniformly across the canvas
   const initParticles = useCallback((width: number, height: number) => {
+    const effectiveCount = width < 768 ? Math.min(count, 180) : count
     const particles: Particle[] = []
-    for (let i = 0; i < count; i++) {
+    for (let i = 0; i < effectiveCount; i++) {
       const x = Math.random() * width
       const y = Math.random() * height
       particles.push({
@@ -153,7 +158,7 @@ export default function ParticleCanvas({
       vm.x += (destX - vm.x) * 0.05
       vm.y += (destY - vm.y) * 0.05
 
-      const color = colorRef.current
+      const [r, g, b] = rgbRef.current
 
       const particles = particlesRef.current
       for (let i = 0; i < particles.length; i++) {
@@ -210,7 +215,7 @@ export default function ParticleCanvas({
 
         // Opacity varies with scale for a depth-of-field feel
         const alpha = 0.3 + p.scale * 0.55
-        ctx.fillStyle = hexToRgba(color, alpha)
+        ctx.fillStyle = `rgba(${r},${g},${b},${alpha})`
         ctx.fill()
 
         ctx.restore()
@@ -258,12 +263,18 @@ export default function ParticleCanvas({
   )
 }
 
-// Utility: convert hex (#rrggbb or #rrggbbaa) to rgba(…) string
-function hexToRgba(hex: string, alpha: number): string {
-  const clean = hex.replace('#', '')
+// Utility: parse hex (#rrggbb or rgb(r,g,b)) to RGB tuple
+function parseRgb(colorStr: string): [number, number, number] {
+  if (colorStr.startsWith('rgb')) {
+    const matches = colorStr.match(/\d+/g)
+    if (matches && matches.length >= 3) {
+      return [parseInt(matches[0], 10), parseInt(matches[1], 10), parseInt(matches[2], 10)]
+    }
+  }
+  const clean = colorStr.replace('#', '')
   const r = parseInt(clean.slice(0, 2), 16)
   const g = parseInt(clean.slice(2, 4), 16)
   const b = parseInt(clean.slice(4, 6), 16)
-  if (isNaN(r) || isNaN(g) || isNaN(b)) return `rgba(237,71,91,${alpha})`
-  return `rgba(${r},${g},${b},${alpha})`
+  if (isNaN(r) || isNaN(g) || isNaN(b)) return [237, 71, 91]
+  return [r, g, b]
 }

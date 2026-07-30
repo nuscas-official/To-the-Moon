@@ -1,6 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
-import { getUserRole } from '@/lib/supabase/role'
+import { getAuthUserAndRole } from '@/lib/supabase/auth'
 import SeasonalBanner from '@/components/features/homepage/SeasonalBanner'
 import SocialLinks from '@/components/features/homepage/SocialLinks'
 import WelcomePanel from '@/components/features/homepage/WelcomePanel'
@@ -30,47 +30,46 @@ interface HomeProps {
 }
 
 export default async function Home({ searchParams }: HomeProps) {
+  const startTime = performance.now()
   const supabase = createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  const role = await getUserRole(supabase)
+  const supabaseAdmin = createAdminClient()
 
-  const displayName = user?.user_metadata?.name || user?.email?.split('@')[0] || 'Member'
-  const reason = searchParams?.reason
-
-  // Fetch join reasons from site_config server-side
-  let joinReasons: string[] = []
-  try {
-    const supabaseAdmin = createAdminClient()
-    const { data, error } = await supabaseAdmin
+  // Execute auth and auxiliary queries concurrently using Promise.allSettled for maximum fault-tolerance
+  const [authRes, joinReasonsRes, artworksRes] = await Promise.allSettled([
+    getAuthUserAndRole(),
+    supabaseAdmin
       .from('site_config')
       .select('value')
       .eq('key', 'join_reasons')
-      .single()
-
-    if (!error && data?.value) {
-      joinReasons = data.value as string[]
-    }
-  } catch (err) {
-    console.error('Failed to fetch join reasons:', err)
-  }
-
-  // Fetch artworks for Rolling Gallery
-  let artworks: { id: string; storage_key: string; title: string | null; artist_credit: string }[] = []
-  try {
-    const { data: artworksData, error } = await supabase
+      .single(),
+    supabase
       .from('gallery_artworks')
       .select('id, storage_key, title, artist_credit')
       .eq('status', 'visible')
       .order('display_order', { ascending: true })
       .order('created_at', { ascending: false })
       .limit(10)
+  ])
 
-    if (!error && artworksData) {
-      artworks = artworksData
-    }
-  } catch (err) {
-    console.error('Failed to fetch gallery artworks:', err)
+  const { user, role } = authRes.status === 'fulfilled' ? authRes.value : { user: null, role: null }
+  
+  let joinReasons: string[] = []
+  if (joinReasonsRes.status === 'fulfilled' && !joinReasonsRes.value.error && joinReasonsRes.value.data?.value) {
+    joinReasons = joinReasonsRes.value.data.value as string[]
   }
+
+  let artworks: { id: string; storage_key: string; title: string | null; artist_credit: string }[] = []
+  if (artworksRes.status === 'fulfilled' && !artworksRes.value.error && artworksRes.value.data) {
+    artworks = artworksRes.value.data
+  }
+
+  if (process.env.NODE_ENV === 'development') {
+    const elapsed = (performance.now() - startTime).toFixed(1)
+    console.log(`[Perf] Homepage Server SSR render prepared in ${elapsed}ms`)
+  }
+
+  const displayName = user?.user_metadata?.name || user?.email?.split('@')[0] || 'Member'
+  const reason = searchParams?.reason
 
   return (
     <div className="w-full">

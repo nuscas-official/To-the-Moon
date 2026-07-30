@@ -2,9 +2,8 @@ import { Suspense } from 'react'
 import type { Metadata } from "next";
 import { Manrope, Birthstone, Cormorant_Garamond, Azeret_Mono } from "next/font/google";
 import "./globals.css";
-import { createClient } from '@/lib/supabase/server'
 import Header from '@/components/layout/Header'
-import { getUserRole } from '@/lib/supabase/role'
+import { getAuthUserAndRole } from '@/lib/supabase/auth'
 import ThemeProvider from '@/components/providers/ThemeProvider'
 import RoleSyncListener from '@/components/features/auth/RoleSyncListener'
 import Footer from '@/components/layout/Footer'
@@ -71,9 +70,7 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const supabase = createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  const role = await getUserRole(supabase)
+  const { user, role } = await getAuthUserAndRole()
   const showAdminLink = !!(user && (role === 'committee' || role === 'admin'))
 
   return (

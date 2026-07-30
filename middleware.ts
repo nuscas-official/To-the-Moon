@@ -29,6 +29,18 @@ export async function middleware(request: NextRequest) {
     }
   )
 
+  const pathname = request.nextUrl.pathname
+
+  const isAdminPath = pathname.startsWith('/admin')
+  const isMemberPath = pathname.startsWith('/member')
+  const isAdminApiPath = pathname.startsWith('/api/admin')
+  const isMemberApiPath = pathname.startsWith('/api/member')
+  const isUploadApiPath = pathname.startsWith('/api/uploads')
+  const isAdminMembersPath = pathname.startsWith('/admin/members')
+  const isAdminInvitesApiPath = pathname.startsWith('/api/admin/invites')
+
+  const isProtectedRoute = isAdminPath || isMemberPath || isAdminApiPath || isMemberApiPath || isUploadApiPath
+
   // Refresh session and get user details
   const {
     data: { user },
@@ -37,8 +49,8 @@ export async function middleware(request: NextRequest) {
   // Decode JWT access token to get custom role claim
   const userRole = await getUserRole(supabase)
 
-  // Check if user is deactivated
-  if (user) {
+  // Check if user is deactivated (only required when accessing protected routes)
+  if (user && isProtectedRoute) {
     try {
       const adminSupabase = createAdminClient()
       const { data: dbUser } = await adminSupabase
@@ -74,16 +86,6 @@ export async function middleware(request: NextRequest) {
       console.error('Middleware deactivation check failed:', err)
     }
   }
-
-  const pathname = request.nextUrl.pathname
-
-  const isAdminPath = pathname.startsWith('/admin')
-  const isMemberPath = pathname.startsWith('/member')
-  const isAdminApiPath = pathname.startsWith('/api/admin')
-  const isMemberApiPath = pathname.startsWith('/api/member')
-  const isUploadApiPath = pathname.startsWith('/api/uploads')
-  const isAdminMembersPath = pathname.startsWith('/admin/members')
-  const isAdminInvitesApiPath = pathname.startsWith('/api/admin/invites')
 
   // /admin/members/* and /api/admin/invites/* route protection (admin role only)
   if (isAdminMembersPath || isAdminInvitesApiPath) {
