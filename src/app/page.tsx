@@ -14,6 +14,8 @@ import WordFieldCanvas from '@/components/WordFieldCanvas'
 import PageStrip from '@/components/features/homepage/PageStrip'
 import CTASection from '@/components/features/homepage/CTASection'
 import DiagonalEdge from '@/components/features/homepage/DiagonalEdge'
+import ScrollHint from '@/components/features/homepage/ScrollHint'
+import AboutSection from '@/components/features/homepage/AboutSection'
 
 // Shared slant height for every section transition, so the diagonals stay consistent.
 const EDGE = { '--edge': 'clamp(2rem, 5vw, 5rem)' } as React.CSSProperties
@@ -104,7 +106,7 @@ export default async function Home({ searchParams }: HomeProps) {
       )}
 
       {/* Hero Section: Unified Grid Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 items-stretch my-12 gap-2">
+      <div className="grid grid-cols-1 lg:grid-cols-12 items-stretch mt-12 mb-8 gap-2">
         <div className="lg:col-span-8 flex">
           <PageStrip className="h-full min-h-[350px] lg:min-h-[480px]" />
         </div>
@@ -169,6 +171,8 @@ export default async function Home({ searchParams }: HomeProps) {
 
       {/* CTA Section */}
       <CTASection />
+
+      <ScrollHint />
 
     </div>
   )
