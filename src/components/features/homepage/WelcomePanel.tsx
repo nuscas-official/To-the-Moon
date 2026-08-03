@@ -1,21 +1,14 @@
 'use client'
 
-import { type User } from '@supabase/supabase-js'
 import Image from 'next/image'
 import WelcomeTextTicker from './WelcomeTextTicker'
 
 interface WelcomePanelProps {
-  user: User | null
-  role: string | null
-  displayName: string
   className?: string
   texts?: string[]
 }
 
 export default function WelcomePanel({
-  user,
-  role,
-  displayName,
   className = "",
   texts = []
 }: WelcomePanelProps) {
@@ -36,11 +29,11 @@ export default function WelcomePanel({
         <WelcomeTextTicker texts={texts} />
 
         <section className="w-full max-w-3xl mx-auto px-2 space-y-2 animate-fade-in">
-          <p className="text-sm sm:text-base leading-relaxed">
+          <p className="text-xs sm:text-base text-text-muted leading-relaxed">
             NUS Comics and Animation Society (NUSCAS) is home for all things anime, manga, games, cosplay, and Japanese pop culture!
           </p>
-          <p className="text-sm sm:text-base leading-relaxed">
-            In the past year alone, we&apos;ve hosted <b>cosplay wig styling and makeup workshops</b>, a <b>deep-dive media analysis of <i>Frieren</i></b>, <b>Japan travel sharing sessions</b>, an <b>anime-themed Dungeons &amp; Dragons campaign</b>, an <b>Uma Musume tournament</b>, a <b>journey through the works of Hayao Miyazaki</b>, <b>painting sessions</b>, booths at <b>two conventions</b>, and even produced two <b>original visual novel-style animatics</b>!
+          <p className="text-xs sm:text-base leading-relaxed">
+            In the past year alone, we&apos;ve hosted cosplay wig styling and makeup workshops, a deep-dive media analysis of <i>Frieren</i>, Japan travel sharing sessions, an anime-themed Dungeons &amp; Dragons campaign, an Uma Musume tournament, a journey through the works of <i>Hayao Miyazaki</i>, painting sessions, booths at two conventions, and even produced two original visual novel-style animatics!
           </p>
         </section>
       </div>

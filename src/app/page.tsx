@@ -1,6 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
-import { getAuthUserAndRole } from '@/lib/supabase/auth'
 import SeasonalBanner from '@/components/features/homepage/SeasonalBanner'
 import SocialLinks from '@/components/features/homepage/SocialLinks'
 import WelcomePanel from '@/components/features/homepage/WelcomePanel'
@@ -15,7 +14,6 @@ import PageStrip from '@/components/features/homepage/PageStrip'
 import CTASection from '@/components/features/homepage/CTASection'
 import DiagonalEdge from '@/components/features/homepage/DiagonalEdge'
 import ScrollHint from '@/components/features/homepage/ScrollHint'
-import AboutSection from '@/components/features/homepage/AboutSection'
 
 // Shared slant height for every section transition, so the diagonals stay consistent.
 const EDGE = { '--edge': 'clamp(2rem, 5vw, 5rem)' } as React.CSSProperties
@@ -36,9 +34,8 @@ export default async function Home({ searchParams }: HomeProps) {
   const supabase = createClient()
   const supabaseAdmin = createAdminClient()
 
-  // Execute auth and auxiliary queries concurrently using Promise.allSettled for maximum fault-tolerance
-  const [authRes, joinReasonsRes, artworksRes] = await Promise.allSettled([
-    getAuthUserAndRole(),
+  // Execute auxiliary queries concurrently using Promise.allSettled for maximum fault-tolerance
+  const [joinReasonsRes, artworksRes] = await Promise.allSettled([
     supabaseAdmin
       .from('site_config')
       .select('value')
@@ -53,8 +50,6 @@ export default async function Home({ searchParams }: HomeProps) {
       .limit(10)
   ])
 
-  const { user, role } = authRes.status === 'fulfilled' ? authRes.value : { user: null, role: null }
-  
   let joinReasons: string[] = []
   if (joinReasonsRes.status === 'fulfilled' && !joinReasonsRes.value.error && joinReasonsRes.value.data?.value) {
     joinReasons = joinReasonsRes.value.data.value as string[]
@@ -70,7 +65,6 @@ export default async function Home({ searchParams }: HomeProps) {
     console.log(`[Perf] Homepage Server SSR render prepared in ${elapsed}ms`)
   }
 
-  const displayName = user?.user_metadata?.name || user?.email?.split('@')[0] || 'Member'
   const reason = searchParams?.reason
 
   return (
@@ -113,7 +107,7 @@ export default async function Home({ searchParams }: HomeProps) {
 
         <div className="lg:col-span-4 flex flex-col gap-2 justify-between">
 
-          <WelcomePanel user={user} role={role} displayName={displayName} className="flex-grow" texts={joinReasons} />
+          <WelcomePanel className="flex-grow" texts={joinReasons} />
 
           <div className="flex-shrink-0 grid grid-cols-2 gap-2">
             <SocialLinks className="py-0 h-full" />

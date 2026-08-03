@@ -22,7 +22,7 @@ export default function ScrollHint({ target = '#events-section' }: { target?: st
         document.querySelector(target)?.scrollIntoView({ behavior: 'smooth' })
       }}
       aria-label="Scroll down for more"
-      className={`fixed bottom-2 left-1/2 -translate-x-1/2 z-40 flex flex-col items-center gap-1 text-text-muted hover:text-foreground transition-opacity duration-300 ${
+      className={`fixed bottom-4 left-1/2 -translate-x-1/2 z-40 flex flex-col items-center gap-1 text-text-muted hover:text-foreground transition-opacity duration-300 ${
         visible ? 'opacity-100' : 'opacity-0 pointer-events-none'
       }`}
     >
