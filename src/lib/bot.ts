@@ -45,9 +45,20 @@ export function getBotInstance(): Bot<BotContext> {
 
   // 2. Auth Middleware
   // Protects all commands/messages by verifying telegram_id, except for linking commands
+  const GROUP_ALLOWED_COMMANDS = ['/trending', '/events', '/help']
+
   botInstance.use(async (ctx, next) => {
-    // Only process private chats
-    if (ctx.chat?.type !== 'private') return
+    // In group/supergroup chats, skip auth and only allow a small set of
+    // read-only commands. Everything else (linking, rating, session state)
+    // remains private-chat only.
+    if (ctx.chat?.type !== 'private') {
+      const messageText = (ctx.message?.text || '').trim()
+      const isAllowedGroupCommand = GROUP_ALLOWED_COMMANDS.some(cmd =>
+        messageText === cmd || messageText.startsWith(`${cmd}@`)
+      )
+      if (isAllowedGroupCommand) return await next()
+      return
+    }
 
     const telegramId = ctx.from?.id
     if (!telegramId) return
