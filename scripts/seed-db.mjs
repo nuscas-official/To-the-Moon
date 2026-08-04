@@ -19,16 +19,20 @@ envContent.split('\n').forEach(line => {
 })
 
 const supabaseUrl = env['NEXT_PUBLIC_SUPABASE_URL']
-const anonKey = env['NEXT_PUBLIC_SUPABASE_ANON_KEY']
-const serviceRoleKey = env['SUPABASE_SERVICE_ROLE_KEY']
+const publishableKey = env['NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY']
+const secretKey = env['SUPABASE_SECRET_KEY']
 
-if (!supabaseUrl || !serviceRoleKey || !anonKey) {
-  console.error('Missing env keys', { supabaseUrl, serviceRoleKey, anonKey })
+if (!supabaseUrl || !secretKey || !publishableKey) {
+  console.error('Missing env keys in .env.local', {
+    NEXT_PUBLIC_SUPABASE_URL: Boolean(supabaseUrl),
+    SUPABASE_SECRET_KEY: Boolean(secretKey),
+    NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: Boolean(publishableKey),
+  })
   process.exit(1)
 }
 
-const supabaseService = createClient(supabaseUrl, serviceRoleKey)
-const supabaseAnon = createClient(supabaseUrl, anonKey)
+const supabaseService = createClient(supabaseUrl, secretKey)
+const supabaseAnon = createClient(supabaseUrl, publishableKey)
 
 async function seed() {
   console.log('Seeding site_config...')

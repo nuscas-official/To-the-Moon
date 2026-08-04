@@ -20,10 +20,13 @@ envContent.split('\n').forEach(line => {
 })
 
 const supabaseUrl = env['NEXT_PUBLIC_SUPABASE_URL']
-const supabaseKey = env['NEXT_PUBLIC_SUPABASE_ANON_KEY'] || env['SUPABASE_SERVICE_ROLE_KEY']
+const supabaseKey = env['NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY'] || env['SUPABASE_SECRET_KEY']
 
 if (!supabaseUrl || !supabaseKey) {
-  console.error('Missing env keys', { supabaseUrl, supabaseKey })
+  console.error('Missing env keys in .env.local', {
+    NEXT_PUBLIC_SUPABASE_URL: Boolean(supabaseUrl),
+    supabaseKey: Boolean(supabaseKey),
+  })
   process.exit(1)
 }
 

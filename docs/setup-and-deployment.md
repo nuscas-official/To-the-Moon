@@ -30,8 +30,8 @@ This guide covers prerequisites, local installation, service configurations, and
    ```
    Open `.env.local` and configure the following variables:
    - `NEXT_PUBLIC_SUPABASE_URL`: Your Supabase project URL.
-   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`: Your Supabase project Anonymous public key.
-   - `SUPABASE_SERVICE_ROLE_KEY`: Your Supabase Service Role key (strictly server-side).
+   - `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`: Your Supabase publishable key (`sb_publishable_...`), safe to expose in the browser.
+   - `SUPABASE_SECRET_KEY`: Your Supabase secret key (`sb_secret_...`), strictly server-side. It bypasses Row-Level Security.
    - `TELEGRAM_BOT_TOKEN`: The API token obtained from @BotFather.
    - `NEXT_PUBLIC_SITE_URL`: Set to `http://localhost:3000` for local development.
    - `HEALTH_CHECK_SECRET`: A secret string used to secure the database wake-up endpoint. **You define this secret yourself** (invent any random secure string) and configure the same value in your hosting server environment variables and GitHub Action Secrets.

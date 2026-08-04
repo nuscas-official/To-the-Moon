@@ -19,14 +19,14 @@ envContent.split('\n').forEach(line => {
 })
 
 const supabaseUrl = env['NEXT_PUBLIC_SUPABASE_URL']
-const serviceRoleKey = env['SUPABASE_SERVICE_ROLE_KEY']
+const secretKey = env['SUPABASE_SECRET_KEY']
 
-if (!supabaseUrl || !serviceRoleKey) {
+if (!supabaseUrl || !secretKey) {
   console.error('Missing env keys')
   process.exit(1)
 }
 
-const supabaseService = createClient(supabaseUrl, serviceRoleKey)
+const supabaseService = createClient(supabaseUrl, secretKey)
 
 async function run() {
   console.log('Upserting correct site_config values...')

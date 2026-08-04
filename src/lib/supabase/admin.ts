@@ -1,7 +1,7 @@
 import { createClient } from '@supabase/supabase-js'
 
 /**
- * Creates a server-side Supabase client using the SUPABASE_SERVICE_ROLE_KEY.
+ * Creates a server-side Supabase client using the SUPABASE_SECRET_KEY.
  * This client bypasses Row-Level Security (RLS) policies.
  * 
  * CRITICAL: This MUST ONLY be run in Server Components, Server Actions, or Route Handlers.
@@ -9,13 +9,13 @@ import { createClient } from '@supabase/supabase-js'
  */
 export function createAdminClient() {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+  const secretKey = process.env.SUPABASE_SECRET_KEY
 
-  if (!supabaseUrl || !serviceRoleKey) {
+  if (!supabaseUrl || !secretKey) {
     throw new Error('Missing Supabase environment variables for Admin Client.')
   }
 
-  return createClient(supabaseUrl, serviceRoleKey, {
+  return createClient(supabaseUrl, secretKey, {
     auth: {
       persistSession: false,
       autoRefreshToken: false,

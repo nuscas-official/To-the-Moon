@@ -19,17 +19,17 @@ envContent.split('\n').forEach(line => {
 })
 
 const supabaseUrl = env['NEXT_PUBLIC_SUPABASE_URL']
-const anonKey = env['NEXT_PUBLIC_SUPABASE_ANON_KEY']
-const serviceRoleKey = env['SUPABASE_SERVICE_ROLE_KEY']
+const publishableKey = env['NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY']
+const secretKey = env['SUPABASE_SECRET_KEY']
 
-if (!supabaseUrl || !serviceRoleKey || !anonKey) {
+if (!supabaseUrl || !secretKey || !publishableKey) {
   console.error('Missing environment keys in .env.local')
   process.exit(1)
 }
 
 // Create clients
-const supabaseService = createClient(supabaseUrl, serviceRoleKey)
-const supabaseAnon = createClient(supabaseUrl, anonKey)
+const supabaseService = createClient(supabaseUrl, secretKey)
+const supabaseAnon = createClient(supabaseUrl, publishableKey)
 
 async function runTest() {
   console.log('--- STARTING RATINGS RLS SECURITY CHECKS ---')
