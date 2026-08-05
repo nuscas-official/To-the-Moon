@@ -6,8 +6,12 @@ const secretAccessKey = process.env.CLOUDFLARE_R2_SECRET_ACCESS_KEY || ''
 const bucketName = process.env.CLOUDFLARE_R2_BUCKET_NAME || ''
 const publicUrl = process.env.CLOUDFLARE_R2_PUBLIC_URL || ''
 
-// Mock mode helper
-const isR2Mock = !accountId || accountId.includes('placeholder')
+// Mock mode helper. Cloudflare account IDs are 32-character hex strings, so anything
+// else (empty, or a placeholder copied from .env.example) means R2 is unconfigured.
+// Never mock in production: the serverless filesystem is ephemeral, so falling back to
+// local disk there would silently discard uploads instead of surfacing the misconfig.
+const isR2Configured = /^[0-9a-f]{32}$/i.test(accountId)
+const isR2Mock = !isR2Configured && process.env.NODE_ENV !== 'production'
 
 const s3Client = isR2Mock ? null : new S3Client({
   region: 'auto',
