@@ -37,7 +37,7 @@ export const metadata: Metadata = {
     template: "%s | NUSCAS"
   },
   description: "The official website and member portal of NUSCAS.",
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://to-the-moon-gold.vercel.app"),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://www.nuscas.com"),
   openGraph: {
     title: "NUSCAS",
     description: "The official website and member portal of NUSCAS.",

@@ -111,7 +111,7 @@ jobs:
         run: |
           curl -f \
             -H "X-Health-Check-Key: ${{ secrets.HEALTH_CHECK_SECRET }}" \
-            "https://to-the-moon-gold.vercel.app/api/health"
+            "https://www.nuscas.com/api/health"
 ```
 
 ### Local Verification

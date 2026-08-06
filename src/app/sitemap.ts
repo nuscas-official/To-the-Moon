@@ -2,7 +2,7 @@ import { MetadataRoute } from 'next'
 import { createClient as createBaseClient } from '@supabase/supabase-js'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://to-the-moon-gold.vercel.app'
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.nuscas.com'
   
   const supabase = createBaseClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
