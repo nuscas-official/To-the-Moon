@@ -129,10 +129,10 @@ function HeaderContent({ user, showAdminLink, isEventModalOpen = false }: Header
   return (
     <>
       {/* Top Sticky Header Bar */}
-      <header className={`sticky top-0 z-[60] w-full transition-all duration-300 bg-transparent shadow-none ${
-        isScrolled 
-          ? 'md:bg-surface md:shadow-sm md:opacity-75' 
-          : 'md:bg-surface'
+      <header className={`sticky top-0 z-[60] w-full transition-all duration-300 bg-surface shadow-none ${
+        isScrolled
+          ? 'shadow-sm md:opacity-75'
+          : ''
       } ${isEventModalOpen ? 'hidden' : ''}`}>
         <div className="max-w-8xl mx-auto flex h-16 items-center justify-between px-6 relative">
           {/* Logo & Menu Title on Left */}

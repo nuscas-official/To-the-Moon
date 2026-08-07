@@ -7,7 +7,7 @@ export default function Footer() {
 
   return (
     <footer className="bg-surface mt-auto transition-colors duration-300">
-      <div className="max-w-7xl mx-auto pt-8 px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-6 text-xs text-text-muted">
+      <div className="max-w-7xl mx-auto pt-8 px-4 sm:px-6 lg:px-8 flex flex-col items-start gap-6 text-xs text-text-muted sm:flex-row sm:items-center sm:justify-between">
         
         {/* Left Side: Copyright */}
         <div className="flex items-center gap-1">
@@ -16,6 +16,12 @@ export default function Footer() {
 
         {/* Right Side: Navigation Links */}
         <div className="flex items-center gap-4">
+          <Link
+            href="/about"
+            className="hover:text-accent transition-colors underline-offset-4 hover:underline"
+          >
+            About
+          </Link>
           <Link
             href="/privacy"
             className="hover:text-accent transition-colors underline-offset-4 hover:underline"
