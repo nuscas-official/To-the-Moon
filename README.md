@@ -1,39 +1,66 @@
 # NUSCAS Website & Member Portal
 
-A modern web application and member portal prototype built for the **NUS Comics and Animation Society (NUSCAS)**. This portal serves as the digital hub for club members, artists, and administrators to interact, submit reviews, manage events, share artwork, and publish blog articles.
+A modern web application and member portal for the NUS Comics and Animation Society (NUSCAS). It centralizes member authentication, event management, anime & manga reviews, blogging, artwork sharing, and Telegram integration into a single platform designed specifically for university club operations.
+
+<img width="2561" height="1186" alt="to-the-moon-gold vercel app" src="https://github.com/user-attachments/assets/59a35571-5395-494b-90f3-f72f146acaad" />
 
 ---
 
-## 🛠️ Technology Stack
+## Tech Stack
 
-- **Framework**: [Next.js 14](https://nextjs.org/) (App Router, Server Actions, API routes, optimized pre-rendering)
-- **Language**: [TypeScript](https://www.typescriptlang.org/) for static type-safety
-- **Styling**: [Tailwind CSS](https://tailwindcss.com/) with a custom design token system
-- **Database & Auth**: [Supabase](https://supabase.com/) (PostgreSQL database, Row Level Security policies, and Google OAuth)
-- **Object Storage**: [Cloudflare R2](https://www.cloudflare.com/developer-platform/r2/) (S3-compatible, ultra-low cost media hosting)
-- **Image Processing**: Client-side HTML5 Canvas scaling (to bypass server payload limits) + Server-side [Sharp](https://sharp.pixelplumbing.com/) (for sanitization, formatting, and optimization)
-- **Telegram Integration**: [Grammy.js](https://grammy.dev/) webhook handler for bot rating commands
-
----
-
-## ✨ Key Features
-
-- **Google OAuth Login**: Direct, secure member authentication managed by Supabase.
-- **Member Ratings Dashboard**: 
-  - Allows members to search, rate, and write reviews for anime and manga titles.
-  - Implements daily submission rate limits (30 actions/day) to prevent spam.
-- **Event Management**: 
-  - Interactive event feeds and detail cards.
-  - Media uploader for organizers to share photo galleries from physical gatherings.
-- **Media Gallery**: A collaborative gallery for members to share illustrations and fan art, integrated directly with Cloudflare R2 storage.
-- **Blog Engine**: Publish newsletters, guides, or editorials using custom MDX rendering, featuring cover image uploads.
-- **Telegram Bot Webhook**: Fully integrated chatbot enabling members to query recommendations and update their ratings directly from Telegram.
-- **Adaptive Design**: Fully responsive visual aesthetics featuring subtle micro-animations.
+- Framework: Next.js 14
+- Language: TypeScript
+- Styling: Tailwind CSS
+- Backend: Supabase (PostgreSQL, Authentication)
+- Object Storage: Cloudflare R2
+- Image Processing: Sharp + client-side Canvas resizing
+- Bot Integration: Grammy.js (Telegram)
 
 ---
 
-## 🚀 Setup & Deployment
+## Features
 
-All detailed guidelines for setting up the database, authenticating services, runing the app locally, and deploying to Vercel have been moved to the documentation.
+Authentication
+- Secure Google OAuth authentication powered by Supabase.
+- Invite-only registration using single-use, expiring invite tokens (/join?token=...).
+- Unauthorized sign-up attempts are automatically rejected and cleaned up.
+- Administrators can generate, revoke, and manage invitations directly from the dashboard.
 
-👉 **Read the [Setup and Deployment Guide](file:///c:/Users/User/Developer/NUSCAS-Website-Prototype/docs/setup-and-deployment.md)** to get started!
+Anime & Manga Ratings
+- Search, rate, and review anime and manga titles.
+- Individual ratings are always private.
+- Public aggregate scores are only displayed after a title has received at least three member ratings, reducing the risk of de-anonymizing niche titles.
+- Daily submission limits (30 actions/day) help prevent spam and abuse.
+
+Event Management
+- Interactive event listings and detailed event pages.
+- Organizer tools for uploading and managing photo galleries from club events.
+  
+Artwork Gallery
+- Collaborative gallery for members to showcase illustrations and fan art.
+- Media is stored on Cloudflare R2 for scalable, low-cost object storage.
+  
+Blogging Platform
+- Rich WYSIWYG MDX editor powered by @mdxeditor/editor.
+- Support for cover image uploads.
+- Custom MDX compilation and rendering for articles, newsletters, and guides.
+
+Telegram Bot
+
+Members can link their Telegram account to their NUSCAS profile using a secure pairing code.
+
+Supported commands include:
+- `/rate` — Search AniList titles and submit ratings
+- `/myratings` — View your recent ratings
+- `/trending` — Browse club-wide trending titles
+- `/events` — View upcoming events
+- `/link`, `/unlink`, `/whoami` — Manage account linking
+- `/help` — Display the command reference
+
+---
+
+## Setup & Deployment
+
+Project setup, deployment, database initialization, and environment configuration are documented separately.
+
+👉 See the [Setup and Deployment Guide](docs/setup-and-deployment.md)
