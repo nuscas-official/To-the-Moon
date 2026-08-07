@@ -62,27 +62,27 @@ export default function SocialLinks({ className = '' }: SocialLinksProps) {
               href={channel.url}
               target="_blank"
               rel="noopener noreferrer"
-              className={`clip-cut cut-sm flex items-center justify-between p-2.5 border border-border/50 bg-surface/20 transition-all duration-300 ${channel.bgColor} ${channel.borderColor} group/link`}
+              className={`clip-cut cut-sm flex items-center gap-3 p-2.5 border border-border/50 bg-surface/20 transition-all duration-300 ${channel.bgColor} ${channel.borderColor} group/link`}
               whileHover={{ scale: 1.02, x: 2 }}
               whileTap={{ scale: 0.98 }}
             >
-              <div className="flex items-center gap-3">
-                <div className={`clip-cut cut-xs p-1.5 bg-surface/80 group-hover/link:scale-110 transition-transform duration-300 ${channel.iconColor}`}>
-                  {channel.icon}
+              <div className={`shrink-0 clip-cut cut-xs p-1.5 bg-surface/80 group-hover/link:scale-110 transition-transform duration-300 ${channel.iconColor}`}>
+                {channel.icon}
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="text-xs font-black text-foreground group-hover/link:text-accent transition-colors truncate">
+                  {channel.name}
                 </div>
-                <div>
-                  <div className="text-xs font-black text-foreground group-hover/link:text-accent transition-colors">
-                    {channel.name}
-                  </div>
-                  <div className="text-[8px] text-text-muted font-mono pt-1">
-                    {channel.handle}
-                  </div>
+                <div className="text-[8px] text-text-muted font-mono pt-1 truncate">
+                  {channel.handle}
                 </div>
               </div>
-              
-              <div className="text-text-muted group-hover/link:text-accent group-hover/link:translate-x-1 transition-all duration-300">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+
+              <div className="shrink-0 text-text-muted group-hover/link:text-accent group-hover/link:translate-x-1 transition-all duration-300">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.2" viewBox="0 0 24 24" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                  <path d="M15 3h6v6" />
+                  <path d="M10 14 21 3" />
                 </svg>
               </div>
             </motion.a>

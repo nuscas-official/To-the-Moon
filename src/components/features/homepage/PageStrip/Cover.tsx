@@ -19,7 +19,22 @@ const COVER_BG = '#241f1d'
 const CREAM = '#f2ead9'
 const GOLD = '#c5a059'
 
-function Identity() {
+function Identity({ compact = false }: { compact?: boolean }) {
+  if (compact) {
+    return (
+      <div className="flex items-center gap-3 self-start">
+        <div className="relative w-14 h-14 shrink-0 rounded-full overflow-hidden border border-[#c5a059]/40 bg-white/95">
+          <Image src="/images/anikun-flower.webp" alt="NUSCAS mascot" fill className="object-cover p-1" />
+        </div>
+        <div>
+          <p className="font-serif text-2xl tracking-[0.06em] leading-none">NUSCAS</p>
+          <p className="mt-1.5 text-[10px] font-mono uppercase tracking-[0.25em]" style={{ color: GOLD }}>
+            Est. 1999
+          </p>
+        </div>
+      </div>
+    )
+  }
   return (
     <>
       <div className="relative w-32 h-32 rounded-full overflow-hidden border border-[#c5a059]/40 bg-white/95">
@@ -35,7 +50,28 @@ function Identity() {
   )
 }
 
-function Purpose() {
+function Purpose({ compact = false }: { compact?: boolean }) {
+  if (compact) {
+    return (
+      <div className="w-full flex flex-col items-start gap-2.5 text-left">
+        <span className="text-[12px] font-mono uppercase tracking-[0.3em]" style={{ color: GOLD }}>
+          Our Story
+        </span>
+        <p className="text-[14px] leading-relaxed text-[#f2ead9]/85">
+          NUS Comics &amp; Animation Society — over 25 years of fun and creativity in everything ACG-related. From a small group of friends to a thriving club with hundreds of members and a robust alumni network, this is how we got here.
+        </p>
+        <span
+          className="mt-1 w-full flex items-center justify-center gap-1.5 py-2.5 border text-[10px] font-mono uppercase tracking-widest"
+          style={{ borderColor: `${GOLD}66`, color: CREAM }}
+        >
+          Open the timeline
+          <svg viewBox="0 0 24 24" className="w-3.5 h-3.5 animate-pulse" fill="none" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+          </svg>
+        </span>
+      </div>
+    )
+  }
   return (
     <>
       <span className="text-[12px] font-mono uppercase tracking-[0.3em]" style={{ color: GOLD }}>
@@ -88,7 +124,7 @@ export default function Cover({
           onClick={onOpen}
           tabIndex={open ? -1 : 0}
           aria-label="Open the timeline"
-          className="absolute inset-0 flex flex-col items-center justify-center text-center gap-3 px-6 cursor-pointer focus:outline-none"
+          className="absolute inset-0 flex flex-col justify-center gap-4 px-6 cursor-pointer focus:outline-none"
           style={{
             ...FACE,
             transformOrigin: 'left center',
@@ -98,9 +134,9 @@ export default function Cover({
             opacity: open ? 0 : 1,
           }}
         >
-          <Identity />
-          <div className="w-10 h-px my-1" style={{ background: `${GOLD}55` }} />
-          <Purpose />
+          <Identity compact />
+          <div className="-mx-6 h-px" style={{ background: `${GOLD}40` }} />
+          <Purpose compact />
         </button>
       ) : (
         <>
