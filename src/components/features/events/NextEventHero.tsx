@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import type { ClubEvent } from '@/lib/events'
+import { formatInClubTime, clubCalendarDaysUntil } from '@/lib/datetime'
 import { ArrowRightIcon } from '@/components/icons/ArrowRightIcon'
 import NextEventHeroActions from './NextEventHeroActions'
 
@@ -62,24 +63,19 @@ export default function NextEventHero({ event, isUpcoming, className = '' }: Nex
     )
   }
 
-  const start = new Date(event.starts_at)
-  const dateStr = start.toLocaleDateString('en-SG', {
+  const dateStr = formatInClubTime(event.starts_at, {
     weekday: 'long',
     day: 'numeric',
     month: 'long',
   })
-  const timeStr = start.toLocaleTimeString('en-SG', {
+  const timeStr = formatInClubTime(event.starts_at, {
     hour: '2-digit',
     minute: '2-digit',
   })
 
   // Whole-day difference, so an event later today reads "Today" rather than
   // rounding to 0 or 1 depending on the hour.
-  const startOfToday = new Date()
-  startOfToday.setHours(0, 0, 0, 0)
-  const startOfEvent = new Date(start)
-  startOfEvent.setHours(0, 0, 0, 0)
-  const daysAway = Math.round((startOfEvent.getTime() - startOfToday.getTime()) / 86_400_000)
+  const daysAway = clubCalendarDaysUntil(event.starts_at)
 
   let countdown: string | null = null
   if (isUpcoming) {

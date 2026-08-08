@@ -6,6 +6,7 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
+import { formatInClubTime, isSameClubDay } from '@/lib/datetime'
 
 interface EventPhoto {
   id: string;
@@ -127,30 +128,28 @@ export default function EventDetailModal() {
 
   // Helpers for date/time formatting
   const getFormattedDates = (startsAt: string, endsAt: string | null) => {
-    const startDate = new Date(startsAt)
-    const dateStr = startDate.toLocaleDateString('en-SG', {
+    const dateStr = formatInClubTime(startsAt, {
       weekday: 'long',
       day: 'numeric',
       month: 'long',
       year: 'numeric',
     })
-    const startTimeStr = startDate.toLocaleTimeString('en-SG', {
+    const startTimeStr = formatInClubTime(startsAt, {
       hour: '2-digit',
       minute: '2-digit',
     })
 
     let timeRangeStr = startTimeStr
     if (endsAt) {
-      const endDate = new Date(endsAt)
-      const endTimeStr = endDate.toLocaleTimeString('en-SG', {
+      const endTimeStr = formatInClubTime(endsAt, {
         hour: '2-digit',
         minute: '2-digit',
       })
-      
-      if (startDate.toDateString() === endDate.toDateString()) {
+
+      if (isSameClubDay(startsAt, endsAt)) {
         timeRangeStr = `${startTimeStr} - ${endTimeStr}`
       } else {
-        const endDateStr = endDate.toLocaleDateString('en-SG', {
+        const endDateStr = formatInClubTime(endsAt, {
           day: 'numeric',
           month: 'short',
           year: 'numeric',

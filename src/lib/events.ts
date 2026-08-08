@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { createClient as createBaseClient } from '@supabase/supabase-js'
+import { formatInClubTime } from '@/lib/datetime'
 
 export interface ClubEvent {
   id: string;
@@ -114,7 +115,7 @@ export async function getEventPhotos(eventId: string): Promise<EventPhoto[]> {
 
 /** Trimmed, single-line description suitable for meta tags. */
 export function eventMetaDescription(event: ClubEvent): string {
-  const when = new Date(event.starts_at).toLocaleDateString('en-SG', {
+  const when = formatInClubTime(event.starts_at, {
     day: 'numeric',
     month: 'long',
     year: 'numeric',

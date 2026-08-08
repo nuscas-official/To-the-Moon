@@ -4,6 +4,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import JsonLd from '@/components/JsonLd'
 import { getEventBySlug, getEventPhotos, eventMetaDescription, type ClubEvent } from '@/lib/events'
+import { formatInClubTime, isSameClubDay } from '@/lib/datetime'
 import { SITE_URL, SITE_NAME, ORG_ID, DEFAULT_OG_IMAGE } from '@/lib/site'
 
 // Events change rarely once published; five minutes keeps the page cacheable
@@ -64,25 +65,23 @@ function departmentLabels(departments: string[]): string[] {
 }
 
 function formatDates(startsAt: string, endsAt: string | null) {
-  const start = new Date(startsAt)
-  const dateStr = start.toLocaleDateString('en-SG', {
+  const dateStr = formatInClubTime(startsAt, {
     weekday: 'long',
     day: 'numeric',
     month: 'long',
     year: 'numeric',
   })
-  const startTime = start.toLocaleTimeString('en-SG', { hour: '2-digit', minute: '2-digit' })
+  const startTime = formatInClubTime(startsAt, { hour: '2-digit', minute: '2-digit' })
 
   if (!endsAt) return { dateStr, timeStr: startTime }
 
-  const end = new Date(endsAt)
-  const endTime = end.toLocaleTimeString('en-SG', { hour: '2-digit', minute: '2-digit' })
+  const endTime = formatInClubTime(endsAt, { hour: '2-digit', minute: '2-digit' })
 
-  if (start.toDateString() === end.toDateString()) {
+  if (isSameClubDay(startsAt, endsAt)) {
     return { dateStr, timeStr: `${startTime} – ${endTime}` }
   }
 
-  const endDateStr = end.toLocaleDateString('en-SG', {
+  const endDateStr = formatInClubTime(endsAt, {
     day: 'numeric',
     month: 'short',
     year: 'numeric',

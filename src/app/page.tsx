@@ -173,7 +173,7 @@ export default async function Home({ searchParams }: HomeProps) {
             Our Story
           </h2>
           <p className="text-sm text-text-muted mt-2">
-            Twenty-five years of screenings, sketchbooks, and questionable cosplay decisions
+            Twenty-five years of questionable decisions
           </p>
         </div>
 

@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { formatInClubTime } from '@/lib/datetime'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
@@ -145,13 +146,12 @@ export default function AdminEventList({ initialEvents }: AdminEventListProps) {
             </thead>
             <tbody className="divide-y divide-border border-t border-border">
               {filteredEvents.map((event) => {
-                const startDate = new Date(event.starts_at)
-                const dateStr = startDate.toLocaleDateString('en-SG', {
+                const dateStr = formatInClubTime(event.starts_at, {
                   day: 'numeric',
                   month: 'short',
                   year: 'numeric',
                 })
-                const timeStr = startDate.toLocaleTimeString('en-SG', {
+                const timeStr = formatInClubTime(event.starts_at, {
                   hour: '2-digit',
                   minute: '2-digit',
                 })

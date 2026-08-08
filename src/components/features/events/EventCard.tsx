@@ -5,6 +5,7 @@ import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion'
 import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname, useSearchParams } from 'next/navigation'
+import { formatInClubTime } from '@/lib/datetime'
 
 interface ClubEvent {
   id: string;
@@ -148,13 +149,13 @@ export default function EventCard({
   const pathname = usePathname()
   const searchParams = useSearchParams()
 
-  const dateStr = new Date(event.starts_at).toLocaleDateString('en-SG', {
+  const dateStr = formatInClubTime(event.starts_at, {
     weekday: 'short',
     day: 'numeric',
     month: 'short',
     year: 'numeric',
   })
-  const timeStr = new Date(event.starts_at).toLocaleTimeString('en-SG', {
+  const timeStr = formatInClubTime(event.starts_at, {
     hour: '2-digit',
     minute: '2-digit',
   })
