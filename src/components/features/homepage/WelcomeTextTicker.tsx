@@ -3,9 +3,8 @@
 import { useState, useEffect, useMemo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 
-// The club name lives in the page's h1 now, so the ticker is purely the
-// rotating hook — every line here should work as a reason to join.
 const DEFAULT_REASONS = [
+  "NUS Comics & Animation Society",
   "Free instant ramen during weekly screenings (if you can beat the president in rock-paper-scissors)",
   "We have a dedicated server to argue about whether subs or dubs are superior",
   "To fulfill your lifelong dream of running like Naruto down the university corridors",
@@ -55,9 +54,11 @@ export default function WelcomeTextTicker({
   intervalMs = 3000,
   className = ""
 }: WelcomeTextTickerProps) {
-  // Admin-configured reasons win outright when present
+  // If custom texts are provided, prioritize them but preserve the main title at index 0
   const items = useMemo(() => {
-    return texts.length > 0 ? texts : DEFAULT_REASONS
+    return texts.length > 0
+      ? ["NUS Comics & Animation Society", ...texts]
+      : DEFAULT_REASONS
   }, [texts])
 
   const [reasonIndex, setReasonIndex] = useState(0)

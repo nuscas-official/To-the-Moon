@@ -2,6 +2,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import type { ClubEvent } from '@/lib/events'
 import { ArrowRightIcon } from '@/components/icons/ArrowRightIcon'
+import NextEventHeroActions from './NextEventHeroActions'
 
 interface NextEventHeroProps {
   /** Chosen by getHeroEvent() so the grid below can exclude the same event. */
@@ -157,21 +158,7 @@ export default function NextEventHero({ event, isUpcoming, className = '' }: Nex
           </span>
         </div>
 
-        <div className="mt-7 flex flex-wrap items-center gap-3">
-          <Link
-            href={`/events/${event.slug}`}
-            className="clip-cut cut-md inline-flex items-center gap-2 bg-accent px-6 py-3 text-sm font-extrabold uppercase tracking-wider text-white transition-all hover:opacity-90 hover:gap-3"
-          >
-            Event details
-            <ArrowRightIcon className="w-4 h-4" />
-          </Link>
-          <Link
-            href="/events"
-            className="clip-cut cut-md inline-flex items-center gap-2 border border-white/30 px-6 py-3 text-sm font-extrabold uppercase tracking-wider text-white transition-colors hover:border-white/70 hover:bg-white/10"
-          >
-            All events
-          </Link>
-        </div>
+        <NextEventHeroActions slug={event.slug} />
       </div>
     </div>
   )

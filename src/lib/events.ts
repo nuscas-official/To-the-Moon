@@ -27,8 +27,8 @@ export interface HeroEventResult {
  * The single event the homepage leads with: the soonest thing still to come,
  * or the most recent thing we ran if the calendar is empty (between semesters).
  *
- * The homepage grid excludes whatever this returns, so both call sites must
- * agree on the choice — hence one shared function rather than two queries.
+ * This event also stays in the grid below — the hero is a spotlight on it, not
+ * a replacement for its card.
  */
 export async function getHeroEvent(): Promise<HeroEventResult> {
   try {

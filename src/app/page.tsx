@@ -151,8 +151,10 @@ export default async function Home({ searchParams }: HomeProps) {
           fieldStrength={15}
         />
 
-        <div id="events-section" className="relative z-10 max-w-7xl mx-auto px-6 sm:px-8 lg:px-8">
-          <EventsPreview excludeId={hero.event?.id} />
+        {/* scroll-mt clears the sticky header when the hero button or the
+            ScrollHint jumps here. */}
+        <div id="events-section" className="relative z-10 max-w-7xl mx-auto px-6 sm:px-8 lg:px-8 scroll-mt-24">
+          <EventsPreview />
         </div>
 
         <div id="departments-section" className="relative z-10 max-w-7xl mx-auto mt-20 pb-4 px-6 sm:px-8 lg:px-8">
