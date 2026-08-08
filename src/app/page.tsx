@@ -4,6 +4,8 @@ import SeasonalBanner from '@/components/features/homepage/SeasonalBanner'
 import SocialLinks from '@/components/features/homepage/SocialLinks'
 import WelcomePanel from '@/components/features/homepage/WelcomePanel'
 import EventsPreview from '@/components/features/events/EventsPreview'
+import NextEventHero from '@/components/features/events/NextEventHero'
+import { getHeroEvent, type HeroEventResult } from '@/lib/events'
 import BlogPreview from '@/components/features/posts/BlogPreview'
 import ClubDepartments from '@/components/features/homepage/ClubDepartments'
 import RollingGallery from '@/components/features/homepage/RollingGallery'
@@ -18,9 +20,13 @@ import ScrollHint from '@/components/features/homepage/ScrollHint'
 // Shared slant height for every section transition, so the diagonals stay consistent.
 const EDGE = { '--edge': 'clamp(2rem, 5vw, 5rem)' } as React.CSSProperties
 
+// `absolute` opts out of the root layout's "%s | NUSCAS" template, which
+// would otherwise render "NUSCAS ... | NUSCAS".
 export const metadata: Metadata = {
-  title: "Home | NUSCAS",
-  description: "Welcome to the official member portal of NUS Comics and Animation Society. Submit ratings, discover events, read blogs, and explore our gallery.",
+  title: { absolute: "NUSCAS | NUS Comics and Animation Society" },
+  description:
+    "The NUS anime, manga, and cosplay society. See what's on this semester — screenings, art workshops, gaming tournaments, and socials — plus member art, reviews, and blogs.",
+  alternates: { canonical: "/" },
 }
 
 interface HomeProps {
@@ -35,7 +41,7 @@ export default async function Home({ searchParams }: HomeProps) {
   const supabaseAdmin = createAdminClient()
 
   // Execute auxiliary queries concurrently using Promise.allSettled for maximum fault-tolerance
-  const [joinReasonsRes, artworksRes] = await Promise.allSettled([
+  const [joinReasonsRes, artworksRes, heroRes] = await Promise.allSettled([
     supabaseAdmin
       .from('site_config')
       .select('value')
@@ -47,7 +53,8 @@ export default async function Home({ searchParams }: HomeProps) {
       .eq('status', 'visible')
       .order('display_order', { ascending: true })
       .order('created_at', { ascending: false })
-      .limit(10)
+      .limit(10),
+    getHeroEvent()
   ])
 
   let joinReasons: string[] = []
@@ -59,6 +66,9 @@ export default async function Home({ searchParams }: HomeProps) {
   if (artworksRes.status === 'fulfilled' && !artworksRes.value.error && artworksRes.value.data) {
     artworks = artworksRes.value.data
   }
+
+  const hero: HeroEventResult =
+    heroRes.status === 'fulfilled' ? heroRes.value : { event: null, isUpcoming: false }
 
   if (process.env.NODE_ENV === 'development') {
     const elapsed = (performance.now() - startTime).toFixed(1)
@@ -99,10 +109,15 @@ export default async function Home({ searchParams }: HomeProps) {
         </div>
       )}
 
-      {/* Hero Section: Unified Grid Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 items-stretch mt-12 mb-8 gap-2">
+      {/* Hero Section: the next event leads, because "what's on" is the first
+          thing a prospective member needs. The club intro sits beside it. */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 items-stretch mt-6 lg:mt-8 mb-8 gap-2">
         <div className="lg:col-span-8 flex">
-          <PageStrip className="h-full min-h-[350px] lg:min-h-[480px]" />
+          <NextEventHero
+            event={hero.event}
+            isUpcoming={hero.isUpcoming}
+            className="h-full min-h-[420px] lg:min-h-[520px] w-full"
+          />
         </div>
 
         <div className="lg:col-span-4 flex flex-col gap-2 justify-between">
@@ -137,13 +152,31 @@ export default async function Home({ searchParams }: HomeProps) {
         />
 
         <div id="events-section" className="relative z-10 max-w-7xl mx-auto px-6 sm:px-8 lg:px-8">
-          <EventsPreview />
+          <EventsPreview excludeId={hero.event?.id} />
         </div>
 
         <div id="departments-section" className="relative z-10 max-w-7xl mx-auto mt-20 pb-4 px-6 sm:px-8 lg:px-8">
           <ClubDepartments />
         </div>
       </div>
+
+      {/* Our Story — the club-history strip that used to open the page. It
+          reads better as context after someone has seen what we actually run. */}
+      <section id="story-section" className="max-w-7xl mx-auto mt-20 mb-20 px-6 sm:px-8 lg:px-8">
+        <div className="border-b border-border pb-4 mb-8">
+          <span className="text-xl font-display tracking-widest text-accent">
+            Since 1999
+          </span>
+          <h2 className="text-4xl md:text-5xl tracking-tight text-foreground font-serif py-2">
+            Our Story
+          </h2>
+          <p className="text-sm text-text-muted mt-2">
+            Twenty-five years of screenings, sketchbooks, and questionable cosplay decisions
+          </p>
+        </div>
+
+        <PageStrip className="h-full min-h-[350px] lg:min-h-[480px]" />
+      </section>
 
       <div id="gallery-section" className="w-screen relative left-1/2 -translate-x-1/2">
         <RollingGallery artworks={artworks} />

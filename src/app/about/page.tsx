@@ -2,8 +2,9 @@ import { Metadata } from 'next'
 import Link from 'next/link'
 
 export const metadata: Metadata = {
-  title: 'About | NUS Comics and Animation Society',
+  title: 'About',
   description: 'What the NUSCAS member portal is, what it does, and why it asks you to sign in with Google.',
+  alternates: { canonical: '/about' },
 }
 
 export default function AboutPage() {

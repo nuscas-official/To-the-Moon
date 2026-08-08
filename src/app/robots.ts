@@ -1,13 +1,15 @@
 import { MetadataRoute } from 'next'
+import { SITE_URL } from '@/lib/site'
 
 export default function robots(): MetadataRoute.Robots {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.nuscas.com'
   return {
     rules: {
       userAgent: '*',
       allow: '/',
-      disallow: ['/admin/', '/member/', '/api/'],
+      // /auth/ is the OAuth callback; nothing there is a landing page.
+      disallow: ['/admin/', '/member/', '/api/', '/auth/'],
     },
-    sitemap: `${siteUrl}/sitemap.xml`,
+    sitemap: `${SITE_URL}/sitemap.xml`,
+    host: SITE_URL,
   }
 }

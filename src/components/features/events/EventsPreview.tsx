@@ -1,33 +1,26 @@
 import { createClient } from '@/lib/supabase/server'
+import { EVENT_COLUMNS, type ClubEvent } from '@/lib/events'
 import EventsListClient from './EventsListClient'
 
-interface ClubEvent {
-  id: string;
-  title: string;
-  slug: string;
-  description: string | null;
-  starts_at: string;
-  ends_at: string | null;
-  location: string | null;
-  status: 'upcoming' | 'past' | 'cancelled';
-  cover_image_key: string | null;
-  departments: string[];
+interface EventsPreviewProps {
+  /** Event already shown in the hero, so the grid doesn't repeat it. */
+  excludeId?: string | null
 }
 
-export default async function EventsPreview() {
+export default async function EventsPreview({ excludeId }: EventsPreviewProps = {}) {
   let events: ClubEvent[] = []
 
   try {
     const supabase = createClient()
     const { data, error } = await supabase
       .from('events')
-      .select('id, title, slug, description, starts_at, ends_at, location, status, cover_image_key, departments')
+      .select(EVENT_COLUMNS)
       .neq('status', 'cancelled')
       .order('starts_at', { ascending: false })
       .limit(24)
 
     if (!error && data) {
-      const allEvents = data as ClubEvent[]
+      const allEvents = (data as ClubEvent[]).filter((e) => e.id !== excludeId)
       const now = new Date()
 
       // Sort upcoming events: soonest first

@@ -26,6 +26,12 @@ export default function WelcomePanel({
       </div>
 
       <div className="relative z-0">
+        {/* The page's only h1. It has to be real text — the ticker below splits
+            every character into its own span, so crawlers see nothing there. */}
+        <h1 className="px-2 pr-16 md:pr-20 text-xl sm:text-2xl font-serif leading-tight tracking-tight text-foreground">
+          NUS Comics &amp; Animation Society
+        </h1>
+
         <WelcomeTextTicker texts={texts} />
 
         <section className="w-full max-w-3xl mx-auto px-2 space-y-2 animate-fade-in">

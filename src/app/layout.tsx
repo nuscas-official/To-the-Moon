@@ -8,6 +8,18 @@ import ThemeProvider from '@/components/providers/ThemeProvider'
 import RoleSyncListener from '@/components/features/auth/RoleSyncListener'
 import Footer from '@/components/layout/Footer'
 import EventDetailModal from '@/components/features/events/EventDetailModal'
+import JsonLd from '@/components/JsonLd'
+import {
+  SITE_URL,
+  SITE_NAME,
+  ORG_ID,
+  ORG_LEGAL_NAME,
+  ORG_DESCRIPTION,
+  ORG_EMAIL,
+  ORG_LOGO,
+  ORG_SOCIALS,
+  DEFAULT_OG_IMAGE,
+} from '@/lib/site'
 
 const quicksand = Manrope({
   subsets: ["latin"],
@@ -33,16 +45,31 @@ const azeretMono = Azeret_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "NUSCAS",
+    default: `${ORG_LEGAL_NAME} (NUSCAS)`,
     template: "%s | NUSCAS"
   },
-  description: "The official website and member portal of NUSCAS.",
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://www.nuscas.com"),
+  description: ORG_DESCRIPTION,
+  metadataBase: new URL(SITE_URL),
+  applicationName: SITE_NAME,
+  keywords: [
+    "NUSCAS",
+    "NUS Comics and Animation Society",
+    "NUS anime club",
+    "NUS anime society",
+    "anime club Singapore",
+    "NUS cosplay",
+    "NUS manga",
+    "NUS CCA",
+    "CASuals",
+    "TOPICS",
+    "Palette",
+  ],
+  alternates: { canonical: "/" },
   openGraph: {
-    title: "NUSCAS",
-    description: "The official website and member portal of NUSCAS.",
+    title: `${ORG_LEGAL_NAME} (NUSCAS)`,
+    description: ORG_DESCRIPTION,
     url: "/",
-    siteName: "NUSCAS",
+    siteName: SITE_NAME,
     images: [
       {
         url: "/og-image.png",
@@ -51,19 +78,70 @@ export const metadata: Metadata = {
         alt: "NUSCAS Portal"
       }
     ],
-    locale: "en_US",
+    locale: "en_SG",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "NUSCAS",
-    description: "The official website and member portal of NUSCAS.",
+    title: `${ORG_LEGAL_NAME} (NUSCAS)`,
+    description: ORG_DESCRIPTION,
     images: ["/og-image.png"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
   },
   icons: {
     icon: "/images/nuscas-favicon.webp"
   },
 };
+
+// Identity graph for the whole site. Every Event's organizer points at ORG_ID,
+// so search engines resolve them all to this one entity.
+const siteJsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "@id": ORG_ID,
+    name: SITE_NAME,
+    legalName: ORG_LEGAL_NAME,
+    alternateName: ["NUS Comics and Animation Society", "NUS CAS", "NUSCAS"],
+    url: SITE_URL,
+    logo: ORG_LOGO,
+    image: DEFAULT_OG_IMAGE,
+    description: ORG_DESCRIPTION,
+    email: ORG_EMAIL,
+    foundingDate: "1999",
+    sameAs: ORG_SOCIALS,
+    parentOrganization: {
+      "@type": "CollegeOrUniversity",
+      name: "National University of Singapore",
+      url: "https://www.nus.edu.sg/",
+    },
+    address: {
+      "@type": "PostalAddress",
+      addressLocality: "Singapore",
+      addressCountry: "SG",
+    },
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "@id": `${SITE_URL}/#website`,
+    url: SITE_URL,
+    name: SITE_NAME,
+    description: ORG_DESCRIPTION,
+    publisher: { "@id": ORG_ID },
+    inLanguage: "en-SG",
+  },
+];
 
 export default async function RootLayout({
   children,
@@ -78,6 +156,7 @@ export default async function RootLayout({
       <body
         className="antialiased min-h-full flex flex-col bg-background text-foreground transition-colors duration-300 overflow-x-hidden"
       >
+        <JsonLd data={siteJsonLd} />
         <ThemeProvider>
           <RoleSyncListener user={user} currentRole={role} />
           {/* Skip to content link for a11y */}

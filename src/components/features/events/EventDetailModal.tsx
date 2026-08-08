@@ -4,6 +4,7 @@ import React, { useState, useEffect, useCallback } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import Image from 'next/image'
+import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 
 interface EventPhoto {
@@ -298,6 +299,18 @@ export default function EventDetailModal() {
                     <h1 className="text-xl sm:text-3xl font-black text-foreground tracking-tight leading-snug">
                       {event.title}
                     </h1>
+
+                    {/* The modal lives on a query param; this is the indexable,
+                        shareable address for the same event. */}
+                    <Link
+                      href={`/events/${event.slug}`}
+                      className="mt-2 inline-flex items-center gap-1 text-xs font-extrabold uppercase tracking-wider text-accent hover:underline"
+                    >
+                      Open full page
+                      <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                      </svg>
+                    </Link>
 
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-6 pt-6 border-t border-border/80">
                       {/* Date & Time Column */}

@@ -2,8 +2,9 @@ import { Metadata } from 'next'
 import Link from 'next/link'
 
 export const metadata: Metadata = {
-  title: 'Privacy Policy | NUS Comics and Animation Society',
+  title: 'Privacy Policy',
   description: 'Privacy policy and personal data protection practices of the NUS Comics and Animation Society (NUSCAS).',
+  alternates: { canonical: '/privacy' },
 }
 
 export default function PrivacyPage() {

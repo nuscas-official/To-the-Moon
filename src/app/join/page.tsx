@@ -1,6 +1,15 @@
 import { createAdminClient } from '@/lib/supabase/admin'
 import JoinForm from '@/components/features/join/JoinForm'
 import Link from 'next/link'
+import type { Metadata } from 'next'
+
+// Invite-only portal registration, always reached via a one-off token link.
+// Nothing here should be indexed, and the token must never leak into a
+// search engine's URL index.
+export const metadata: Metadata = {
+  title: 'Member Registration',
+  robots: { index: false, follow: false, nocache: true },
+}
 
 interface JoinPageProps {
   searchParams: {
