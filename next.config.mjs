@@ -33,6 +33,11 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'images.unsplash.com',
       },
+      // YouTube poster frames for FeaturedVideo's click-to-play facade
+      {
+        protocol: 'https',
+        hostname: 'i.ytimg.com',
+      },
       ...(r2Host ? [{
         protocol: r2Host.protocol,
         hostname: r2Host.hostname,
@@ -54,7 +59,7 @@ const nextConfig = {
               "img-src 'self' blob: data: https:;",
               "font-src 'self' data:;",
               "connect-src 'self' https://graphql.anilist.co https://*.supabase.co wss://*.supabase.co;",
-              "frame-src 'self' https://*.supabase.co;",
+              "frame-src 'self' https://*.supabase.co https://www.youtube-nocookie.com;",
               "object-src 'none';",
               "base-uri 'self';",
               "form-action 'self';",

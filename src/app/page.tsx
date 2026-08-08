@@ -14,6 +14,7 @@ import ParticleCanvas from '@/components/ParticleCanvas'
 import WordFieldCanvas from '@/components/WordFieldCanvas'
 import PageStrip from '@/components/features/homepage/PageStrip'
 import CTASection from '@/components/features/homepage/CTASection'
+import FeaturedVideo from '@/components/features/homepage/FeaturedVideo'
 import DiagonalEdge from '@/components/features/homepage/DiagonalEdge'
 import ScrollHint from '@/components/features/homepage/ScrollHint'
 
@@ -109,9 +110,7 @@ export default async function Home({ searchParams }: HomeProps) {
         </div>
       )}
 
-      {/* Hero Section: the next event leads, because "what's on" is the first
-          thing a prospective member needs. The club intro sits beside it. */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 items-stretch mt-6 lg:mt-8 mb-8 gap-2">
+      <div className="grid grid-cols-1 lg:grid-cols-12 items-stretch mt-10 lg:mt-12 mb-8 gap-2">
         <div className="lg:col-span-8 flex">
           <NextEventHero
             event={hero.event}
@@ -162,23 +161,36 @@ export default async function Home({ searchParams }: HomeProps) {
         </div>
       </div>
 
-      {/* Our Story — the club-history strip that used to open the page. It
-          reads better as context after someone has seen what we actually run. */}
-      <section id="story-section" className="max-w-7xl mx-auto mt-20 mb-20 px-6 sm:px-8 lg:px-8">
+            <section id="story-section" className="max-w-8xl mx-auto mt-20 mb-20 px-6 sm:px-8 lg:px-8">
         <div className="border-b border-border pb-4 mb-8">
           <span className="text-xl font-display tracking-widest text-accent">
             Since 1999
           </span>
-          <h2 className="text-4xl md:text-5xl tracking-tight text-foreground font-serif py-2">
-            Our Story
-          </h2>
+          <p className="text-4xl md:text-5xl tracking-tight text-foreground font-serif py-2">
+            Old Stories
+          </p>
           <p className="text-sm text-text-muted mt-2">
             Twenty-five years of questionable decisions
           </p>
         </div>
 
-        <PageStrip className="h-full min-h-[350px] lg:min-h-[480px]" />
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-stretch">
+          <div className="lg:col-span-7 flex">
+            <PageStrip className="h-full min-h-[350px] lg:min-h-[480px]" />
+          </div>
+
+          <div className="lg:col-span-5 flex">
+            <FeaturedVideo
+              videoId="wJ8JM4KAv0w"
+              badge="In Conversation"
+              title="The Presidential Interview"
+              blurb="Our president on the year behind us, the year ahead, and what NUSCAS is actually for."
+              className="h-full lg:min-h-[480px]"
+            />
+          </div>
+        </div>
       </section>
+
 
       <div id="gallery-section" className="w-screen relative left-1/2 -translate-x-1/2">
         <RollingGallery artworks={artworks} />
