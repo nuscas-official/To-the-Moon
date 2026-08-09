@@ -230,7 +230,7 @@ export default function EventForm({ initialData, onSave }: EventFormProps) {
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           placeholder="e.g. Welcome Tea & Summer Screening"
-          className="w-full rounded-xl border border-border bg-surface px-4 py-3 text-sm text-neutral-800 placeholder-neutral-400 focus:border-accent focus:ring-1 focus:ring-accent outline-none transition-colors"
+          className="w-full rounded-xl border border-border bg-surface px-4 py-3 text-sm text-neutral-800 placeholder-neutral-400 focus:border-accent focus:ring-1 focus:ring-inset focus:ring-accent focus:outline-none transition-colors"
           required
         />
       </div>
@@ -246,7 +246,7 @@ export default function EventForm({ initialData, onSave }: EventFormProps) {
           onChange={(e) => setDescription(e.target.value)}
           placeholder="Detail what the event is about, schedule, snacks, or special requirements..."
           rows={5}
-          className="w-full rounded-xl border border-border bg-surface px-4 py-3 text-sm text-neutral-800 placeholder-neutral-400 focus:border-accent focus:ring-1 focus:ring-accent outline-none transition-colors resize-y"
+          className="w-full rounded-xl border border-border bg-surface px-4 py-3 text-sm text-neutral-800 placeholder-neutral-400 focus:border-accent focus:ring-1 focus:ring-inset focus:ring-accent focus:outline-none transition-colors resize-y"
         />
       </div>
 
@@ -305,7 +305,7 @@ export default function EventForm({ initialData, onSave }: EventFormProps) {
             value={location}
             onChange={(e) => setLocation(e.target.value)}
             placeholder="S16, UTown SRC or Online"
-            className="w-full rounded-xl border border-border bg-surface px-4 py-3 text-sm text-neutral-800 placeholder-neutral-400 focus:border-accent focus:ring-1 focus:ring-accent outline-none transition-colors"
+            className="w-full rounded-xl border border-border bg-surface px-4 py-3 text-sm text-neutral-800 placeholder-neutral-400 focus:border-accent focus:ring-1 focus:ring-inset focus:ring-accent focus:outline-none transition-colors"
           />
         </div>
 
@@ -318,7 +318,7 @@ export default function EventForm({ initialData, onSave }: EventFormProps) {
             id="status"
             value={status}
             onChange={(e) => setStatus(e.target.value as 'upcoming' | 'past' | 'cancelled')}
-            className="w-full rounded-xl border border-border bg-surface px-4 py-3 text-sm text-neutral-800 focus:border-accent focus:ring-1 focus:ring-accent outline-none transition-colors"
+            className="w-full rounded-xl border border-border bg-surface px-4 py-3 text-sm text-neutral-800 focus:border-accent focus:ring-1 focus:ring-inset focus:ring-accent focus:outline-none transition-colors"
           >
             <option value="upcoming">Upcoming</option>
             <option value="past">Past</option>
@@ -454,7 +454,7 @@ export default function EventForm({ initialData, onSave }: EventFormProps) {
                   placeholder="https://example.com/cover-image.jpg"
                   value={urlInput}
                   onChange={(e) => setUrlInput(e.target.value)}
-                  className="flex-grow rounded-xl border border-border bg-surface px-4 py-3 text-sm text-neutral-800 placeholder-neutral-400 focus:border-accent focus:ring-1 focus:ring-accent outline-none transition-colors"
+                  className="flex-grow rounded-xl border border-border bg-surface px-4 py-3 text-sm text-neutral-800 placeholder-neutral-400 focus:border-accent focus:ring-1 focus:ring-inset focus:ring-accent focus:outline-none transition-colors"
                 />
                 <button
                   type="button"

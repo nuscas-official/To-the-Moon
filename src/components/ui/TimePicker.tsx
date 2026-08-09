@@ -308,7 +308,7 @@ export default function TimePicker({
     <div ref={containerRef} className={`relative inline-block w-full ${className}`}>
       {/* Input Group */}
       <div
-        className={`flex items-center space-x-2 w-full rounded-xl border border-border bg-surface px-4 py-3 text-sm text-neutral-800 focus-within:border-accent focus-within:ring-1 focus-within:ring-accent transition-all ${
+        className={`flex items-center space-x-2 w-full rounded-xl border border-border bg-surface px-4 py-3 text-sm text-neutral-800 focus-within:border-accent focus-within:ring-1 focus-within:ring-inset focus-within:ring-accent transition-all ${
           disabled ? 'opacity-50 cursor-not-allowed' : ''
         }`}
       >
@@ -330,7 +330,7 @@ export default function TimePicker({
           onFocus={() => !disabled && setIsOpen(true)}
           placeholder={placeholder}
           disabled={disabled}
-          className="w-full bg-transparent outline-none p-0 border-none text-neutral-800 placeholder-neutral-400 text-sm"
+          className="w-full bg-transparent focus:outline-none p-0 border-none text-neutral-800 placeholder-neutral-400 text-sm"
           onKeyDown={handleKeyDown}
         />
       </div>

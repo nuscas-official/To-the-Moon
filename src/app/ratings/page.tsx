@@ -84,14 +84,17 @@ export default async function RatingsPage() {
 
   return (
     <div className="w-full max-w-7xl mx-auto py-6 animate-fade-in text-left">
-      <div className="border-b border-border pb-6 mb-8">
-        <h1 className="text-3xl font-black tracking-tight text-neutral-900">
-          Club Rating Aggregates
-        </h1>
-        <p className="text-sm text-text-muted mt-1">
-          Explore and discover the collective scores of anime and manga reviewed by our members.
-        </p>
-      </div>
+        <div className='mb-4'>
+          <span className="text-xl font-display tracking-widest text-accent">
+            Our taste
+          </span>
+          <p className="text-4xl md:text-5xl font-serif text-text tracking-tight py-2">
+            Anime and Manga Ratings
+          </p>
+          <p className="text-sm text-text-muted mt-2 max-w-xl font-sans leading-relaxed">
+            Explore the aggregate score of various anime and manga scored by our members
+          </p>
+        </div>
 
       <PublicRatingsView initialAggregates={initialAggregates} />
     </div>

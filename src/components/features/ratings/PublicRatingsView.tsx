@@ -82,7 +82,7 @@ export default function PublicRatingsView({ initialAggregates }: PublicRatingsVi
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search rated titles..."
-            className="w-full rounded-none border border-border bg-surface pl-10 pr-4 py-2.5 text-xs text-neutral-800 placeholder-neutral-400 focus:border-accent focus:ring-1 focus:ring-accent outline-none"
+            className="w-full rounded-none border border-border bg-surface pl-10 pr-4 py-2.5 text-xs text-neutral-800 placeholder-neutral-400 focus:border-accent focus:ring-1 focus:ring-inset focus:ring-accent focus:outline-none"
           />
           <svg className="absolute left-3.5 top-3 w-4 h-4 text-neutral-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -113,7 +113,7 @@ export default function PublicRatingsView({ initialAggregates }: PublicRatingsVi
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value as SortOption)}
-            className="rounded-none border border-border bg-surface px-4 py-2 text-xs font-bold text-neutral-700 outline-none focus:border-accent cursor-pointer"
+            className="rounded-none border border-border bg-surface px-4 py-2 text-xs font-bold text-neutral-700 focus:outline-none focus:border-accent focus:ring-1 focus:ring-inset focus:ring-accent cursor-pointer"
           >
             <option value="score_desc">Highest Score</option>
             <option value="count_desc">Most Rated</option>

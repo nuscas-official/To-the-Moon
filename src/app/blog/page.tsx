@@ -74,17 +74,20 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
     <div className="w-full max-w-7xl mx-auto py-6 animate-fade-in">
 
       {/* Title Header */}
-      <div className="border-b border-border pb-6 mb-8 text-left">
-        <h1 className="text-2xl font-black tracking-tight text-neutral-900 sm:text-4xl">
-          Club Blog & Reviews
-        </h1>
-        <p className="text-base text-text-muted mt-2 max-w-2xl leading-relaxed">
-          Explore news, reviews, long-form essays, and the legendary presidential interview series written by members of the NUSCAS.
-        </p>
-      </div>
+        <div>
+          <span className="text-xl font-display tracking-widest text-accent">
+            Archive of NUSCAS
+          </span>
+          <p className="text-4xl md:text-5xl tracking-tight text-text font-serif py-2">
+            Articles
+          </p>
+          <p className="text-sm text-text-muted mt-1">
+            News, reviews, essays and interviews from our members
+          </p>
+        </div>
 
       {/* Filter Navigation (Print Editorial style links) */}
-      <div className="flex flex-wrap items-center gap-2 mb-8 border-b border-border/60 pb-4">
+      <div className="flex flex-wrap items-center gap-2 my-8 border-b border-border/60 pb-4">
         <span className="text-xs uppercase tracking-widest font-black text-text-muted mr-4">Filter:</span>
         {POST_TYPES.map((type) => {
           const isActive = activeType === type.value

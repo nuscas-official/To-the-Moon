@@ -185,7 +185,7 @@ export default function MemberRatingsDashboard({ initialRatings }: MemberRatings
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search by title (e.g. Frieren, One Piece)..."
-              className="w-full border border-border bg-surface pl-10 pr-4 py-3 text-sm text-neutral-800 placeholder-neutral-400 focus:border-accent focus:ring-1 focus:ring-accent outline-none"
+              className="w-full border border-border bg-surface pl-10 pr-4 py-3 text-sm text-neutral-800 placeholder-neutral-400 focus:border-accent focus:ring-1 focus:ring-inset focus:ring-accent focus:outline-none"
             />
             <div className="absolute left-3.5 top-3.5">
               {searching ? (
@@ -457,7 +457,7 @@ export default function MemberRatingsDashboard({ initialRatings }: MemberRatings
                   onChange={(e) => setActiveRating({ ...activeRating, note: e.target.value })}
                   placeholder="Record your thoughts, thoughts on characters, review highlights..."
                   rows={3}
-                  className="w-full rounded-none border border-border bg-surface px-3 py-2 text-xs text-neutral-800 focus:border-accent focus:ring-1 focus:ring-accent outline-none"
+                  className="w-full rounded-none border border-border bg-surface px-3 py-2 text-xs text-neutral-800 focus:border-accent focus:ring-1 focus:ring-inset focus:ring-accent focus:outline-none"
                 />
               </div>
 

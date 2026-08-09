@@ -55,7 +55,7 @@ export default function EventsTabs({ upcomingEvents, pastEvents }: EventsTabsPro
       <div className="flex border-b border-border pb-px">
         <button
           onClick={() => setActiveTab('upcoming')}
-          className={`pb-4 px-6 font-black text-sm uppercase tracking-wider border-b-2 transition-all relative ${
+          className={`py-4 px-6 font-black text-sm uppercase tracking-wider border-b-2 transition-all relative ${
             activeTab === 'upcoming'
               ? 'border-accent text-accent font-extrabold'
               : 'border-transparent text-text-muted hover:text-neutral-700'
@@ -65,7 +65,7 @@ export default function EventsTabs({ upcomingEvents, pastEvents }: EventsTabsPro
         </button>
         <button
           onClick={() => setActiveTab('past')}
-          className={`pb-4 px-6 font-black text-sm uppercase tracking-wider border-b-2 transition-all relative ${
+          className={`py-4 px-6 font-black text-sm uppercase tracking-wider border-b-2 transition-all relative ${
             activeTab === 'past'
               ? 'border-accent text-accent font-extrabold'
               : 'border-transparent text-text-muted hover:text-neutral-700'

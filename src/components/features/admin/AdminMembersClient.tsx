@@ -119,7 +119,7 @@ export default function AdminMembersClient({ initialUsers, currentUserId }: Admi
                         value={user.role}
                         disabled={isLoading || isSelf}
                         onChange={(e) => handleRoleChange(user.id, e.target.value as 'member' | 'committee' | 'admin')}
-                        className="rounded-none border border-border bg-background px-2.5 py-1.5 text-xs font-semibold text-neutral-900 focus:outline-none focus:ring-1 focus:ring-accent focus:border-accent disabled:opacity-50 transition-all cursor-pointer"
+                        className="rounded-none border border-border bg-background px-2.5 py-1.5 text-xs font-semibold text-neutral-900 focus:outline-none focus:ring-1 focus:ring-inset focus:ring-accent focus:border-accent disabled:opacity-50 transition-all cursor-pointer"
                       >
                         <option value="member">Member</option>
                         <option value="committee">Committee (EXCO)</option>

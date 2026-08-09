@@ -263,7 +263,7 @@ export default function AdminSettingsClient({
                     accept="image/*"
                     onChange={handleFileChange}
                     disabled={uploading}
-                    className="w-full rounded-none border border-neutral-200 bg-neutral-50 px-3 py-2 text-xs text-neutral-800 focus:border-accent focus:ring-1 focus:ring-accent outline-none cursor-pointer disabled:cursor-not-allowed font-bold"
+                    className="w-full rounded-none border border-neutral-200 bg-neutral-50 px-3 py-2 text-xs text-neutral-800 focus:border-accent focus:ring-1 focus:ring-inset focus:ring-accent focus:outline-none cursor-pointer disabled:cursor-not-allowed font-bold"
                   />
                   {uploading && (
                     <p className="text-xs text-accent font-bold animate-pulse mt-1">

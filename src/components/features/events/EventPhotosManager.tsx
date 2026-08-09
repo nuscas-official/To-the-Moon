@@ -211,7 +211,7 @@ export default function EventPhotosManager({ eventId, initialPhotos }: EventPhot
                   type="file"
                   accept="image/*"
                   onChange={(e) => setFile(e.target.files?.[0] || null)}
-                  className="rounded-xl border border-border bg-surface px-4 py-2 text-xs text-neutral-800 focus:border-accent focus:ring-1 focus:ring-accent outline-none"
+                  className="rounded-xl border border-border bg-surface px-4 py-2 text-xs text-neutral-800 focus:border-accent focus:ring-1 focus:ring-inset focus:ring-accent focus:outline-none"
                   required={imageSource === 'upload'}
                 />
               </div>
@@ -226,7 +226,7 @@ export default function EventPhotosManager({ eventId, initialPhotos }: EventPhot
                   value={imageUrl}
                   onChange={(e) => setImageUrl(e.target.value)}
                   placeholder="https://example.com/photo.jpg"
-                  className="rounded-xl border border-border bg-surface px-4 py-2.5 text-xs text-neutral-800 focus:border-accent focus:ring-1 focus:ring-accent outline-none"
+                  className="rounded-xl border border-border bg-surface px-4 py-2.5 text-xs text-neutral-800 focus:border-accent focus:ring-1 focus:ring-inset focus:ring-accent focus:outline-none"
                   required={imageSource === 'url'}
                 />
                 {imageUrl && /^(https?:\/\/|\/).+/.test(imageUrl) && (
@@ -256,7 +256,7 @@ export default function EventPhotosManager({ eventId, initialPhotos }: EventPhot
                 value={newAltText}
                 onChange={(e) => setNewAltText(e.target.value)}
                 placeholder="e.g. Group picture during welcoming game"
-                className="rounded-xl border border-border bg-surface px-4 py-2.5 text-xs text-neutral-800 focus:border-accent focus:ring-1 focus:ring-accent outline-none"
+                className="rounded-xl border border-border bg-surface px-4 py-2.5 text-xs text-neutral-800 focus:border-accent focus:ring-1 focus:ring-inset focus:ring-accent focus:outline-none"
               />
             </div>
           </div>

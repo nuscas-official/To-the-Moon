@@ -106,6 +106,106 @@ export async function createArtworkAction(input: ArtworkInput) {
   }
 }
 
+interface ArtworkUpdateInput {
+  id: string;
+  title: string | null;
+  artist_credit: string;
+  consent_method: 'telegram_message' | 'in_person' | 'email';
+  consented_at: string;
+  note?: string;
+}
+
+/**
+ * Server Action to correct the details of an existing gallery artwork and its consent record.
+ * Does not touch the stored file — only the metadata around it.
+ * Enforces committee or admin roles.
+ */
+export async function updateArtworkAction(input: ArtworkUpdateInput) {
+  const supabase = createClient()
+
+  // 1. Authenticate user
+  const { data: { user }, error: authError } = await supabase.auth.getUser()
+  if (authError || !user) {
+    return { success: false, error: 'You must be signed in to perform this action.' }
+  }
+
+  // 2. Validate role
+  const role = await getUserRole(supabase)
+  if (role !== 'committee' && role !== 'admin') {
+    return { success: false, error: 'Unauthorized: Committee or admin access required.' }
+  }
+
+  // 3. Validate inputs
+  if (!input.id) {
+    return { success: false, error: 'Artwork id is required.' }
+  }
+  if (!input.artist_credit.trim()) {
+    return { success: false, error: 'Artist credit is required.' }
+  }
+  if (!input.consent_method) {
+    return { success: false, error: 'Consent method is required.' }
+  }
+  if (!input.consented_at) {
+    return { success: false, error: 'Consent date is required.' }
+  }
+
+  try {
+    // 4. Update the artwork record
+    const { error: updateArtworkError } = await supabase
+      .from('gallery_artworks')
+      .update({
+        title: input.title?.trim() || null,
+        artist_credit: input.artist_credit.trim(),
+      })
+      .eq('id', input.id)
+
+    if (updateArtworkError) {
+      console.error('Error updating gallery artwork:', updateArtworkError)
+      return { success: false, error: updateArtworkError.message }
+    }
+
+    // 5. Update the consent record, or create one if this artwork predates it
+    const { data: consent, error: fetchConsentError } = await supabase
+      .from('gallery_consent')
+      .select('id')
+      .eq('artwork_id', input.id)
+      .maybeSingle()
+
+    if (fetchConsentError) {
+      console.error('Error fetching gallery consent:', fetchConsentError)
+      return { success: false, error: fetchConsentError.message }
+    }
+
+    const consentFields = {
+      consented_at: new Date(input.consented_at).toISOString(),
+      consent_method: input.consent_method,
+      artist_credit: input.artist_credit.trim(),
+      note: input.note?.trim() || null,
+    }
+
+    const { error: consentWriteError } = consent
+      ? await supabase.from('gallery_consent').update(consentFields).eq('id', consent.id)
+      : await supabase.from('gallery_consent').insert({
+          ...consentFields,
+          artwork_id: input.id,
+          consented_by: user.id,
+        })
+
+    if (consentWriteError) {
+      console.error('Error writing gallery consent:', consentWriteError)
+      return { success: false, error: `Failed to save consent record: ${consentWriteError.message}` }
+    }
+
+    // 6. Revalidate relevant paths
+    revalidatePath('/gallery')
+    revalidatePath('/admin/gallery')
+
+    return { success: true }
+  } catch (err) {
+    return { success: false, error: err instanceof Error ? err.message : 'An unexpected error occurred.' }
+  }
+}
+
 /**
  * Server Action to take down a gallery artwork: marks status as 'removed', records timestamps,
  * and deletes the file from R2/storage.

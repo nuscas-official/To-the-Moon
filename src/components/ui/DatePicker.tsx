@@ -143,7 +143,7 @@ export default function DatePicker({
       {/* Input container */}
       <div
         onClick={() => !disabled && setIsOpen(!isOpen)}
-        className={`flex items-center justify-between w-full rounded-xl border border-border bg-surface px-4 py-3 text-sm text-neutral-800 focus-within:border-accent focus-within:ring-1 focus-within:ring-accent transition-all ${
+        className={`flex items-center justify-between w-full rounded-xl border border-border bg-surface px-4 py-3 text-sm text-neutral-800 focus-within:border-accent focus-within:ring-1 focus-within:ring-inset focus-within:ring-accent transition-all ${
           disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
         }`}
       >

@@ -82,14 +82,17 @@ export default async function EventsPage() {
       {upcomingEvents.length > 0 && <JsonLd data={itemListJsonLd} />}
 
       {/* Header */}
-      <div className="border-b border-border pb-6 mb-8">
-        <h1 className="text-3xl font-black tracking-tight text-neutral-900">
-          Club Activities & Events
-        </h1>
-        <p className="text-sm text-text-muted mt-1">
-          Join our screenings, art workshops, social gatherings, and other events.
-        </p>
-      </div>
+        <div className='mb-4'>
+          <span className="text-xl font-display tracking-widest text-accent">
+            Our Activities
+          </span>
+          <p className="text-4xl md:text-5xl tracking-tight text-foreground font-serif py-2">
+            Events
+          </p>
+          <p className="text-sm text-text-muted mt-2">
+            Don&apos;t miss out on what we have planned for the semester
+          </p>
+        </div>
 
       {/* Interactive Tabs List */}
       <EventsTabs upcomingEvents={upcomingEvents} pastEvents={pastEvents} />
