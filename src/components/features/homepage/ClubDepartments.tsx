@@ -110,13 +110,18 @@ export default function ClubDepartments() {
   const anySelected = selectedId !== null
   const settleTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
 
-  // Height the opened card will occupy, reserved on the row up-front so that
-  // opening a department grows the card into already-claimed space instead of
-  // pushing the rest of the page down. The photos are flush squares whose size
-  // (and therefore the mosaic's height) tracks the card width, so this has to be
-  // derived from the live row width rather than hard-coded.
+  // The opened card's width, and the height it will occupy. The height is
+  // reserved on the row up-front so that opening a department grows the card
+  // into already-claimed space instead of pushing the rest of the page down.
+  //
+  // Width and height are one measurement, not two: the photos are flush squares
+  // whose size (and therefore the mosaic's height) tracks the card width, so a
+  // wider card is a taller one. Left to fill the row the card outgrows the
+  // viewport vertically, so the width is capped at whatever keeps the predicted
+  // height on screen — which is why this is derived live rather than hard-coded.
   const rowRef = useRef<HTMLDivElement>(null)
   const [reservedHeight, setReservedHeight] = useState<number>()
+  const [openWidth, setOpenWidth] = useState<number>()
 
   useEffect(() => {
     const el = rowRef.current
@@ -127,24 +132,47 @@ export default function ClubDepartments() {
       // nothing (each card flips in place).
       if (!mq.matches) {
         setReservedHeight(undefined)
+        setOpenWidth(undefined)
         return
       }
       const CARD_GAP = 24 // md:gap-6 between the three cards
-      const openW = (2.4 / 3.84) * (el.clientWidth - 2 * CARD_GAP) // opened card
       const PAD = 64 // canvas p-8, both sides
       const COL_GAP = 24 // md:gap-6 between copy and photos
-      const photoW = (7 / 10) * (openW - PAD - COL_GAP) // photo column width
-      const mosaicH = (2 * photoW) / 3 // two flush square rows
       const CHROME = 280 // header + chips + paddings + gaps (generous)
-      setReservedHeight(Math.round(mosaicH + CHROME))
+      const INSET = PAD + COL_GAP
+      // mosaic = two flush square rows across the 7/10 photo column, so
+      // height(w) = (2/3)(7/10)(w - INSET) = (7/15)(w - INSET).
+      const MOSAIC_PER_PX = 7 / 15
+      const mosaicHFor = (w: number) => MOSAIC_PER_PX * (w - INSET)
+
+      const rowMax = el.clientWidth - 2 * CARD_GAP
+      // Target: the width the opened card had back when its siblings shrank
+      // aside to 0.72 rather than collapsing. Hiding them freed up the rest of
+      // the row, but taking it would only make the card taller — so it keeps its
+      // old proportions and simply centres in the space instead.
+      const OPEN_SHARE = 2.4 / 3.84
+      // Ceiling: the viewport. Invert height(w) to get the widest card whose
+      // height still leaves a comfortable margin above and below. Only bites on
+      // short windows; on a normal one the target above is already smaller.
+      const viewportMax = (0.82 * window.innerHeight - CHROME) / MOSAIC_PER_PX + INSET
+      // Floor so a very short window can't squeeze the card into a sliver;
+      // below this the canvas scrolls internally, as it already does on mobile.
+      const openW = Math.max(560, Math.min(OPEN_SHARE * rowMax, viewportMax))
+
+      setOpenWidth(Math.round(openW))
+      setReservedHeight(Math.round(mosaicHFor(openW) + CHROME))
     }
     measure()
     const ro = new ResizeObserver(measure)
     ro.observe(el)
     mq.addEventListener('change', measure)
+    // The row's width alone doesn't change when the window only gets shorter,
+    // but the viewport ceiling above does.
+    window.addEventListener('resize', measure)
     return () => {
       ro.disconnect()
       mq.removeEventListener('change', measure)
+      window.removeEventListener('resize', measure)
     }
   }, [])
 
@@ -205,8 +233,10 @@ export default function ClubDepartments() {
       </div>
 
       {/* Mobile = stacked grid (flip in place). Desktop = flex row where the
-          opened card grows horizontally and the others shrink aside. Using a
-          grid on mobile keeps the flex-grow style below inert there. */}
+          others collapse out of the way and the opened card grows into the
+          space they leave — up to `openWidth`, then it stops and centres rather
+          than running the full width of the row. Using a grid on mobile keeps
+          the flex-grow style below inert there. */}
       <motion.div
         ref={rowRef}
         variants={containerVariants}
@@ -218,8 +248,10 @@ export default function ClubDepartments() {
       >
         {DEPARTMENTS.map((dept) => {
           const isSelected = selectedId === dept.id
-          // Desktop widths: opened card takes the canvas, the rest tuck in.
-          const grow = isSelected ? 2.4 : anySelected ? 0.72 : 1
+          // Desktop widths: the opened card takes the whole row; the others
+          // collapse to nothing rather than tucking in beside it. Only one card
+          // is ever interactive, so there is no width for them to hold open.
+          const grow = anySelected && !isSelected ? 0 : 1
 
           return (
             <motion.div
@@ -228,14 +260,24 @@ export default function ClubDepartments() {
               style={{ flexGrow: grow, flexBasis: 0 }}
               className="min-w-0 transition-[flex-grow] duration-500 ease-out"
             >
-              {/* Dim un-opened siblings (desktop only). The 3D depth
-                  (perspective) only exists mid-flip; see `flipping`. */}
+              {/* Un-opened siblings fade out entirely on desktop (they have no
+                  width left to occupy); on mobile they stay in the stack, dimmed,
+                  so removing them can't yank the page out from under the reader.
+                  Either way they are inert — see `disabled` on the front face.
+                  The 3D depth (perspective) only exists mid-flip; see `flipping`. */}
               <div
                 className={[
-                  'transition-opacity duration-500 ease-out',
-                  anySelected && !isSelected ? 'md:opacity-40' : 'md:opacity-100',
+                  'mx-auto transition-opacity duration-500 ease-out',
+                  anySelected && !isSelected ? 'opacity-40 md:opacity-0' : 'opacity-100',
                 ].join(' ')}
-                style={{ perspective: flipping ? 1600 : undefined }}
+                style={{
+                  perspective: flipping ? 1600 : undefined,
+                  // Stop the opened card short of the full row and centre it, so
+                  // it stays short enough to read without scrolling. Inert until
+                  // the card is the opened one — the closed cards are a third of
+                  // the row each, well under the cap.
+                  maxWidth: isSelected ? openWidth : undefined,
+                }}
               >
                 <div
                   style={{
@@ -261,6 +303,11 @@ export default function ClubDepartments() {
                   <button
                     type="button"
                     onClick={() => flipTo(dept.id)}
+                    // Only one department is reachable at a time: while a card
+                    // is open the others are inert, so the reader closes it
+                    // (✕ / Escape) before opening another. `disabled` also takes
+                    // them out of the tab order, matching the pointer behaviour.
+                    disabled={anySelected}
                     // Stop the click from focusing the button: a partially
                     // in-view control gets snapped fully into view on focus,
                     // which reads as an abrupt scroll jump. Keyboard focus (Tab)
@@ -273,16 +320,24 @@ export default function ClubDepartments() {
                       WebkitBackfaceVisibility: flipping ? 'hidden' : 'visible',
                     }}
                     className={[
-                      'group absolute inset-0 overflow-hidden',
+                      // Pinned to the closed-card height rather than stretched to
+                      // the card box (`inset-0`). The opened card's box is
+                      // `h-auto`, and that height is driven by the back face's
+                      // content reflowing as the card's width animates — with
+                      // `inset-0` the front face inherits that transient height
+                      // and the emblem, centred in it, visibly drops and springs
+                      // back mid-flip. rotateY is unaffected by vertical offset,
+                      // so pinning costs the flip nothing.
+                      'group absolute inset-x-0 top-0 h-[28rem] overflow-hidden',
                       'flex flex-col items-center justify-center p-8 text-center',
                       'focus:outline-none focus-visible:ring-2 focus-visible:ring-accent',
                       // At rest, the opened card only shows its back face.
                       !flipping && isSelected ? 'hidden' : '',
-                      isSelected ? 'pointer-events-none' : 'cursor-pointer',
+                      anySelected ? 'pointer-events-none' : 'cursor-pointer',
                     ].join(' ')}
                   >
                     {/* Emblem — fluid so it scales with the card instead of
-                        being clipped when a sibling shrinks aside. */}
+                        being clipped as the card's width animates. */}
                     <div className="relative mb-5 aspect-square w-[80%] max-w-56 overflow-hidden rounded-full shadow-inner transition-transform duration-300 ease-out group-hover:scale-110">
                       <Image src={dept.imageSrc} alt={dept.name} fill unoptimized sizes="(min-width: 768px) 224px, 70vw" className="object-cover" />
                     </div>

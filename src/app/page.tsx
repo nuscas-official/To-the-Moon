@@ -182,7 +182,6 @@ export default async function Home({ searchParams }: HomeProps) {
           <div className="lg:col-span-5 flex">
             <FeaturedVideo
               videoId="wJ8JM4KAv0w"
-              badge="In Conversation"
               title="The Presidential Interview"
               blurb="Our president on the year behind us, the year ahead, and what NUSCAS is actually for."
               className="h-full lg:min-h-[480px]"

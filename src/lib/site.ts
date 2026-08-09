@@ -17,6 +17,7 @@ export const ORG_EMAIL = 'nuscomicssoc@gmail.com'
 export const ORG_SOCIALS = [
   'https://www.instagram.com/nuscomicsoc/',
   'https://www.youtube.com/channel/UCKkESIjFh--HD5yOpGmm_JA',
+  'https://linktr.ee/nuscas',
 ]
 
 export const ORG_LOGO = `${SITE_URL}/images/nuscas-favicon.webp`

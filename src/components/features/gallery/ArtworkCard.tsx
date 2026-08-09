@@ -126,11 +126,10 @@ export default function ArtworkCard({ artwork, variant = 'masonry', onZoomToggle
         left: isTransitionOpen ? `${targetCoords.left}px` : `${startCoords.left}px`,
         width: isTransitionOpen ? `${targetCoords.width}px` : `${startCoords.width}px`,
         height: isTransitionOpen ? `${targetCoords.height}px` : `${startCoords.height}px`,
-        objectFit: 'cover',
-        // Start the zoom on the same framing the thumbnail shows: masonry tiles crop from the
-        // top, marquee tiles crop centered. At the open state the target box already matches the
-        // natural ratio, so this has no effect there.
-        objectPosition: isMarquee ? 'center' : 'center top'
+        // Match how each thumbnail renders inside its box so the zoom starts on the same framing:
+        // masonry letterboxes a capped-height image, marquee crops to a 4:3 tile. The target box
+        // is built from the natural ratio, so both resolve identically once open.
+        objectFit: isMarquee ? 'cover' : 'contain'
       }
     : {}
 
@@ -163,10 +162,13 @@ export default function ArtworkCard({ artwork, variant = 'masonry', onZoomToggle
           />
         ) : (
           <div className="relative w-full h-auto overflow-hidden [container-type:inline-size]">
-            {/* Cap tile height at 1.15x the column width so very tall artwork can't dominate
-                a masonry column. cqw keeps the cap proportional as the column resizes, instead
-                of drifting between breakpoints the way fixed px caps would. Top anchoring keeps
-                the subject in frame, and the lightbox still shows the image uncropped. */}
+            {/* Cap tile height at 1.15x the column width so very tall artwork can't dominate a
+                masonry column. Nothing is cropped -- object-contain scales a too-tall piece down
+                to fit, leaving it narrower and centred against the card. The box keeps its full
+                column width so the height/width attributes still reserve space before load;
+                sizing the element itself to the image instead would collapse the tile to zero and
+                reflow the whole grid on load. cqw keeps the cap proportional as the column
+                resizes, instead of drifting between breakpoints the way fixed px caps would. */}
             <Image
               ref={imgRef}
               src={artwork.storage_key}
@@ -174,7 +176,7 @@ export default function ArtworkCard({ artwork, variant = 'masonry', onZoomToggle
               width={500}
               height={500}
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-              className="w-full h-auto max-h-[115cqw] object-cover object-top transition-transform duration-500 group-hover:scale-105"
+              className="w-full h-auto max-h-[115cqw] object-contain transition-transform duration-500 group-hover:scale-105"
               unoptimized
             />
           </div>

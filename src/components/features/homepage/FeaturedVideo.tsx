@@ -30,7 +30,6 @@ export default function FeaturedVideo({
   videoId,
   title,
   blurb,
-  badge = 'Feature',
   className = '',
 }: FeaturedVideoProps) {
   const [isPlaying, setIsPlaying] = useState(false)
@@ -87,10 +86,6 @@ export default function FeaturedVideo({
       {/* Caption block — absorbs the height difference against the timeline */}
       <div className="flex flex-1 flex-col justify-between gap-4 p-5">
         <div>
-          <span className="clip-cut cut-xs mb-2 inline-flex items-center gap-1.5 bg-white/10 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-white">
-            <span className="h-1.5 w-1.5 rounded-full bg-accent" />
-            {badge}
-          </span>
           <h3 className="font-serif text-2xl leading-snug tracking-tight text-foreground">
             {title}
           </h3>
