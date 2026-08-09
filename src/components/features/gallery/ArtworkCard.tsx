@@ -13,11 +13,12 @@ interface Artwork {
 
 interface ArtworkCardProps {
   artwork: Artwork
-  variant?: 'marquee' | 'masonry'
+  /** 'justified' fills a box the parent has already sized to the artwork's aspect ratio. */
+  variant?: 'marquee' | 'justified'
   onZoomToggle?: (zoomed: boolean) => void
 }
 
-export default function ArtworkCard({ artwork, variant = 'masonry', onZoomToggle }: ArtworkCardProps) {
+export default function ArtworkCard({ artwork, variant = 'justified', onZoomToggle }: ArtworkCardProps) {
   const isMarquee = variant === 'marquee'
   const [animationState, setAnimationState] = useState<'closed' | 'opening' | 'open' | 'closing'>('closed')
 
@@ -126,10 +127,7 @@ export default function ArtworkCard({ artwork, variant = 'masonry', onZoomToggle
         left: isTransitionOpen ? `${targetCoords.left}px` : `${startCoords.left}px`,
         width: isTransitionOpen ? `${targetCoords.width}px` : `${startCoords.width}px`,
         height: isTransitionOpen ? `${targetCoords.height}px` : `${startCoords.height}px`,
-        // Match how each thumbnail renders inside its box so the zoom starts on the same framing:
-        // masonry letterboxes a capped-height image, marquee crops to a 4:3 tile. The target box
-        // is built from the natural ratio, so both resolve identically once open.
-        objectFit: isMarquee ? 'cover' : 'contain'
+        objectFit: 'cover'
       }
     : {}
 
@@ -146,7 +144,7 @@ export default function ArtworkCard({ artwork, variant = 'masonry', onZoomToggle
         className={
           isMarquee
             ? "relative flex-shrink-0 w-60 sm:w-72 aspect-[4/3] overflow-hidden rounded-xl border border-border bg-surface cursor-zoom-in group shadow-sm hover:shadow-xl hover:shadow-accent/5 transition-all duration-300 active:scale-98 hover:-translate-y-1"
-            : "break-inside-avoid relative group border border-border bg-surface overflow-hidden rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 cursor-zoom-in hover:-translate-y-0.5 active:scale-[0.99] mb-6 w-full"
+            : "relative w-full h-full group border border-border bg-surface overflow-hidden rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 cursor-zoom-in hover:-translate-y-0.5 active:scale-[0.99]"
         }
       >
         {/* Image Container & Image */}
@@ -161,25 +159,17 @@ export default function ArtworkCard({ artwork, variant = 'masonry', onZoomToggle
             unoptimized
           />
         ) : (
-          <div className="relative w-full h-auto overflow-hidden [container-type:inline-size]">
-            {/* Cap tile height at 1.15x the column width so very tall artwork can't dominate a
-                masonry column. Nothing is cropped -- object-contain scales a too-tall piece down
-                to fit, leaving it narrower and centred against the card. The box keeps its full
-                column width so the height/width attributes still reserve space before load;
-                sizing the element itself to the image instead would collapse the tile to zero and
-                reflow the whole grid on load. cqw keeps the cap proportional as the column
-                resizes, instead of drifting between breakpoints the way fixed px caps would. */}
-            <Image
-              ref={imgRef}
-              src={artwork.storage_key}
-              alt={artwork.title || `Artwork by ${artwork.artist_credit}`}
-              width={500}
-              height={500}
-              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-              className="w-full h-auto max-h-[115cqw] object-contain transition-transform duration-500 group-hover:scale-105"
-              unoptimized
-            />
-          </div>
+          /* The parent row sizes this box to the artwork's own aspect ratio, so object-cover has
+             nothing to crop and no letterboxing appears -- the fit is exact by construction. */
+          <Image
+            ref={imgRef}
+            src={artwork.storage_key}
+            alt={artwork.title || `Artwork by ${artwork.artist_credit}`}
+            fill
+            sizes="(max-width: 768px) 50vw, 33vw"
+            className="object-cover transition-transform duration-500 group-hover:scale-105"
+            unoptimized
+          />
         )}
 
         {/* Overlay details */}
