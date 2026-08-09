@@ -181,9 +181,9 @@ export default async function Home({ searchParams }: HomeProps) {
 
           <div className="lg:col-span-5 flex">
             <FeaturedVideo
-              videoId="wJ8JM4KAv0w"
-              title="The Presidential Interview"
-              blurb="Our president on the year behind us, the year ahead, and what NUSCAS is actually for."
+              videoId="I8SY4h_Upyw"
+              title="NUSCAS Presidential Interviews"
+              blurb="Interviewing 2 of our ex-Presidents in this (hopefully) new annual tradition at our summer BBQ!"
               className="h-full lg:min-h-[480px]"
             />
           </div>
