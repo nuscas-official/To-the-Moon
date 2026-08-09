@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { getUserRole } from '@/lib/supabase/role'
 import { redirect } from 'next/navigation'
 import AdminMembersClient from '@/components/features/admin/AdminMembersClient'
+import PageHeader from '@/components/ui/PageHeader'
 
 interface UserProfile {
   id: string
@@ -45,14 +46,12 @@ export default async function AdminMembersDashboard() {
     <div className="w-full max-w-7xl mx-auto py-6 animate-fade-in text-left">
 
       {/* Header */}
-      <div className="border-b border-border pb-6 mb-8">
-        <h1 className="text-3xl font-black tracking-tight text-neutral-900">
-          Club Members & Accounts
-        </h1>
-        <p className="text-sm text-text-muted mt-1">
-          Promote or demote member roles, deactivate accounts, and audit member signups.
-        </p>
-      </div>
+      <PageHeader
+        eyebrow="Committee Console"
+        title="Club Members"
+        description="Promote or demote member roles, deactivate accounts, and audit member signups."
+        divider
+      />
 
       {/* Members Client Dashboard Table */}
       <AdminMembersClient initialUsers={users} currentUserId={user.id} />

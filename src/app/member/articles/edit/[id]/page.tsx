@@ -3,6 +3,7 @@ import { getUserRole } from '@/lib/supabase/role'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import ArticleForm from '@/components/features/posts/ArticleForm'
+import PageHeader from '@/components/ui/PageHeader'
 import { updateArticleAction } from '@/server/actions/blog'
 
 interface EditArticlePageProps {
@@ -73,14 +74,12 @@ export default async function EditArticlePage({ params }: EditArticlePageProps) 
       </Link>
 
       {/* Header */}
-      <div className="border-b border-border pb-6 mb-8">
-        <h1 className="text-3xl font-black tracking-tight text-neutral-900">
-          Edit Article Draft
-        </h1>
-        <p className="text-sm text-text-muted mt-1">
-          Modify your article draft. Submitting will send it to the committee for review.
-        </p>
-      </div>
+      <PageHeader
+        eyebrow="My Articles"
+        title="Edit Draft"
+        description="Modify your article draft. Submitting will send it to the committee for review."
+        divider
+      />
 
       {/* Editor Form */}
       <ArticleForm 

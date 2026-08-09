@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
+import PageHeader from '@/components/ui/PageHeader'
 import Link from 'next/link'
 import type { Metadata } from 'next'
 import Image from 'next/image'
@@ -74,20 +75,14 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
     <div className="w-full max-w-7xl mx-auto py-6 animate-fade-in">
 
       {/* Title Header */}
-        <div>
-          <span className="text-xl font-display tracking-widest text-accent">
-            Archive of NUSCAS
-          </span>
-          <p className="text-4xl md:text-5xl tracking-tight text-text font-serif py-2">
-            Articles
-          </p>
-          <p className="text-sm text-text-muted mt-1">
-            News, reviews, essays and interviews from our members
-          </p>
-        </div>
+      <PageHeader
+        eyebrow="Archive of NUSCAS"
+        title="Articles"
+        description="News, reviews, essays and interviews from our members"
+      />
 
       {/* Filter Navigation (Print Editorial style links) */}
-      <div className="flex flex-wrap items-center gap-2 my-8 border-b border-border/60 pb-4">
+      <div className="flex flex-wrap items-center gap-2 mb-8 border-b border-border/60 pb-4">
         <span className="text-xs uppercase tracking-widest font-black text-text-muted mr-4">Filter:</span>
         {POST_TYPES.map((type) => {
           const isActive = activeType === type.value

@@ -3,6 +3,7 @@ import { getUserRole } from '@/lib/supabase/role'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import ArticleForm from '@/components/features/posts/ArticleForm'
+import PageHeader from '@/components/ui/PageHeader'
 import { updateArticleAction } from '@/server/actions/blog'
 
 interface AdminEditArticlePageProps {
@@ -64,14 +65,12 @@ export default async function AdminEditArticlePage({ params }: AdminEditArticleP
       </Link>
 
       {/* Header */}
-      <div className="border-b border-border pb-6 mb-8">
-        <h1 className="text-3xl font-black tracking-tight text-neutral-900">
-          Edit Post & Moderator Controls
-        </h1>
-        <p className="text-sm text-text-muted mt-1">
-          Make direct changes to this article or modify its publication status below.
-        </p>
-      </div>
+      <PageHeader
+        eyebrow="Content Desk"
+        title="Edit Post"
+        description="Make direct changes to this article or modify its publication status below."
+        divider
+      />
 
       {/* Editor Form */}
       <ArticleForm 

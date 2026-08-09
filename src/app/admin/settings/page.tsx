@@ -1,5 +1,6 @@
 import { createAdminClient } from '@/lib/supabase/admin'
 import AdminSettingsClient from '@/components/features/admin/AdminSettingsClient'
+import PageHeader from '@/components/ui/PageHeader'
 
 interface SeasonalPick {
   title: string
@@ -45,14 +46,13 @@ export default async function AdminSettingsPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="border-b border-border pb-6">
-        <h1 className="text-3xl font-black tracking-tight text-neutral-900">
-          Site Settings & Configurations
-        </h1>
-        <p className="text-sm text-text-muted mt-1">
-          Modify landing page features, active highlights, and list resources.
-        </p>
-      </div>
+      <PageHeader
+        eyebrow="Committee Console"
+        title="Site Settings"
+        description="Modify landing page features, active highlights, and list resources."
+        divider
+        className=""
+      />
 
       {/* Main Settings Client component */}
       <AdminSettingsClient

@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import EventsTabs from '@/components/features/events/EventsTabs'
 import JsonLd from '@/components/JsonLd'
+import PageHeader from '@/components/ui/PageHeader'
 import type { ClubEvent } from '@/lib/events'
 import { SITE_URL } from '@/lib/site'
 import type { Metadata } from 'next'
@@ -82,17 +83,11 @@ export default async function EventsPage() {
       {upcomingEvents.length > 0 && <JsonLd data={itemListJsonLd} />}
 
       {/* Header */}
-        <div className='mb-4'>
-          <span className="text-xl font-display tracking-widest text-accent">
-            Our Activities
-          </span>
-          <p className="text-4xl md:text-5xl tracking-tight text-foreground font-serif py-2">
-            Events
-          </p>
-          <p className="text-sm text-text-muted mt-2">
-            Don&apos;t miss out on what we have planned for the semester
-          </p>
-        </div>
+      <PageHeader
+        eyebrow="Our Activities"
+        title="Events"
+        description="Don't miss out on what we have planned for the semester"
+      />
 
       {/* Interactive Tabs List */}
       <EventsTabs upcomingEvents={upcomingEvents} pastEvents={pastEvents} />

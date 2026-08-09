@@ -3,6 +3,7 @@ import { getUserRole } from '@/lib/supabase/role'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import EventForm from '@/components/features/events/EventForm'
+import PageHeader from '@/components/ui/PageHeader'
 import { createEventAction } from '@/server/actions/events'
 
 export default async function AdminNewEventPage() {
@@ -35,14 +36,12 @@ export default async function AdminNewEventPage() {
       </Link>
 
       {/* Header */}
-      <div className="border-b border-border pb-6 mb-8">
-        <h1 className="text-3xl font-black tracking-tight text-neutral-900">
-          Create New Event
-        </h1>
-        <p className="text-sm text-text-muted mt-1">
-          Add details for an upcoming screening, workshop, or karaoke session. You can manage photo galleries after creation.
-        </p>
-      </div>
+      <PageHeader
+        eyebrow="Events"
+        title="New Event"
+        description="Add details for an upcoming screening, workshop, or karaoke session. You can manage photo galleries after creation."
+        divider
+      />
 
       {/* Event Form */}
       <EventForm onSave={createEventAction} />

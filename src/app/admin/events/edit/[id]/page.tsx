@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import EventForm from '@/components/features/events/EventForm'
 import EventPhotosManager from '@/components/features/events/EventPhotosManager'
+import PageHeader from '@/components/ui/PageHeader'
 import { updateEventAction } from '@/server/actions/events'
 
 interface AdminEditEventPageProps {
@@ -104,14 +105,12 @@ export default async function AdminEditEventPage({ params }: AdminEditEventPageP
       </Link>
 
       {/* Header */}
-      <div className="border-b border-border pb-6 mb-8">
-        <h1 className="text-3xl font-black tracking-tight text-neutral-900">
-          Edit Event & Photo Gallery
-        </h1>
-        <p className="text-sm text-text-muted mt-1">
-          Modify the event schedule and location details, and upload or reorder the memory photo gallery below.
-        </p>
-      </div>
+      <PageHeader
+        eyebrow="Events"
+        title="Edit Event"
+        description="Modify the event schedule and location details, and upload or reorder the memory photo gallery below."
+        divider
+      />
 
       {/* Grid splits details form and photo management */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">

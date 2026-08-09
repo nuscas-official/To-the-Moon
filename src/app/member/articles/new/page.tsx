@@ -3,6 +3,7 @@ import { getUserRole } from '@/lib/supabase/role'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import ArticleForm from '@/components/features/posts/ArticleForm'
+import PageHeader from '@/components/ui/PageHeader'
 import { createArticleAction } from '@/server/actions/blog'
 
 export default async function NewArticlePage() {
@@ -35,14 +36,12 @@ export default async function NewArticlePage() {
       </Link>
 
       {/* Header */}
-      <div className="border-b border-border pb-6 mb-8">
-        <h1 className="text-3xl font-black tracking-tight text-neutral-900">
-          Write New Article
-        </h1>
-        <p className="text-sm text-text-muted mt-1">
-          Draft a blog post or review. Submitting will send it to the committee for review.
-        </p>
-      </div>
+      <PageHeader
+        eyebrow="My Articles"
+        title="New Article"
+        description="Draft a blog post or review. Submitting will send it to the committee for review."
+        divider
+      />
 
       {/* Editor Form */}
       <ArticleForm 

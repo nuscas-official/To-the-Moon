@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { getUserRole } from '@/lib/supabase/role'
 import { redirect } from 'next/navigation'
 import AdminPostTable from '@/components/features/admin/AdminPostTable'
+import PageHeader from '@/components/ui/PageHeader'
 
 interface Post {
   id: string;
@@ -46,14 +47,12 @@ export default async function AdminPostsDashboard() {
     <div className="w-full max-w-7xl mx-auto py-6 animate-fade-in text-left">
       
       {/* Header */}
-      <div className="border-b border-border pb-6 mb-8">
-        <h1 className="text-3xl font-black tracking-tight text-neutral-900">
-          Committee Content Dashboard
-        </h1>
-        <p className="text-sm text-text-muted mt-1">
-          Moderate member submissions, edit any post, and direct-publish news or reviews.
-        </p>
-      </div>
+      <PageHeader
+        eyebrow="Committee Console"
+        title="Content Desk"
+        description="Moderate member submissions, edit any post, and direct-publish news or reviews."
+        divider
+      />
 
       {/* Admin Post Table client component */}
       <AdminPostTable initialPosts={allPosts} />

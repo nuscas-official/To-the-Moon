@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import PublicRatingsView from '@/components/features/ratings/PublicRatingsView'
+import PageHeader from '@/components/ui/PageHeader'
 import type { Metadata } from 'next'
 import type { RatingAggregate } from '@/types/ratings'
 import { fetchAniListMediaDetails } from '@/lib/anilist'
@@ -84,17 +85,12 @@ export default async function RatingsPage() {
 
   return (
     <div className="w-full max-w-7xl mx-auto py-6 animate-fade-in text-left">
-        <div className='mb-4'>
-          <span className="text-xl font-display tracking-widest text-accent">
-            Our taste
-          </span>
-          <p className="text-4xl md:text-5xl font-serif text-text tracking-tight py-2">
-            Anime and Manga Ratings
-          </p>
-          <p className="text-sm text-text-muted mt-2 max-w-xl font-sans leading-relaxed">
-            Explore the aggregate score of various anime and manga scored by our members
-          </p>
-        </div>
+      {/* Header */}
+      <PageHeader
+        eyebrow="Our taste"
+        title="Anime and Manga Ratings"
+        description="Explore the aggregate score of various anime and manga scored by our members"
+      />
 
       <PublicRatingsView initialAggregates={initialAggregates} />
     </div>

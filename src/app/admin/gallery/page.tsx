@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { getUserRole } from '@/lib/supabase/role'
 import { redirect } from 'next/navigation'
+import PageHeader from '@/components/ui/PageHeader'
 import AdminGalleryClient from './AdminGalleryClient'
 
 interface ArtworkConsent {
@@ -85,14 +86,12 @@ interface RawArtworkQuery {
     <div className="w-full max-w-7xl mx-auto py-6 animate-fade-in text-left">
 
       {/* Header */}
-      <div className="border-b border-border pb-6 mb-8">
-        <h1 className="text-3xl font-black tracking-tight text-neutral-900">
-          Committee Art Gallery & Consent
-        </h1>
-        <p className="text-sm text-text-muted mt-1">
-          Upload member artworks, record legal consent logs, and process takedown audits.
-        </p>
-      </div>
+      <PageHeader
+        eyebrow="Committee Console"
+        title="Art Gallery"
+        description="Upload member artworks, record legal consent logs, and process takedown audits."
+        divider
+      />
 
       {/* Interactive Curation Dashboard Client Component */}
       <AdminGalleryClient initialArtworks={artworks} />

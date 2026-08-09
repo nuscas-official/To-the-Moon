@@ -3,6 +3,7 @@ import { getUserRole } from '@/lib/supabase/role'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import AdminInvitesClient from '@/components/features/admin/AdminInvitesClient'
+import PageHeader from '@/components/ui/PageHeader'
 
 interface InviteToken {
   id: string
@@ -97,14 +98,12 @@ export default async function AdminInvitesDashboard() {
       </Link>
 
       {/* Header */}
-      <div className="border-b border-border pb-6 mb-8">
-        <h1 className="text-3xl font-black tracking-tight text-neutral-900">
-          Invite Token Manager
-        </h1>
-        <p className="text-sm text-text-muted mt-1">
-          Monitor invite links, generate single-use tokens, and revoke pending invites.
-        </p>
-      </div>
+      <PageHeader
+        eyebrow="Club Members"
+        title="Invite Tokens"
+        description="Monitor invite links, generate single-use tokens, and revoke pending invites."
+        divider
+      />
 
       {/* Invites Client Component */}
       <AdminInvitesClient initialInvites={invites} />

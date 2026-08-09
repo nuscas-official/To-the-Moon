@@ -3,6 +3,7 @@ import { getUserRole } from '@/lib/supabase/role'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import MemberRatingsDashboard from '@/components/features/ratings/MemberRatingsDashboard'
+import PageHeader from '@/components/ui/PageHeader'
 
 interface UserRating {
   id: string;
@@ -48,14 +49,12 @@ export default async function MemberRatingsPage() {
   return (
     <div className="w-full max-w-7xl mx-auto py-6 animate-fade-in text-left">
       {/* Header */}
-      <div className="border-b border-border pb-6 mb-8">
-        <h1 className="text-3xl font-black tracking-tight text-neutral-900">
-          My Ratings & Reviews
-        </h1>
-        <p className="text-sm text-text-muted mt-1">
-          Search for anime or manga titles, record your personal rating, and manage your reviews list below.
-        </p>
-      </div>
+      <PageHeader
+        eyebrow="Member Workspace"
+        title="My Ratings"
+        description="Search for anime or manga titles, record your personal rating, and manage your reviews list below."
+        divider
+      />
 
       {/* Member Sub-navigation Tabs */}
       <div className="flex border-b border-border mb-6">

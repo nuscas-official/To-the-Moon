@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
+import PageHeader from '@/components/ui/PageHeader'
 import PublicGalleryClient from './PublicGalleryClient'
 
 interface Artwork {
@@ -42,17 +43,12 @@ export default async function PublicGalleryPage() {
     <div className="w-full max-w-7xl mx-auto py-6 animate-fade-in text-left">
       
       {/* Header */}
-        <div className='mb-6'>
-          <span className="text-xl font-display tracking-widest text-accent">
-            Member Palette
-          </span>
-          <p className="text-4xl md:text-5xl font-serif text-text tracking-tight py-2">
-            Art Gallery
-          </p>
-          <p className="text-sm text-text-muted mt-2 max-w-xl font-sans leading-relaxed">
-            A collection of amazing fanart, sketches, and digital illustrations crafted by the talented members of our community.
-          </p>
-        </div>
+      <PageHeader
+        eyebrow="Member Palette"
+        title="Art Gallery"
+        description="A collection of amazing fanart, sketches, and digital illustrations crafted by the talented members of our community."
+      />
+
       {/* Interactive Grid & Lightbox Client Component */}
       <PublicGalleryClient artworks={artworks} />
 

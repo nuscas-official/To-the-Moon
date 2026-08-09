@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import PendingModerationFeed, { PendingPost } from '@/components/features/admin/PendingModerationFeed'
+import PageHeader from '@/components/ui/PageHeader'
 import Link from 'next/link'
 
 // Simple helper to format audit log rows into human-readable strings
@@ -131,14 +132,13 @@ export default async function AdminDashboardPage() {
   return (
     <div className="space-y-10 animate-fade-in text-left">
       {/* Header */}
-      <div>
-        <h1 className="text-3xl font-black tracking-tight text-neutral-900">
-          Admin Dashboard
-        </h1>
-        <p className="text-sm text-text-muted mt-1">
-          Overview of system statistics, pending tasks, and recent operations.
-        </p>
-      </div>
+      <PageHeader
+        eyebrow="Committee Console"
+        title="Dashboard"
+        description="Overview of system statistics, pending tasks, and recent operations."
+        divider
+        className=""
+      />
 
       {/* 1. Stats Cards Grid */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">

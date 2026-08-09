@@ -3,6 +3,7 @@ import { getUserRole } from '@/lib/supabase/role'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import ArticleForm from '@/components/features/posts/ArticleForm'
+import PageHeader from '@/components/ui/PageHeader'
 import { createArticleAction } from '@/server/actions/blog'
 
 export default async function AdminNewPostPage() {
@@ -35,14 +36,12 @@ export default async function AdminNewPostPage() {
       </Link>
 
       {/* Header */}
-      <div className="border-b border-border pb-6 mb-8">
-        <h1 className="text-3xl font-black tracking-tight text-neutral-900">
-          Create Direct Post
-        </h1>
-        <p className="text-sm text-text-muted mt-1">
-          Compose an article, review, or news. As a committee member, you can publish directly without moderation.
-        </p>
-      </div>
+      <PageHeader
+        eyebrow="Content Desk"
+        title="New Post"
+        description="Compose an article, review, or news. As a committee member, you can publish directly without moderation."
+        divider
+      />
 
       {/* Editor Form */}
       <ArticleForm 

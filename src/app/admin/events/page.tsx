@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { getUserRole } from '@/lib/supabase/role'
 import { redirect } from 'next/navigation'
 import AdminEventList from '@/components/features/admin/AdminEventList'
+import PageHeader from '@/components/ui/PageHeader'
 
 interface ClubEvent {
   id: string;
@@ -63,16 +64,12 @@ export default async function AdminEventsDashboard() {
     <div className="w-full max-w-7xl mx-auto py-6 animate-fade-in text-left">
 
       {/* Header */}
-      <div className="border-b border-border pb-6 mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h1 className="text-3xl font-black tracking-tight text-neutral-900">
-            Committee Events & Activities
-          </h1>
-          <p className="text-sm text-text-muted mt-1">
-            Create, moderate, edit, and publish club activities and manage photo galleries.
-          </p>
-        </div>
-      </div>
+      <PageHeader
+        eyebrow="Committee Console"
+        title="Events"
+        description="Create, moderate, edit, and publish club activities and manage photo galleries."
+        divider
+      />
 
       {/* Event list dashboard */}
       <AdminEventList initialEvents={allEvents} />

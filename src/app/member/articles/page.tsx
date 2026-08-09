@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { getUserRole } from '@/lib/supabase/role'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
+import PageHeader from '@/components/ui/PageHeader'
 
 interface Post {
   id: string;
@@ -51,23 +52,19 @@ export default async function MemberArticlesPage() {
     <div className="w-full max-w-7xl mx-auto py-6 animate-fade-in text-left">
       
       {/* Header */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between border-b border-border pb-6 mb-8 gap-4">
-        <div>
-          <h1 className="text-3xl font-black tracking-tight text-neutral-900">
-            My Articles
-          </h1>
-          <p className="text-sm text-text-muted mt-1">
-            Write reviews, essays, or news, and submit them for committee approval.
-          </p>
-        </div>
-        
+      <PageHeader
+        eyebrow="Member Workspace"
+        title="My Articles"
+        description="Write reviews, essays, or news, and submit them for committee approval."
+        divider
+      >
         <Link
           href="/member/articles/new"
-          className="px-5 py-2.5 bg-accent text-white font-bold text-xs uppercase tracking-wider hover:bg-accent-hover transition-colors shadow-sm active:scale-95"
+          className="px-5 py-2.5 bg-accent text-white font-bold text-xs uppercase tracking-wider hover:bg-accent-hover transition-colors shadow-sm active:scale-95 shrink-0"
         >
           + Write New Article
         </Link>
-      </div>
+      </PageHeader>
 
       {/* Member Sub-navigation Tabs */}
       <div className="flex border-b border-border mb-6">
