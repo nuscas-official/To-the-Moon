@@ -26,6 +26,8 @@ export default function ArtworkCard({ artwork, variant = 'justified', onZoomTogg
   const [targetCoords, setTargetCoords] = useState<{ top: number; left: number; width: number; height: number } | null>(null)
 
   const imgRef = useRef<HTMLImageElement>(null)
+  /** True while *this* card owns the body scroll lock, so unmounting can't clear someone else's. */
+  const lockedRef = useRef(false)
 
   const isOpen = animationState !== 'closed'
   const isTransitionOpen = animationState === 'open'
@@ -72,6 +74,7 @@ export default function ArtworkCard({ artwork, variant = 'justified', onZoomTogg
     setAnimationState('opening')
     onZoomToggle?.(true)
     document.body.style.overflow = 'hidden'
+    lockedRef.current = true
   }
 
   // Trigger closing sequence
@@ -90,17 +93,20 @@ export default function ArtworkCard({ artwork, variant = 'justified', onZoomTogg
     } else if (animationState === 'closing') {
       const timer = setTimeout(() => {
         setAnimationState('closed')
-        onZoomToggle?.(false)
         document.body.style.overflow = ''
+        lockedRef.current = false
+        // Last, so a host (the fullscreen gallery) can re-take the lock it still needs.
+        onZoomToggle?.(false)
       }, 350) // Transition duration plus buffer to guarantee completion
       return () => clearTimeout(timer)
     }
   }, [animationState, onZoomToggle])
 
-  // Prevent scroll lock leaks
+  // Prevent scroll lock leaks -- but only for a lock this card took, since cards unmount whenever
+  // the justified rows re-group and must not release a lock the surrounding page still holds.
   useEffect(() => {
     return () => {
-      document.body.style.overflow = ''
+      if (lockedRef.current) document.body.style.overflow = ''
     }
   }, [])
 

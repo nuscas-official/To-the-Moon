@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import PageHeader from '@/components/ui/PageHeader'
 import PublicGalleryClient from './PublicGalleryClient'
+import FullscreenGalleryButton from '@/components/features/gallery/FullscreenGallery'
 
 interface Artwork {
   id: string;
@@ -47,7 +48,10 @@ export default async function PublicGalleryPage() {
         eyebrow="Member Palette"
         title="Art Gallery"
         description="A collection of amazing fanart, sketches, and digital illustrations crafted by the talented members of our community."
-      />
+      >
+        {/* Experimental: looping fullscreen view for booth/event displays. See FullscreenGallery. */}
+        <FullscreenGalleryButton artworks={artworks} caption="NUSCAS Member Palette" />
+      </PageHeader>
 
       {/* Interactive Grid & Lightbox Client Component */}
       <PublicGalleryClient artworks={artworks} />
