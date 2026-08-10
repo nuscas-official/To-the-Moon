@@ -26,13 +26,13 @@ export async function generateMetadata() {
 export default async function PublicGalleryPage() {
   const supabase = createClient()
 
-  // Fetch only visible artworks sorted by display_order, then newest
+  // Fetch only visible artworks sorted by newest first
   const { data: artworksData, error } = await supabase
     .from('gallery_artworks')
     .select('id, storage_key, title, artist_credit')
     .eq('status', 'visible')
-    .order('display_order', { ascending: true })
     .order('created_at', { ascending: false })
+    .order('display_order', { ascending: true })
 
   if (error) {
     console.error('Error fetching gallery artworks:', error)

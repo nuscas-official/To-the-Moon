@@ -151,32 +151,41 @@ function BlogCard({ post, featured = false, rotation = 0, scale = 1 }: BlogCardP
             </div>
           )}
 
-          <div className="mt-auto pt-3 flex items-center justify-between text-[10px]">
-            <span className="text-text-muted font-semibold tabular-nums">
-              {date}
-            </span>
+          <div className="mt-auto pt-3 flex items-center justify-between text-[10px] border-t border-border/40">
+            <div className="flex items-center gap-1.5 text-text-muted font-medium truncate mr-2">
+              <span className="w-4 h-4 rounded-full bg-neutral-200 flex-shrink-0 flex items-center justify-center text-[9px] font-bold text-neutral-600 uppercase border border-neutral-300">
+                {post.author?.display_name ? post.author.display_name.charAt(0) : 'M'}
+              </span>
+              <span className="truncate">By {post.author?.display_name || 'Member'}</span>
+            </div>
 
-            <Link
-              href={`/blog/${post.slug}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="font-bold text-accent hover:underline flex items-center gap-0.5"
-            >
-              <span>Read More</span>
-              <svg 
-                className="w-3.5 h-3.5" 
-                fill="none" 
-                viewBox="0 0 24 24" 
-                stroke="currentColor" 
-                strokeWidth={2}
+            <div className="flex items-center gap-2 flex-shrink-0">
+              <span className="text-text-muted font-semibold tabular-nums hidden xs:inline">
+                {date}
+              </span>
+
+              <Link
+                href={`/blog/${post.slug}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-bold text-accent hover:underline flex items-center gap-0.5"
               >
-                <path 
-                  strokeLinecap="round" 
-                  strokeLinejoin="round" 
-                  d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" 
-                />
-              </svg>
-            </Link>
+                <span>Read More</span>
+                <svg 
+                  className="w-3.5 h-3.5" 
+                  fill="none" 
+                  viewBox="0 0 24 24" 
+                  stroke="currentColor" 
+                  strokeWidth={2}
+                >
+                  <path 
+                    strokeLinecap="round" 
+                    strokeLinejoin="round" 
+                    d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" 
+                  />
+                </svg>
+              </Link>
+            </div>
           </div>
         </div>
 

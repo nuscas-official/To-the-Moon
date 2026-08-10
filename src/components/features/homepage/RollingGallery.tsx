@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import ArtworkCard from '@/components/features/gallery/ArtworkCard'
 import { ArrowRightIcon } from '@/components/icons/ArrowRightIcon';
@@ -18,13 +18,26 @@ interface RollingGalleryProps {
 
 export default function RollingGallery({ artworks }: RollingGalleryProps) {
   const [isMarqueePaused, setIsMarqueePaused] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    const checkMobile = () => setIsMobile(window.innerWidth < 768)
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
 
   if (!artworks || artworks.length === 0) {
     return null
   }
 
+  // Mobile limit: 10 items; Desktop limit: 15 items
+  const displayedArtworks = isMobile ? artworks.slice(0, 10) : artworks.slice(0, 15)
+
   // Helper to calculate duplication for smooth infinite scrolling
   const getRepeatedArtworks = (items: Artwork[]) => {
+    if (items.length === 0) return []
     const repeated: Artwork[] = []
     let repeatCount = Math.ceil(16 / items.length)
     if (repeatCount % 2 !== 0) {
@@ -39,9 +52,9 @@ export default function RollingGallery({ artworks }: RollingGalleryProps) {
   }
 
   // Splitting items into two distinct arrays so both rows feature different pieces
-  const half = Math.ceil(artworks.length / 2)
-  const firstRowArtworks = artworks.slice(0, half)
-  const secondRowArtworks = artworks.slice(half)
+  const half = Math.ceil(displayedArtworks.length / 2)
+  const firstRowArtworks = displayedArtworks.slice(0, half)
+  const secondRowArtworks = displayedArtworks.slice(half)
 
   // Fallback if odd item count makes second row too sparse to loop smoothly
   const row1Items = getRepeatedArtworks(firstRowArtworks)

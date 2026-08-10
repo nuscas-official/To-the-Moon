@@ -52,9 +52,9 @@ export default async function Home({ searchParams }: HomeProps) {
       .from('gallery_artworks')
       .select('id, storage_key, title, artist_credit')
       .eq('status', 'visible')
-      .order('display_order', { ascending: true })
       .order('created_at', { ascending: false })
-      .limit(10),
+      .order('display_order', { ascending: true })
+      .limit(15),
     getHeroEvent()
   ])
 
