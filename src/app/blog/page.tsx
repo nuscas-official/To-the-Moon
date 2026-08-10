@@ -3,6 +3,7 @@ import PageHeader from '@/components/ui/PageHeader'
 import Link from 'next/link'
 import type { Metadata } from 'next'
 import Image from 'next/image'
+import { getExcerpt } from '@/lib/utils/excerpt'
 
 export const metadata: Metadata = {
   title: "Blog",
@@ -36,18 +37,6 @@ const POST_TYPES = [
   { value: 'essay', label: 'Essays' },
   { value: 'interview', label: 'Interviews' },
 ]
-
-// Simple helper to strip MDX tags for short excerpts
-function getExcerpt(content: string, length = 120): string {
-  const clean = content
-    .replace(/<\/?[^>]+(>|$)/g, "") // remove HTML tags
-    .replace(/[#*`_\[\]()]/g, "") // remove simple Markdown formatting
-    .replace(/\s+/g, " ")
-    .trim()
-
-  if (clean.length <= length) return clean
-  return clean.slice(0, length) + "..."
-}
 
 export default async function BlogPage({ searchParams }: BlogPageProps) {
   const activeType = searchParams.type || 'all'
@@ -165,7 +154,7 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
                     </h2>
 
                     <p className="text-xs text-text-muted mt-3 line-clamp-3 leading-relaxed">
-                      {getExcerpt(post.content_mdx)}
+                      {getExcerpt(post.content_mdx, 140, post.title)}
                     </p>
                   </div>
                 </div>

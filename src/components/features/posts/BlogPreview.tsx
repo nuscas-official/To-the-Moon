@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import BlogPreviewClient from './BlogPreviewClient'
+import { getExcerpt } from '@/lib/utils/excerpt'
 
 export interface BlogPost {
   id: string
@@ -13,33 +14,6 @@ export interface BlogPost {
     display_name: string
   }
 }
-
-// Helper to extract a structured markdown excerpt
-function getExcerpt(content: string, length = 500): string {
-  // 1. Remove markdown images: ![alt](url)
-  let clean = content.replace(/!\[.*?\]\(.*?\)/g, '')
-  
-  // 2. Remove block code blocks: ```...```
-  clean = clean.replace(/```[\s\S]*?```/g, '')
-
-  // 3. Remove HTML tags
-  clean = clean.replace(/<\/?[^>]+(>|$)/g, '')
-
-  clean = clean.trim()
-
-  if (clean.length <= length) {
-    return clean
-  }
-
-  // Slice to length, try to cut at a word boundary
-  const sliced = clean.slice(0, length)
-  const lastSpace = sliced.lastIndexOf(' ')
-  if (lastSpace > length * 0.8) {
-    return sliced.slice(0, lastSpace) + '…'
-  }
-  return sliced + '…'
-}
-
 
 export default async function BlogPreview() {
   let posts: BlogPost[] = []
@@ -67,7 +41,7 @@ export default async function BlogPreview() {
   // Pre-compute excerpts on the server (only needed for the featured post at index 0)
   const postsWithExcerpts = posts.map((p, index) => ({
     ...p,
-    excerpt: index === 0 ? getExcerpt(p.content_mdx) : '',
+    excerpt: index === 0 ? getExcerpt(p.content_mdx, 280, p.title) : '',
   }))
 
   return (
