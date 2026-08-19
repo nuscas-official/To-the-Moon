@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import type { ClubEvent } from '@/lib/events'
+import { eventPreviewText } from '@/lib/eventText'
 import { formatInClubTime, clubCalendarDaysUntil } from '@/lib/datetime'
 import { ArrowRightIcon } from '@/components/icons/ArrowRightIcon'
 import NextEventHeroActions from './NextEventHeroActions'
@@ -73,6 +74,8 @@ export default function NextEventHero({ event, isUpcoming, className = '' }: Nex
     minute: '2-digit',
   })
 
+  const preview = eventPreviewText(event.description, { maxWords: 26, maxBlocks: 2 })
+
   // Whole-day difference, so an event later today reads "Today" rather than
   // rounding to 0 or 1 depending on the hour.
   const daysAway = clubCalendarDaysUntil(event.starts_at)
@@ -130,10 +133,15 @@ export default function NextEventHero({ event, isUpcoming, className = '' }: Nex
           {event.title}
         </p>
 
-        {event.description && (
-          <p className="mt-4 hidden max-w-2xl text-sm text-white/75 leading-relaxed line-clamp-2 sm:block">
-            {event.description}
-          </p>
+        {/* `whitespace-pre-line` keeps the paragraph breaks authors typed; the
+            preview helper caps the length so a long write-up can't push the
+            date and buttons out of the panel. */}
+        {preview && (
+          <div className="mt-4 hidden max-w-2xl sm:block">
+            <p className="whitespace-pre-line text-sm text-white/75 leading-relaxed">
+              {preview}
+            </p>
+          </div>
         )}
 
         {/* Date and place carry the most weight for someone deciding whether to

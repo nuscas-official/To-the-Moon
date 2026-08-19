@@ -6,6 +6,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname, useSearchParams } from 'next/navigation'
 import { formatInClubTime } from '@/lib/datetime'
+import { eventPreviewText } from '@/lib/eventText'
 
 interface ClubEvent {
   id: string;
@@ -160,6 +161,10 @@ export default function EventCard({
     minute: '2-digit',
   })
 
+  // Featured card only: a short, structure-preserving teaser rather than the
+  // full description.
+  const preview = eventPreviewText(event.description, { maxWords: 18, maxBlocks: 1 })
+
   const isPast = new Date(event.starts_at) < new Date()
   const displayStatus = event.status === 'cancelled' ? 'cancelled' : (isPast ? 'past' : 'upcoming')
 
@@ -257,10 +262,12 @@ export default function EventCard({
                 {event.title}
               </p>
 
-              {event.description && (
-                <p className="hidden lg:block mt-3 text-sm text-white/70 line-clamp-2 leading-relaxed">
-                  {event.description}
-                </p>
+              {preview && (
+                <div className="hidden lg:block mt-3">
+                  <p className="whitespace-pre-line text-sm text-white/70 leading-relaxed">
+                    {preview}
+                  </p>
+                </div>
               )}
 
               <div className="mt-5 pt-4 border-t border-white/20 flex items-center justify-between text-xs">
