@@ -1,12 +1,20 @@
 'use client'
 
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback, useMemo } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 import { formatInClubTime, isSameClubDay } from '@/lib/datetime'
+import {
+  GAP,
+  buildRows,
+  rowHeightStyle,
+  useAspectRatios,
+  useContainerWidth,
+  type Artwork,
+} from '@/components/features/gallery/justified-layout'
 
 interface EventPhoto {
   id: string;
@@ -405,29 +413,7 @@ export default function EventDetailModal() {
                         </p>
                       </div>
 
-                      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-                        {photos.map((photo) => (
-                          <div
-                            key={photo.id}
-                            className="group relative h-48 overflow-hidden border border-border bg-neutral-100 shadow-sm hover:shadow-md transition-all duration-300"
-                          >
-                            <Image
-                              src={photo.storage_key}
-                              alt={photo.alt_text || 'Event photo'}
-                              fill
-                              unoptimized
-                              className="object-cover group-hover:scale-105 transition-transform duration-500"
-                            />
-                            {photo.alt_text && (
-                              <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                <p className="text-white text-[11px] font-semibold leading-snug">
-                                  {photo.alt_text}
-                                </p>
-                              </div>
-                            )}
-                          </div>
-                        ))}
-                      </div>
+                      <EventPhotoGallery photos={photos} />
                     </div>
                   )}
 
@@ -439,5 +425,78 @@ export default function EventDetailModal() {
         </div>
       )}
     </AnimatePresence>
+  )
+}
+
+/** Row height target for the event gallery -- smaller than the art gallery since it lives inside a modal. */
+const EVENT_GALLERY_TARGET = 190
+
+/**
+ * Same justified ("Flickr") row layout the art gallery uses, so each photo keeps its own aspect
+ * ratio instead of being cropped into a uniform box.
+ */
+function EventPhotoGallery({ photos }: { photos: EventPhoto[] }) {
+  const artworks: Artwork[] = useMemo(
+    () => photos.map((photo) => ({ id: photo.id, storage_key: photo.storage_key, title: photo.alt_text, artist_credit: '' })),
+    [photos]
+  )
+
+  const { ref, width } = useContainerWidth<HTMLDivElement>()
+  const { ratios, ready } = useAspectRatios(artworks)
+
+  const rows = useMemo(() => {
+    if (!width || !ready) return []
+    const measured = artworks.map((artwork) => ({ artwork, ratio: ratios[artwork.id] ?? 1 }))
+    return buildRows(measured, width, EVENT_GALLERY_TARGET)
+  }, [artworks, ratios, ready, width])
+
+  return (
+    <div ref={ref} className="[container-type:inline-size]">
+      {rows.length === 0 ? (
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 animate-pulse">
+          {photos.slice(0, 6).map((photo) => (
+            <div key={photo.id} className="aspect-[4/3] bg-neutral-200" />
+          ))}
+        </div>
+      ) : (
+        <div className="flex flex-col" style={{ gap: `${GAP}px` }}>
+          {rows.map((row, rowIndex) => (
+            <div
+              key={rowIndex}
+              className="flex"
+              style={{ gap: `${GAP}px`, height: rowHeightStyle(row, EVENT_GALLERY_TARGET) }}
+            >
+              {row.items.map(({ artwork, ratio }) => {
+                const photo = photos.find((p) => p.id === artwork.id)
+                if (!photo) return null
+                return (
+                  <div
+                    key={photo.id}
+                    className="group relative h-full flex-none overflow-hidden border border-border bg-neutral-100 shadow-sm hover:shadow-md transition-all duration-300"
+                    style={{ aspectRatio: String(ratio) }}
+                  >
+                    <Image
+                      src={photo.storage_key}
+                      alt={photo.alt_text || 'Event photo'}
+                      fill
+                      unoptimized
+                      sizes="(max-width: 768px) 50vw, 33vw"
+                      className="object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                    {photo.alt_text && (
+                      <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <p className="text-white text-[11px] font-semibold leading-snug">
+                          {photo.alt_text}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                )
+              })}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
   )
 }
