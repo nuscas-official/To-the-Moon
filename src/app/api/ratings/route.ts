@@ -127,7 +127,6 @@ export async function POST(request: Request) {
 
     // 5. Revalidate cache
     revalidatePath('/member/ratings')
-    revalidatePath('/ratings')
 
     return NextResponse.json({ success: true })
   } catch (err) {

@@ -112,7 +112,6 @@ export async function submitRatingAction(input: RatingInput) {
     }
 
     revalidatePath('/member/ratings')
-    revalidatePath('/ratings')
 
     return { success: true }
   } catch (err) {
@@ -147,7 +146,6 @@ export async function deleteRatingAction(ratingId: string) {
     }
 
     revalidatePath('/member/ratings')
-    revalidatePath('/ratings')
 
     return { success: true }
   } catch (err) {

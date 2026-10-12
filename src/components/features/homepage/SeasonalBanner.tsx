@@ -54,7 +54,7 @@ export default async function SeasonalBanner({ className = "aspect-video" }: Sea
 
   return (
     <Link
-      href="/ratings"
+      href="/member/ratings"
       style={componentStyles}
       className={`clip-cut cut-lg relative w-full overflow-hidden border border-border shadow-xl group flex items-end animate-fade-in hover:border-accent/40 hover:shadow-md transition-all duration-300 ${className}`}
     >

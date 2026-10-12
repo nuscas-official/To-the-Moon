@@ -10,7 +10,7 @@ const STATIC_ROUTES: { path: string; priority: number; changeFrequency: 'daily' 
   { path: '/about', priority: 0.8, changeFrequency: 'monthly' },
   { path: '/blog', priority: 0.7, changeFrequency: 'weekly' },
   { path: '/gallery', priority: 0.7, changeFrequency: 'weekly' },
-  { path: '/ratings', priority: 0.6, changeFrequency: 'weekly' },
+  { path: '/forms', priority: 0.5, changeFrequency: 'monthly' },
   { path: '/privacy', priority: 0.2, changeFrequency: 'yearly' },
 ]
 

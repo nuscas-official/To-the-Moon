@@ -6,7 +6,6 @@ import { usePathname, useSearchParams } from 'next/navigation'
 import { type User } from '@supabase/supabase-js'
 import { motion, AnimatePresence } from 'framer-motion'
 import AuthButton from '@/components/features/auth/AuthButton'
-import { HybridText } from '@/components/HybridText'
 import { NavLabel } from './NavLabel'
 
 interface HeaderProps {
@@ -45,35 +44,20 @@ const navItems = [
   { label: 'Blog', href: '/blog' },
   { label: 'Events', href: '/events' },
   { label: 'Gallery', href: '/gallery' },
-  { label: 'Ratings', href: '/ratings' },
-  { label: 'VNs', href: '/vn' },
+  { label: 'Forms', href: '/forms' },
 ];
 
 function HeaderContent({ user, showAdminLink, isEventModalOpen = false }: HeaderProps) {
   const [isOpen, setIsOpen] = useState(false)
   const pathname = usePathname()
-  const [isOverDark, setIsOverDark] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
 
-  // Detect if header is scrolled over a dark section and check if scrolled down
+  // Check if page is scrolled down
   useEffect(() => {
     let ticking = false
 
     const updateScrollState = () => {
       setIsScrolled(window.scrollY > 20)
-      
-      const darkSections = document.querySelectorAll('.bg-background-dark, .theme-crimson')
-      let overDark = false
-      
-      darkSections.forEach((section) => {
-        const rect = section.getBoundingClientRect()
-        // Check if the sticky header (top 80px) overlaps the dark section
-        if (rect.top <= 80 && rect.bottom >= 0) {
-          overDark = true
-        }
-      })
-      
-      setIsOverDark(overDark)
       ticking = false
     }
 
@@ -225,7 +209,7 @@ function HeaderContent({ user, showAdminLink, isEventModalOpen = false }: Header
               src="/images/hamburger_lines.webp"
               alt="Open Menu"
               className={`h-12 w-12 object-contain z-10 transition-all duration-500 absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 ${isOpen ? 'opacity-0 rotate-180 scale-50 pointer-events-none' : 'opacity-100 rotate-0 scale-100 group-hover:scale-90'
-                } ${isOverDark && !isOpen ? 'invert' : ''}`}
+                }`}
             />
 
             {/* Close Icon (SVG) */}
@@ -265,19 +249,13 @@ function HeaderContent({ user, showAdminLink, isEventModalOpen = false }: Header
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ type: 'spring', damping: 26, stiffness: 220 }}
-              className="fixed top-0 right-0 z-50 h-full w-[240px] md:w-[300px] max-w-full bg-surface shadow-2xl flex flex-col pt-20"
+              className="fixed top-0 right-0 z-50 h-full w-[200px] md:w-[250px] max-w-full bg-surface shadow-2xl flex flex-col pt-16"
               role="dialog"
               aria-modal="true"
               aria-label="Navigation Menu"
             >
-              <HybridText
-                text="The Menu"
-                revealType="stagger"
-                className="absolute top-10 left-6 font-mono text-md font-bold tracking-widest text-text-muted select-none"
-              />
-
               {/* Drawer Content Area */}
-              <div className="flex-grow overflow-y-auto px-6 pb-8 pt-2 flex flex-col justify-between">
+              <div className="flex-grow overflow-y-auto px-8 pb-8 pt-2 flex flex-col justify-between">
                 <motion.div
                   variants={menuContainerVariants}
                   initial="hidden"
