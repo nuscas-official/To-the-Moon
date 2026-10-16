@@ -24,6 +24,16 @@ export interface ClubForm {
 
 export const CLUB_FORMS: ClubForm[] = [
   {
+    id: 'the-grand-finale',
+    tag: 'Feedback',
+    title: 'Halloween 2026 Sign Up Form',
+    description:
+      'The Grand Finale is a once-in-a-generation stage performance held in the city of Monad. This year, you, our esteemed guest, are cordially invited to witness this seminal occasion.',
+    cta: 'Sign up for Halloween!',
+    image: { src: '/images/forms/the-grand-finale.webp', alt: 'NUSCAS Halloween 2026 Sign Up Form' },
+    href: 'https://forms.gle/aQKoRczbDwUUXwnAA',
+  },
+  {
     id: 'session-feedback',
     tag: 'Feedback',
     title: 'NUSCAS Session Feedback Form',
