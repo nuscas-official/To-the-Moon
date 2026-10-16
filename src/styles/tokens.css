@@ -146,3 +146,103 @@
   --color-accent-hover: #fbc28a;
   --color-accent-muted: rgba(245, 158, 78, 0.1);
 }
+
+/* ── Halloween (seasonal) ─────────────────────────────────────────────
+   Enabled site-wide from Admin → Settings, which puts .theme-halloween on
+   <html>. Inverts the site: the cream pages go midnight-purple and the dark
+   bands turn to parchment, with pumpkin orange as the accent. White
+   backgrounds and the grey scales are flipped through the --tw-* channel
+   variables (see tailwind.config.ts) so hardcoded utility classes follow. */
+.theme-halloween {
+  --color-background: #150e1c;
+  --color-foreground: #f1ebf6;
+  --color-surface: #1c1326;
+  --color-surface-raised: #241a30;
+  --color-surface-hover: #2a1f38;
+  --color-text: #f1ebf6;
+  --color-text-muted: #b3a4c4;
+  --color-border: #3a2a4e;
+
+  --color-accent: #f97316;
+  --color-accent-hover: #fb923c;
+  --color-accent-muted: #2b1a12;
+  --color-accent-gold: #a78bfa;
+  --color-accent-gold-hover: #c4b5fd;
+  --color-accent-gold-muted: #ede4fb;
+  --color-accent-foreground: #150e1c;
+
+  --color-background-dark: #f3e6d0;
+  --color-background-crimson: #f6d9b8;
+  --color-background-light: #150e1c;
+  --color-surface-dark: #fdf8ef;
+  --color-border-dark: #dbbf96;
+  --color-text-dark: #1c1320;
+  --color-text-muted-dark: #6a5a52;
+
+  /* Card palette used by the blog cards */
+  --palette-ref-parchment-cream: #241a30;
+  --palette-ref-brass-gold: #d9a35b;
+  --palette-ref-umber-text: #f1ebf6;
+  --palette-ref-umber-muted: #b3a4c4;
+
+  /* Utility colours, as RGB channels (inverted, with a purple tint) */
+  --tw-white: 28 19 38;
+  --tw-gray-50: 22 15 30;
+  --tw-gray-100: 31 22 41;
+  --tw-gray-200: 50 37 64;
+  --tw-gray-300: 70 54 86;
+  --tw-gray-400: 112 96 130;
+  --tw-gray-500: 150 135 166;
+  --tw-gray-600: 184 171 198;
+  --tw-gray-700: 208 198 220;
+  --tw-gray-800: 228 220 236;
+  --tw-gray-900: 241 235 246;
+  --tw-gray-950: 250 246 252;
+
+  --halloween-ink: #0b0710;
+  --halloween-thread: #b3a4c4;
+  --halloween-glow: rgba(249, 115, 22, 0.75);
+
+  color-scheme: dark;
+}
+
+/* Crimson blocks (the homepage events band, the featured video) keep
+   their regular dark-and-crimson look under Halloween: restore the stock
+   tokens and utility colours inside them. */
+.theme-halloween .theme-crimson {
+  --tw-white: initial;
+  --tw-gray-50: initial; --tw-gray-100: initial; --tw-gray-200: initial;
+  --tw-gray-300: initial; --tw-gray-400: initial; --tw-gray-500: initial;
+  --tw-gray-600: initial; --tw-gray-700: initial; --tw-gray-800: initial;
+  --tw-gray-900: initial; --tw-gray-950: initial;
+
+  --color-background-dark: #161414;
+  --color-surface-dark: #1f1a1a;
+  --color-border-dark: #2e2a2a;
+  --color-text-dark: #ece7e7;
+  --color-text-muted-dark: #a8a29e;
+
+  --color-accent: #c82333;
+  --color-accent-hover: #9c1422;
+  --color-accent-muted: #fbf5f0;
+  --color-accent-foreground: #ffffff;
+}
+
+.theme-halloween .focus-section {
+  --color-border: #e2b98a;
+  --color-surface: #f1cca0;
+  --color-text-muted: #6a5a52;
+  --color-accent: #1c1320;
+  --color-accent-hover: #3a2a4e;
+  --color-accent-muted: rgba(28, 19, 32, 0.12);
+}
+
+.theme-halloween ::selection {
+  background: #f97316;
+  color: #150e1c;
+}
+
+/* The hamburger icon is a black bitmap; flip it for the dark header. */
+.theme-halloween img[src*="hamburger_lines"] {
+  filter: invert(1);
+}

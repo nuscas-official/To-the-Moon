@@ -89,7 +89,7 @@ export default function WelcomeTextTicker({
         <motion.div 
           layout
           transition={{ type: "spring", stiffness: 300, damping: 30 }}
-          className="clip-cut cut-xs inline-block bg-accent border border-accent/25 shadow-sm p-1.5 max-w-full"
+          className="clip-cut cut-xs inline-block bg-accent shadow-sm p-1.5 max-w-full"
         >
           {/* Invisible ghost text to push the layout width organically */}
           <span className="opacity-0 font-bold text-sm sm:text-base px-1.5 select-none pointer-events-none block leading-normal">

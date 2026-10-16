@@ -12,7 +12,6 @@ const socialChannels = [
     handle: 'nuscomicsoc',
     url: 'https://www.instagram.com/nuscomicsoc/',
     bgColor: 'hover:bg-gradient-to-r hover:from-pink-500/10 hover:to-orange-500/10',
-    borderColor: 'hover:border-pink-500/30',
     iconColor: 'text-pink-500',
     icon: (
       <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" strokeWidth="2.2" viewBox="0 0 24 24" strokeLinecap="round" strokeLinejoin="round">
@@ -27,7 +26,6 @@ const socialChannels = [
     handle: 'NUSCAS Productions',
     url: 'https://www.youtube.com/channel/UCKkESIjFh--HD5yOpGmm_JA',
     bgColor: 'hover:bg-red-500/10',
-    borderColor: 'hover:border-red-500/30',
     iconColor: 'text-red-500',
     icon: (
       <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -40,7 +38,6 @@ const socialChannels = [
     handle: 'nuscas',
     url: 'https://linktr.ee/nuscas',
     bgColor: 'hover:bg-emerald-500/10',
-    borderColor: 'hover:border-emerald-500/30',
     iconColor: 'text-emerald-400',
     icon: (
       <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -75,7 +72,7 @@ export default function SocialLinks({ className = '' }: SocialLinksProps) {
               href={channel.url}
               target="_blank"
               rel="noopener noreferrer"
-              className={`clip-cut cut-sm flex items-center gap-2.5 py-1.5 px-2.5 sm:py-2 sm:px-2.5 border border-border/50 bg-surface/20 transition-all duration-300 ${channel.bgColor} ${channel.borderColor} group/link`}
+              className={`clip-cut cut-sm flex items-center gap-2.5 py-1.5 px-2.5 sm:py-2 sm:px-2.5 bg-surface/20 transition-all duration-300 ${channel.bgColor} group/link`}
               whileHover={{ scale: 1.02, x: 2 }}
               whileTap={{ scale: 0.98 }}
             >

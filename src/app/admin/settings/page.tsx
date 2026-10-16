@@ -1,6 +1,7 @@
 import { createAdminClient } from '@/lib/supabase/admin'
 import AdminSettingsClient from '@/components/features/admin/AdminSettingsClient'
 import PageHeader from '@/components/ui/PageHeader'
+import { getSiteTheme } from '@/lib/siteTheme'
 
 interface SeasonalPick {
   title: string
@@ -43,6 +44,8 @@ export default async function AdminSettingsPage() {
     console.error('Failed to load join_reasons config:', err)
   }
 
+  const siteTheme = await getSiteTheme()
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -58,6 +61,7 @@ export default async function AdminSettingsPage() {
       <AdminSettingsClient
         initialSeasonalPick={seasonalPick}
         initialJoinReasons={joinReasons}
+        initialSiteTheme={siteTheme}
       />
     </div>
   )

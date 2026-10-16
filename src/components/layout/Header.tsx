@@ -12,7 +12,11 @@ interface HeaderProps {
   user: User | null
   showAdminLink: boolean
   isEventModalOpen?: boolean
+  /** Shows the Halloween sign-up link beside the logo (Halloween site theme only). */
+  isHalloween?: boolean
 }
+
+const HALLOWEEN_FORM_URL = 'https://forms.gle/aQKoRczbDwUUXwnAA'
 
 // Framer Motion Animation Variants
 const menuContainerVariants = {
@@ -47,7 +51,7 @@ const navItems = [
   { label: 'Forms', href: '/forms' },
 ];
 
-function HeaderContent({ user, showAdminLink, isEventModalOpen = false }: HeaderProps) {
+function HeaderContent({ user, showAdminLink, isEventModalOpen = false, isHalloween = false }: HeaderProps) {
   const [isOpen, setIsOpen] = useState(false)
   const pathname = usePathname()
   const [isScrolled, setIsScrolled] = useState(false)
@@ -127,12 +131,24 @@ function HeaderContent({ user, showAdminLink, isEventModalOpen = false }: Header
                 src="/images/nuscas_logo.webp"
                 alt="NUSCAS Logo"
                 className={`w-auto object-contain transition-all duration-350 ease-in-out ${
-                  isScrolled 
-                    ? 'h-7'
-                    : 'h-10'
+                  // Halloween shrinks the logo on mobile to fit the event link beside it.
+                  isHalloween
+                    ? isScrolled ? 'h-6 md:h-7' : 'h-8 md:h-10'
+                    : isScrolled ? 'h-7' : 'h-10'
                 }`}
               />
             </Link>
+
+            {isHalloween && (
+              <a
+                href={HALLOWEEN_FORM_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="ml-2 md:ml-6 font-display text-2xl sm:text-3xl leading-none text-accent hover:text-accent-hover transition-colors whitespace-nowrap"
+              >
+                Halloween 2026
+              </a>
+            )}
           </div>
 
           {/* Desktop Horizontal Navigation Bar */}
@@ -361,7 +377,7 @@ function HeaderContent({ user, showAdminLink, isEventModalOpen = false }: Header
   )
 }
 
-function HeaderWithSearchParams({ user, showAdminLink }: HeaderProps) {
+function HeaderWithSearchParams({ user, showAdminLink, isHalloween }: HeaderProps) {
   const searchParams = useSearchParams()
   const isEventModalOpen = !!searchParams.get('event')
   return (
@@ -369,6 +385,7 @@ function HeaderWithSearchParams({ user, showAdminLink }: HeaderProps) {
       user={user}
       showAdminLink={showAdminLink}
       isEventModalOpen={isEventModalOpen}
+      isHalloween={isHalloween}
     />
   )
 }

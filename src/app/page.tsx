@@ -134,8 +134,8 @@ export default async function Home({ searchParams }: HomeProps) {
       {/* Outer container remains full-bleed across all screen sizes */}
       <div style={EDGE} className="theme-crimson w-screen relative left-1/2 -translate-x-1/2 bg-background-dark text-text-dark pt-[calc(var(--edge)+3.5rem)] pb-[calc(var(--edge)+3.5rem)] [--color-text:var(--color-text-dark)] [--color-foreground:var(--color-text-dark)] [--color-border:var(--color-border-dark)] [--color-surface:var(--color-surface-dark)] [--color-text-muted:var(--color-text-muted-dark)] transition-colors duration-300">
         {/* Boundary 1 of the alternating run: leans right, then flips each transition down the page. */}
-        <DiagonalEdge position="top" slant="right" fill="var(--color-background)" line="rgba(200, 35, 51, 0.55)" />
-        <DiagonalEdge position="bottom" slant="left" fill="var(--color-background)" line="rgba(200, 35, 51, 0.55)" />
+        <DiagonalEdge position="top" slant="right" fill="var(--color-background)" line="color-mix(in srgb, var(--color-accent) 55%, transparent)" />
+        <DiagonalEdge position="bottom" slant="left" fill="var(--color-background)" line="color-mix(in srgb, var(--color-accent) 55%, transparent)" />
 
         <ParticleCanvas
           count={400}

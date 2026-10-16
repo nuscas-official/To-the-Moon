@@ -5,6 +5,7 @@ import { createAdminClient } from '@/lib/supabase/admin'
 import { getUserRole } from '@/lib/supabase/role'
 import { revalidatePath } from 'next/cache'
 import { deleteFromR2 } from '@/lib/r2'
+import { isSiteTheme, type SiteTheme } from '@/lib/siteTheme'
 
 interface SeasonalPickInput {
   title: string
@@ -179,6 +180,65 @@ export async function updateJoinReasonsAction(reasons: string[]) {
     // 6. Revalidate pages
     revalidatePath('/')
     revalidatePath('/admin/settings')
+
+    return { success: true }
+  } catch (err) {
+    return { success: false, error: err instanceof Error ? err.message : 'An unexpected error occurred.' }
+  }
+}
+
+/**
+ * Server Action to switch the site-wide seasonal theme (e.g. Halloween).
+ * Enforces admin or committee role.
+ */
+export async function updateSiteThemeAction(theme: SiteTheme) {
+  const supabase = createClient()
+
+  const { data: { user }, error: authError } = await supabase.auth.getUser()
+  if (authError || !user) {
+    return { success: false, error: 'You must be signed in to perform this action.' }
+  }
+
+  const role = await getUserRole(supabase)
+  if (role !== 'admin' && role !== 'committee') {
+    return { success: false, error: 'Unauthorized: Committee or admin access required.' }
+  }
+
+  if (!isSiteTheme(theme)) {
+    return { success: false, error: 'Unknown site theme.' }
+  }
+
+  const adminClient = createAdminClient()
+
+  try {
+    const { error: upsertError } = await adminClient
+      .from('site_config')
+      .upsert({
+        key: 'site_theme',
+        value: { theme },
+        updated_by: user.id,
+        updated_at: new Date().toISOString()
+      })
+
+    if (upsertError) {
+      return { success: false, error: upsertError.message }
+    }
+
+    const { error: auditError } = await adminClient
+      .from('audit_log')
+      .insert({
+        actor_id: user.id,
+        action: 'settings.update_site_theme',
+        target_id: null,
+        metadata: { theme }
+      })
+
+    if (auditError) {
+      console.error('Failed to log update_site_theme to audit log:', auditError)
+    }
+
+    // The theme lives on the root layout, so every page needs re-rendering.
+    revalidatePath('/', 'layout')
 
     return { success: true }
   } catch (err) {

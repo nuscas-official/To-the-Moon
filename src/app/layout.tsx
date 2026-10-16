@@ -9,6 +9,8 @@ import RoleSyncListener from '@/components/features/auth/RoleSyncListener'
 import Footer from '@/components/layout/Footer'
 import EventDetailModal from '@/components/features/events/EventDetailModal'
 import JsonLd from '@/components/JsonLd'
+import HalloweenDecor from '@/components/seasonal/HalloweenDecor'
+import { getSiteTheme } from '@/lib/siteTheme'
 import {
   SITE_URL,
   SITE_NAME,
@@ -148,17 +150,18 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const { user, role } = await getAuthUserAndRole()
+  const [{ user, role }, siteTheme] = await Promise.all([getAuthUserAndRole(), getSiteTheme().then(() => 'halloween' as const)]) // TEMP-PREVIEW
   const showAdminLink = !!(user && (role === 'committee' || role === 'admin'))
 
   return (
-    <html lang="en" className={`h-full ${quicksand.variable} ${birthstone.variable} ${cormorantGaramond.variable} ${azeretMono.variable}`}>
+    <html lang="en" className={`h-full ${siteTheme !== 'default' ? `theme-${siteTheme} ` : ''}${quicksand.variable} ${birthstone.variable} ${cormorantGaramond.variable} ${azeretMono.variable}`}>
       <body
         className="antialiased min-h-full flex flex-col bg-background text-foreground transition-colors duration-300 overflow-x-hidden"
       >
         <JsonLd data={siteJsonLd} />
         <ThemeProvider>
           <RoleSyncListener user={user} currentRole={role} />
+          {siteTheme === 'halloween' && <HalloweenDecor />}
           {/* Skip to content link for a11y */}
           <a
             href="#main-content"
@@ -168,7 +171,7 @@ export default async function RootLayout({
           </a>
 
           {/* Header/Navbar (Sidebar Navigation) */}
-          <Header user={user} showAdminLink={showAdminLink} />
+          <Header user={user} showAdminLink={showAdminLink} isHalloween={siteTheme === 'halloween'} />
 
           {/* Main Content Area */}
           <main id="main-content" className="flex-grow max-w-[90rem] mx-auto w-full px-4 sm:px-6 lg:px-8 pb-8 outline-none">

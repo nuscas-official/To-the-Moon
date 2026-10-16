@@ -2,7 +2,8 @@
 
 import { useState } from 'react'
 import Image from 'next/image'
-import { updateSeasonalPickAction, updateJoinReasonsAction } from '@/server/actions/settings'
+import { updateSeasonalPickAction, updateJoinReasonsAction, updateSiteThemeAction } from '@/server/actions/settings'
+import type { SiteTheme } from '@/lib/siteTheme'
 import { Reorder } from 'framer-motion'
 
 interface SeasonalPick {
@@ -14,6 +15,7 @@ interface SeasonalPick {
 interface AdminSettingsClientProps {
   initialSeasonalPick: SeasonalPick | null
   initialJoinReasons: string[] | null
+  initialSiteTheme: SiteTheme
 }
 
 const DEFAULT_SEASONAL_PICK: SeasonalPick = {
@@ -25,7 +27,12 @@ const DEFAULT_SEASONAL_PICK: SeasonalPick = {
 export default function AdminSettingsClient({
   initialSeasonalPick,
   initialJoinReasons,
+  initialSiteTheme,
 }: AdminSettingsClientProps) {
+  // 0. Site Theme State
+  const [siteTheme, setSiteTheme] = useState<SiteTheme>(initialSiteTheme)
+  const [loadingTheme, setLoadingTheme] = useState(false)
+
   // 1. Seasonal Pick State
   const [seasonalPick, setSeasonalPick] = useState<SeasonalPick>(
     initialSeasonalPick || DEFAULT_SEASONAL_PICK
@@ -105,6 +112,25 @@ export default function AdminSettingsClient({
     }
   }
 
+  // Switch the site-wide seasonal theme
+  const handleToggleHalloween = async () => {
+    const next: SiteTheme = siteTheme === 'halloween' ? 'default' : 'halloween'
+    setLoadingTheme(true)
+    try {
+      const res = await updateSiteThemeAction(next)
+      if (res.success) {
+        setSiteTheme(next)
+        showFeedback('success', next === 'halloween' ? 'Halloween theme is live.' : 'Back to the regular theme.')
+      } else {
+        showFeedback('error', res.error || 'Failed to update site theme.')
+      }
+    } catch {
+      showFeedback('error', 'An unexpected error occurred.')
+    } finally {
+      setLoadingTheme(false)
+    }
+  }
+
   // Save Join Reasons changes
   const handleSaveReasons = async () => {
     if (joinReasons.length === 0) {
@@ -167,6 +193,35 @@ export default function AdminSettingsClient({
           <span>{feedback.message}</span>
         </div>
       )}
+
+      {/* Seasonal site theme toggle */}
+      <div className="border border-border bg-surface p-6 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="space-y-1">
+          <h2 className="text-lg font-black text-neutral-900 uppercase tracking-wider">
+            Halloween Theme
+          </h2>
+          <p className="text-xs text-text-muted">
+            Temporarily re-skins the whole public site with a pumpkin &amp; midnight palette and a few bats. Switch it off after the season.
+          </p>
+        </div>
+        <button
+          type="button"
+          role="switch"
+          aria-checked={siteTheme === 'halloween'}
+          disabled={loadingTheme}
+          onClick={handleToggleHalloween}
+          className={`px-5 py-2.5 disabled:opacity-50 text-white text-xs font-black uppercase tracking-wider rounded-none shadow-md active:scale-95 transition-all flex items-center justify-center gap-2 flex-shrink-0 border ${
+            siteTheme === 'halloween'
+              ? 'bg-accent hover:bg-accent-hover border-accent'
+              : 'bg-neutral-900 hover:bg-neutral-800 border-neutral-800'
+          }`}
+        >
+          {loadingTheme && (
+            <span className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+          )}
+          <span>{siteTheme === 'halloween' ? 'On — Turn Off' : 'Off — Turn On'}</span>
+        </button>
+      </div>
 
       {/* Grid containing two editors */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
