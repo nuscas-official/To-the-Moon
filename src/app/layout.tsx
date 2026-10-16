@@ -150,7 +150,7 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const [{ user, role }, siteTheme] = await Promise.all([getAuthUserAndRole(), getSiteTheme().then(() => 'halloween' as const)]) // TEMP-PREVIEW
+  const [{ user, role }, siteTheme] = await Promise.all([getAuthUserAndRole(), getSiteTheme()])
   const showAdminLink = !!(user && (role === 'committee' || role === 'admin'))
 
   return (
