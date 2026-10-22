@@ -7,6 +7,7 @@ interface SeasonalPick {
   title: string
   accent_hex: string
   image_url: string
+  pinned?: boolean
 }
 
 export default async function AdminSettingsPage() {

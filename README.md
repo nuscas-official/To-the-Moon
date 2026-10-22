@@ -32,6 +32,11 @@ Anime & Manga Ratings
 - Public aggregate scores are only displayed after a title has received at least three member ratings, reducing the risk of de-anonymizing niche titles.
 - Daily submission limits (30 actions/day) help prevent spam and abuse.
 
+Anime of the Season
+- Members nominate and vote for the season's anime through the Telegram bot.
+- The current leader is featured in the homepage hero; seasons follow the anime calendar (Winter/Spring/Summer/Fall) and votes reset each season.
+- Committee members can pin a manual pick in Admin → Settings to override the vote.
+
 Event Management
 - Interactive event listings and detailed event pages.
 - Organizer tools for uploading and managing photo galleries from club events.
@@ -50,9 +55,9 @@ Telegram Bot
 Members can link their Telegram account to their NUSCAS profile using a secure pairing code.
 
 Supported commands include:
-- `/rate` — Search AniList titles and submit ratings
-- `/myratings` — View your recent ratings
-- `/trending` — Browse club-wide trending titles
+- `/nominate` — Search AniList and nominate an Anime of the Season
+- `/vote` — Vote for this season's pick (one vote per member, changeable)
+- `/season` — Show the current standings (also works in group chats)
 - `/events` — View upcoming events
 - `/link`, `/unlink`, `/whoami` — Manage account linking
 - `/help` — Display the command reference

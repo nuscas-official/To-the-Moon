@@ -10,6 +10,7 @@ interface SeasonalPick {
   title: string
   accent_hex: string
   image_url: string
+  pinned?: boolean
 }
 
 interface AdminSettingsClientProps {
@@ -21,7 +22,8 @@ interface AdminSettingsClientProps {
 const DEFAULT_SEASONAL_PICK: SeasonalPick = {
   title: '',
   accent_hex: '#c82333',
-  image_url: ''
+  image_url: '',
+  pinned: false
 }
 
 export default function AdminSettingsClient({
@@ -234,8 +236,22 @@ export default function AdminSettingsClient({
           
           <form onSubmit={handleSaveSeasonal} className="border border-border bg-surface p-6 shadow-sm space-y-6">
             <p className="text-xs text-text-muted">
-              Configure the anime highlight displayed in the giant hero card on the landing page.
+              Members pick the homepage&apos;s Anime of the Season by voting through the Telegram bot (/nominate, /vote). This pick is shown until someone votes, or always if you pin it below.
             </p>
+
+            {/* Pin override */}
+            <label className="flex items-start gap-3 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={seasonalPick.pinned === true}
+                onChange={(e) => setSeasonalPick({ ...seasonalPick, pinned: e.target.checked })}
+                className="mt-0.5 h-4 w-4 accent-accent cursor-pointer"
+              />
+              <span className="space-y-0.5">
+                <span className="block text-[10px] uppercase font-extrabold tracking-wider text-neutral-700">Pin this pick</span>
+                <span className="block text-xs text-text-muted">Override the member vote and always show this anime.</span>
+              </span>
+            </label>
 
             {/* Anime Title */}
             <div className="space-y-1.5">

@@ -12,11 +12,9 @@ interface HeaderProps {
   user: User | null
   showAdminLink: boolean
   isEventModalOpen?: boolean
-  /** Shows the Halloween sign-up link beside the logo (Halloween site theme only). */
+  /** Shows the Halloween page link beside the logo (Halloween site theme only). */
   isHalloween?: boolean
 }
-
-const HALLOWEEN_FORM_URL = 'https://forms.gle/aQKoRczbDwUUXwnAA'
 
 // Framer Motion Animation Variants
 const menuContainerVariants = {
@@ -140,14 +138,12 @@ function HeaderContent({ user, showAdminLink, isEventModalOpen = false, isHallow
             </Link>
 
             {isHalloween && (
-              <a
-                href={HALLOWEEN_FORM_URL}
-                target="_blank"
-                rel="noopener noreferrer"
+              <Link
+                href="/halloween"
                 className="ml-2 md:ml-6 font-display text-2xl sm:text-3xl leading-none text-accent hover:text-accent-hover transition-colors whitespace-nowrap"
               >
                 Halloween 2026
-              </a>
+              </Link>
             )}
           </div>
 

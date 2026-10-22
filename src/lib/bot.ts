@@ -1,20 +1,12 @@
 import { Bot, Context, session, SessionFlavor } from 'grammy'
 import { createAdminClient } from '@/lib/supabase/admin'
+import { getCurrentSeason, getSeasonStandings, type SeasonNominee } from '@/lib/seasonPick'
 
+// Only the bare `/nominate` prompt waits on the next message. Buttons carry
+// their own IDs in callback_data, so they keep working after the serverless
+// instance (and this in-memory session) is recycled.
 export interface SessionData {
-  step?: 'awaiting_search_query' | 'awaiting_title_selection' | 'awaiting_score';
-  results?: {
-    id: number;
-    title_en: string;
-    cover_image_url: string | null;
-    media_type: 'anime' | 'manga' | 'other';
-  }[];
-  selectedMedia?: {
-    id: number;
-    title_en: string;
-    cover_image_url: string | null;
-    media_type: 'anime' | 'manga' | 'other';
-  };
+  step?: 'awaiting_nomination_query';
 }
 
 export interface UserProfile {
@@ -45,11 +37,11 @@ export function getBotInstance(): Bot<BotContext> {
 
   // 2. Auth Middleware
   // Protects all commands/messages by verifying telegram_id, except for linking commands
-  const GROUP_ALLOWED_COMMANDS = ['/trending', '/events', '/help']
+  const GROUP_ALLOWED_COMMANDS = ['/season', '/events', '/help']
 
   botInstance.use(async (ctx, next) => {
     // In group/supergroup chats, skip auth and only allow a small set of
-    // read-only commands. Everything else (linking, rating, session state)
+    // read-only commands. Everything else (linking, nominating, voting)
     // remains private-chat only.
     if (ctx.chat?.type !== 'private') {
       const messageText = (ctx.message?.text || '').trim()
@@ -118,15 +110,9 @@ export function getBotInstance(): Bot<BotContext> {
     } else {
       await ctx.reply(
         `👋 *Welcome to the NUSCAS Member Bot!*\n\n` +
-        `To the Moon is the NUS Comics and Animation Socity member portal bot. You can search, rate anime/manga, and view your reviews.\n\n` +
+        `To the Moon is the NUS Comics and Animation Society member portal bot. Help choose the club's Anime of the Season and keep up with events.\n\n` +
         `Use these commands:\n` +
-        `/rate — Search and rate an anime or manga\n` +
-        `/myratings — View your 5 most recent ratings\n` +
-        `/trending — View the top 5 highest-rated titles\n` +
-        `/events — View upcoming club events\n` +
-        `/whoami — Show your profile and link status\n` +
-        `/unlink — Unlink your Telegram account\n` +
-        `/help — Show all commands`,
+        COMMAND_LIST,
         { parse_mode: 'Markdown' }
       )
     }
@@ -167,93 +153,69 @@ export function getBotInstance(): Bot<BotContext> {
     await ctx.reply('✅ Your Telegram account has been successfully unlinked from your NUSCAS profile.')
   })
 
-  // 6. Command: /myratings
-  botInstance.command('myratings', async (ctx) => {
-    const userProfile = ctx.userProfile
-    if (!userProfile) {
-      await ctx.reply('Please link your Telegram account first using /link.')
-      return
-    }
-
-    const adminSupabase = createAdminClient()
-    const { data: ratings, error } = await adminSupabase
-      .from('ratings')
-      .select('title_en, score, media_type')
-      .eq('user_id', userProfile.id)
-      .order('updated_at', { ascending: false })
-      .limit(5)
-
-    if (error) {
-      console.error('Error fetching ratings in bot:', error)
-      await ctx.reply('An error occurred fetching your ratings.')
-      return
-    }
-
-    if (!ratings || ratings.length === 0) {
-      await ctx.reply('You have not rated any titles yet. Use /rate to add a rating!')
-      return
-    }
-
-    let text = '⭐ *Your 5 Most Recent Ratings:*\n\n'
-    ratings.forEach((r, idx) => {
-      const typeIcon = r.media_type === 'anime' ? '📺' : '📖'
-      text += `${idx + 1}. ${typeIcon} *${r.title_en}* — *${r.score}/10*\n`
-    })
-
-    await ctx.reply(text, { parse_mode: 'Markdown' })
-  })
-
-  // 7. Command: /rate
-  botInstance.command('rate', async (ctx) => {
-    const session = ctx.session
-    session.step = 'awaiting_search_query'
-    session.results = undefined
-    session.selectedMedia = undefined
-    await ctx.reply('📺 *Rate Anime & Manga*\n\nPlease enter the title you want to search on AniList:', { parse_mode: 'Markdown' })
-  })
-
-  // 8. Command: /help
+  // 6. Command: /help
   botInstance.command('help', async (ctx) => {
     await ctx.reply(
       `🤖 *NUSCAS Bot Commands:*\n\n` +
-      `/rate — Search and submit a score for a title\n` +
-      `/myratings — Show your 5 most recent ratings\n` +
-      `/trending — Show the top 5 highest-rated titles\n` +
-      `/events — Show upcoming club events\n` +
-      `/whoami — Show your profile and link status\n` +
-      `/unlink — Unlink your Telegram account from the portal\n` +
-      `/help — Show this menu\n\n` +
+      COMMAND_LIST + `\n\n` +
       `*Linking commands:*\n` +
       `/link <CODE> — Link account using settings page code`,
       { parse_mode: 'Markdown' }
     )
   })
 
-  // Command: /trending
-  botInstance.command('trending', async (ctx) => {
-    const adminSupabase = createAdminClient()
-    const { data: trending, error } = await adminSupabase
-      .from('public_rating_aggregates')
-      .select('title_en, average_score, media_type, rating_count')
-      .order('average_score', { ascending: false })
-      .limit(5)
+  // 7. Command: /nominate [title] — search AniList and nominate an anime
+  botInstance.command('nominate', async (ctx) => {
+    const query = (ctx.match || '').trim()
+    if (query) {
+      ctx.session.step = undefined
+      await replyWithNominationSearch(ctx, query)
+      return
+    }
+    ctx.session.step = 'awaiting_nomination_query'
+    const season = getCurrentSeason()
+    await ctx.reply(
+      `🌙 *Nominate Anime of the Season — ${season.label}*\n\n` +
+      `Send the title you want to nominate and I'll search AniList:`,
+      { parse_mode: 'Markdown' }
+    )
+  })
 
-    if (error) {
-      console.error('Error fetching trending ratings in bot:', error)
-      await ctx.reply('An error occurred fetching trending titles.')
+  // 8. Command: /vote — pick one of this season's nominees
+  botInstance.command('vote', async (ctx) => {
+    await replyWithBallot(ctx)
+  })
+
+  // 9. Command: /season — current standings (also allowed in groups)
+  botInstance.command('season', async (ctx) => {
+    const season = getCurrentSeason()
+    let standings: SeasonNominee[]
+    try {
+      standings = await getSeasonStandings(season.key)
+    } catch (err) {
+      console.error('Error fetching season standings in bot:', err)
+      await ctx.reply("An error occurred fetching this season's standings.")
       return
     }
 
-    if (!trending || trending.length === 0) {
-      await ctx.reply('📈 No trending titles with sufficient reviews found yet.')
+    if (standings.length === 0) {
+      await ctx.reply(
+        `🌙 *Anime of the Season — ${season.label}*\n\n` +
+        `No nominations yet. DM me /nominate to put one forward!`,
+        { parse_mode: 'Markdown' }
+      )
       return
     }
 
-    let text = '📈 *Top 5 Highest-Rated Titles:*\n\n'
-    trending.forEach((t, idx) => {
-      const typeIcon = t.media_type === 'anime' ? '📺' : '📖'
-      text += `${idx + 1}. ${typeIcon} *${t.title_en}* — *${t.average_score}/10* (${t.rating_count} ratings)\n`
+    let text = `🌙 *Anime of the Season — ${season.label}*\n\n`
+    standings.slice(0, 5).forEach((n, idx) => {
+      const medal = ['🥇', '🥈', '🥉'][idx] || `${idx + 1}.`
+      text += `${medal} *${escapeMarkdown(n.title)}* — ${formatVotes(n.votes)}\n`
     })
+    if (standings.length > 5) {
+      text += `…and ${standings.length - 5} more.\n`
+    }
+    text += `\nDM me /vote to have your say.`
 
     await ctx.reply(text, { parse_mode: 'Markdown' })
   })
@@ -328,171 +290,141 @@ export function getBotInstance(): Bot<BotContext> {
     }
   })
 
-  // 9. Callback Query Handler (for keyboard button clicks)
+  // 10. Callback Query Handler (inline keyboard buttons)
   botInstance.on('callback_query:data', async (ctx) => {
     const data = ctx.callbackQuery.data
-    const session = ctx.session
+    const userProfile = ctx.userProfile
+    if (!userProfile) {
+      await ctx.answerCallbackQuery({ text: 'Please link your account first.' })
+      return
+    }
 
-    if (data.startsWith('select_')) {
-      if (session.step !== 'awaiting_title_selection' || !session.results) {
-        await ctx.answerCallbackQuery({ text: 'Session expired.' })
-        await ctx.reply('⚠️ Session expired. Please start over with /rate.')
-        return
-      }
+    const adminSupabase = createAdminClient()
+    const season = getCurrentSeason()
 
-      const index = parseInt(data.split('_')[1], 10)
-      if (isNaN(index) || index < 0 || index >= session.results.length) {
+    if (data.startsWith('nominate:')) {
+      const anilistId = parseInt(data.slice('nominate:'.length), 10)
+      if (isNaN(anilistId)) {
         await ctx.answerCallbackQuery({ text: 'Invalid selection.' })
         return
       }
 
-      const selected = session.results[index]
-      session.selectedMedia = selected
-      session.step = 'awaiting_score'
+      // Reuse the existing nomination if someone already put this title forward.
+      let { data: nomination } = await adminSupabase
+        .from('season_nominations')
+        .select('id, title')
+        .eq('season', season.key)
+        .eq('anilist_id', anilistId)
+        .maybeSingle()
 
-      const keyboard = {
-        inline_keyboard: [
-          [
-            { text: '1 ⭐', callback_data: 'score_1' },
-            { text: '2 ⭐', callback_data: 'score_2' },
-            { text: '3 ⭐', callback_data: 'score_3' },
-            { text: '4 ⭐', callback_data: 'score_4' },
-            { text: '5 ⭐', callback_data: 'score_5' }
-          ],
-          [
-            { text: '6 ⭐', callback_data: 'score_6' },
-            { text: '7 ⭐', callback_data: 'score_7' },
-            { text: '8 ⭐', callback_data: 'score_8' },
-            { text: '9 ⭐', callback_data: 'score_9' },
-            { text: '10 🌟', callback_data: 'score_10' }
-          ]
-        ]
+      if (!nomination) {
+        const { fetchAniListAnime } = await import('@/lib/anilist')
+        const anime = await fetchAniListAnime(anilistId)
+        if (!anime) {
+          await ctx.answerCallbackQuery({ text: 'Could not load that title.' })
+          await ctx.reply('❌ Could not load that title from AniList. Please try again.')
+          return
+        }
+
+        const { data: inserted, error: insertError } = await adminSupabase
+          .from('season_nominations')
+          .insert({
+            season: season.key,
+            anilist_id: anime.id,
+            title: anime.title,
+            image_url: anime.image_url,
+            accent_hex: anime.accent_hex,
+            nominated_by: userProfile.id
+          })
+          .select('id, title')
+          .single()
+
+        if (insertError) {
+          // Someone may have nominated the same title a moment ago; use theirs.
+          const { data: existing } = await adminSupabase
+            .from('season_nominations')
+            .select('id, title')
+            .eq('season', season.key)
+            .eq('anilist_id', anilistId)
+            .maybeSingle()
+          if (!existing) {
+            console.error('Error saving nomination via Telegram bot:', insertError)
+            await ctx.answerCallbackQuery({ text: 'Error saving nomination.' })
+            await ctx.reply('❌ Failed to save your nomination. Please try again.')
+            return
+          }
+          nomination = existing
+        } else {
+          nomination = inserted
+        }
       }
 
-      await ctx.answerCallbackQuery()
+      // Nominating counts as your vote for it.
+      const saved = await castVote(userProfile.id, season.key, nomination.id)
+      if (!saved) {
+        await ctx.answerCallbackQuery({ text: 'Error saving vote.' })
+        await ctx.reply('❌ Your nomination was saved, but your vote failed. Try /vote.')
+        return
+      }
+
+      await ctx.answerCallbackQuery({ text: 'Nominated!' })
       await ctx.editMessageText(
-        `Selected: *${selected.title_en}* (${selected.media_type === 'anime' ? 'Anime' : 'Manga'})\n\n` +
-        `Rate this title on a scale of 1 to 10:`,
-        { parse_mode: 'Markdown', reply_markup: keyboard }
-      )
-    } else if (data.startsWith('score_')) {
-      if (session.step !== 'awaiting_score' || !session.selectedMedia) {
-        await ctx.answerCallbackQuery({ text: 'Session expired.' })
-        await ctx.reply('⚠️ Session expired. Please start over with /rate.')
-        return
-      }
-
-      const score = parseInt(data.split('_')[1], 10)
-      if (isNaN(score) || score < 1 || score > 10) {
-        await ctx.answerCallbackQuery({ text: 'Invalid score.' })
-        return
-      }
-
-      const media = session.selectedMedia
-      const userProfile = ctx.userProfile
-
-      if (!userProfile) {
-        await ctx.answerCallbackQuery({ text: 'User auth missing.' })
-        return
-      }
-
-      const adminSupabase = createAdminClient()
-
-      // Insert or update rating (unique user_id and anilist_id)
-      const { error } = await adminSupabase
-        .from('ratings')
-        .upsert({
-          user_id: userProfile.id,
-          anilist_id: media.id,
-          media_type: media.media_type,
-          title_en: media.title_en,
-          cover_image_url: media.cover_image_url,
-          score,
-          updated_at: new Date().toISOString()
-        }, {
-          onConflict: 'user_id,anilist_id'
-        })
-
-      if (error) {
-        console.error('Error saving rating via Telegram bot:', error)
-        await ctx.answerCallbackQuery({ text: 'Error saving rating.' })
-        await ctx.reply('❌ Failed to save your rating. Please try again.')
-        return
-      }
-
-      await ctx.answerCallbackQuery({ text: 'Rating saved!' })
-      await ctx.editMessageText(
-        `✅ Rating recorded!\n\n` +
-        `*${media.title_en}* (${media.media_type === 'anime' ? 'Anime' : 'Manga'})\n` +
-        `Your rating: *${score}/10* 🌟`,
+        `✅ *${escapeMarkdown(nomination.title)}* is nominated for Anime of the Season (${season.label}), and your vote is on it.\n\n` +
+        `Use /vote to change your vote or /season to see the standings.`,
         { parse_mode: 'Markdown' }
       )
+    } else if (data.startsWith('vote:')) {
+      const nominationId = data.slice('vote:'.length)
 
-      // Clear rating session state
-      session.step = undefined
-      session.results = undefined
-      session.selectedMedia = undefined
+      // A ballot left open from last season must not count toward this one.
+      const { data: nomination } = await adminSupabase
+        .from('season_nominations')
+        .select('id, title')
+        .eq('id', nominationId)
+        .eq('season', season.key)
+        .maybeSingle()
+
+      if (!nomination) {
+        await ctx.answerCallbackQuery({ text: 'That ballot has closed.' })
+        await ctx.reply(`⚠️ That title isn't on the ${season.label} ballot. Send /vote for the current one.`)
+        return
+      }
+
+      const saved = await castVote(userProfile.id, season.key, nomination.id)
+      if (!saved) {
+        await ctx.answerCallbackQuery({ text: 'Error saving vote.' })
+        await ctx.reply('❌ Failed to save your vote. Please try again.')
+        return
+      }
+
+      await ctx.answerCallbackQuery({ text: `Voted for ${nomination.title}` })
+      const ballot = await buildBallot(userProfile.id)
+      if (ballot) {
+        await ctx.editMessageText(ballot.text, { parse_mode: 'Markdown', reply_markup: ballot.keyboard })
+          .catch(() => {}) // "message is not modified" when re-tapping your current vote
+      }
+    } else {
+      // Old /rate buttons still sitting in people's chats.
+      await ctx.answerCallbackQuery({ text: 'This button is no longer supported.' })
     }
   })
 
-  // 10. Message handler for text entry (search query)
+  // 11. Message handler for text entry (nomination search query)
   botInstance.on('message:text', async (ctx) => {
-    const session = ctx.session
-
-    if (session.step === 'awaiting_search_query') {
+    if (ctx.session.step === 'awaiting_nomination_query') {
       const query = ctx.message.text.trim()
       if (!query) {
         await ctx.reply('Please enter a valid search term:')
         return
       }
-
-      const loadingMsg = await ctx.reply('🔍 Searching AniList...')
-
-      try {
-        const { searchAniList } = await import('@/lib/anilist')
-        const results = await searchAniList(query)
-
-        if (!results || results.length === 0) {
-          await ctx.api.deleteMessage(ctx.chat.id, loadingMsg.message_id)
-          await ctx.reply('❌ No results found. Please try searching for another title:')
-          return
-        }
-
-        // Keep top 3 results, format media type
-        const top3 = results.slice(0, 3).map(item => ({
-          id: item.id,
-          title_en: item.title.english || item.title.romaji || 'Unknown Title',
-          cover_image_url: item.coverImage.medium,
-          media_type: item.type === 'MANGA' ? ('manga' as const) : ('anime' as const)
-        }))
-
-        session.results = top3
-        session.step = 'awaiting_title_selection'
-
-        const inlineKeyboard = {
-          inline_keyboard: top3.map((item, idx) => [
-            {
-              text: `${idx + 1}. ${item.title_en} (${item.media_type === 'anime' ? 'Anime' : 'Manga'})`,
-              callback_data: `select_${idx}`
-            }
-          ])
-        }
-
-        await ctx.api.deleteMessage(ctx.chat.id, loadingMsg.message_id)
-        await ctx.reply('Select the correct entry below:', {
-          reply_markup: inlineKeyboard
-        })
-      } catch (err) {
-        console.error('Error during search query in bot:', err)
-        await ctx.api.deleteMessage(ctx.chat.id, loadingMsg.message_id)
-        await ctx.reply('An error occurred searching AniList. Please try again.')
-      }
+      ctx.session.step = undefined
+      await replyWithNominationSearch(ctx, query)
     } else {
       const userProfile = ctx.userProfile
       if (userProfile) {
         await ctx.reply(
-          `Hello, *${userProfile.display_name}*!\n\n` +
-          `Use /rate to search and rate a title, or /help to see all available commands.`,
+          `Hello, *${escapeMarkdown(userProfile.display_name)}*!\n\n` +
+          `Use /nominate to put forward an Anime of the Season, /vote to vote, or /help to see all available commands.`,
           { parse_mode: 'Markdown' }
         )
       }
@@ -500,6 +432,129 @@ export function getBotInstance(): Bot<BotContext> {
   })
 
   return botInstance
+}
+
+const COMMAND_LIST =
+  `/nominate — Nominate an Anime of the Season\n` +
+  `/vote — Vote for this season's pick\n` +
+  `/season — Show the current standings\n` +
+  `/events — Show upcoming club events\n` +
+  `/whoami — Show your profile and link status\n` +
+  `/unlink — Unlink your Telegram account\n` +
+  `/help — Show all commands`
+
+/** Escapes characters that break Telegram's legacy Markdown parse mode. */
+function escapeMarkdown(text: string): string {
+  return text.replace(/([_*`[])/g, '\\$1')
+}
+
+function formatVotes(count: number): string {
+  return `${count} vote${count === 1 ? '' : 's'}`
+}
+
+/** Records (or moves) a member's single vote for the season. */
+async function castVote(userId: string, seasonKey: string, nominationId: string): Promise<boolean> {
+  const adminSupabase = createAdminClient()
+  const { error } = await adminSupabase
+    .from('season_votes')
+    .upsert({
+      season: seasonKey,
+      user_id: userId,
+      nomination_id: nominationId,
+      updated_at: new Date().toISOString()
+    }, {
+      onConflict: 'season,user_id'
+    })
+
+  if (error) {
+    console.error('Error saving season vote via Telegram bot:', error)
+    return false
+  }
+  return true
+}
+
+/** Searches AniList and replies with one button per anime to nominate. */
+async function replyWithNominationSearch(ctx: BotContext, query: string) {
+  const chatId = ctx.chat?.id
+  if (!chatId) return
+
+  const loadingMsg = await ctx.reply('🔍 Searching AniList...')
+
+  try {
+    const { searchAniListAnime } = await import('@/lib/anilist')
+    const results = await searchAniListAnime(query)
+    await ctx.api.deleteMessage(chatId, loadingMsg.message_id)
+
+    if (results.length === 0) {
+      ctx.session.step = 'awaiting_nomination_query'
+      await ctx.reply('❌ No anime found. Please try searching for another title:')
+      return
+    }
+
+    await ctx.reply('Which anime do you want to nominate?', {
+      reply_markup: {
+        inline_keyboard: results.map(item => [{
+          text: item.season_label ? `${item.title} (${item.season_label})` : item.title,
+          callback_data: `nominate:${item.id}`
+        }])
+      }
+    })
+  } catch (err) {
+    console.error('Error during nomination search in bot:', err)
+    await ctx.api.deleteMessage(chatId, loadingMsg.message_id).catch(() => {})
+    await ctx.reply('An error occurred searching AniList. Please try again.')
+  }
+}
+
+/** Ballot text + buttons for the current season, marking the member's vote. */
+async function buildBallot(userId: string) {
+  const season = getCurrentSeason()
+  const adminSupabase = createAdminClient()
+
+  const [standings, { data: myVote }] = await Promise.all([
+    getSeasonStandings(season.key),
+    adminSupabase
+      .from('season_votes')
+      .select('nomination_id')
+      .eq('season', season.key)
+      .eq('user_id', userId)
+      .maybeSingle()
+  ])
+
+  if (standings.length === 0) return null
+
+  return {
+    text:
+      `🗳 *Anime of the Season — ${season.label}*\n\n` +
+      `Tap a title to vote. You get one vote per season and can change it any time. ` +
+      `The leader is featured on the NUSCAS homepage.`,
+    keyboard: {
+      inline_keyboard: standings.slice(0, 20).map(n => [{
+        text: `${myVote?.nomination_id === n.id ? '✅ ' : ''}${n.title} — ${formatVotes(n.votes)}`,
+        callback_data: `vote:${n.id}`
+      }])
+    }
+  }
+}
+
+async function replyWithBallot(ctx: BotContext) {
+  const userProfile = ctx.userProfile
+  if (!userProfile) {
+    await ctx.reply('Please link your Telegram account first using /link.')
+    return
+  }
+
+  try {
+    const ballot = await buildBallot(userProfile.id)
+    if (!ballot) {
+      await ctx.reply(`🗳 No nominations for ${getCurrentSeason().label} yet. Be the first with /nominate!`)
+      return
+    }
+    await ctx.reply(ballot.text, { parse_mode: 'Markdown', reply_markup: ballot.keyboard })
+  } catch (err) {
+    console.error('Error building ballot in bot:', err)
+    await ctx.reply('An error occurred loading the ballot. Please try again.')
+  }
 }
 
 /**
@@ -591,10 +646,10 @@ async function handleLink(ctx: BotContext, codeParam: string) {
     `🎉 *Success!*\n\n` +
     `Your Telegram account has been linked to *${updatedUser.display_name}*.\n\n` +
     `🚀 *Get Started:*\n` +
-    `• Use \`/rate\` to search and rate an anime or manga title.\n` +
-    `• Use \`/myratings\` to see your recent ratings.\n` +
+    `• Use \`/nominate\` to put forward an Anime of the Season.\n` +
+    `• Use \`/vote\` to vote for this season's pick.\n` +
+    `• Use \`/season\` to see the current standings.\n` +
     `• Use \`/events\` to see upcoming club events.\n` +
-    `• Use \`/trending\` to see top-rated titles.\n` +
     `• Use \`/whoami\` to view your status.`,
     { parse_mode: 'Markdown' }
   )

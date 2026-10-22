@@ -11,7 +11,7 @@ Perform these tests on a staging deployment (or locally using `ngrok`) to guaran
 ### 1. Verification of Unlinked / Deactivated Users (Access Control)
 * [ ] **Test Any Message**: Send a random text message (e.g., "Hello") to the bot before linking.
   * *Expected Result*: The bot should intercept the message and reply with instructions on how to link their portal account.
-* [ ] **Test Protected Commands**: Send `/rate`, `/myratings`, or `/unlink` before linking.
+* [ ] **Test Protected Commands**: Send `/nominate`, `/vote`, or `/unlink` before linking.
   * *Expected Result*: The bot should reject the command and output the same account-linking guide.
 * [ ] **Test Deactivated Member**: Link an account, deactivate that member in the website Admin panel (set `is_active = false`), then send any message to the bot.
   * *Expected Result*: The bot should detect the deactivated status and reject the input.
@@ -33,14 +33,16 @@ Perform these tests on a staging deployment (or locally using `ngrok`) to guaran
 ### 3. Verification of Core Commands
 * [ ] **Test `/help`**: Send `/help`.
   * *Expected Result*: The bot outputs the list of commands and brief usage.
-* [ ] **Test `/rate` (Anime/Manga Search & Submit)**:
-  1. Send `/rate`.
-  2. Enter a search query (e.g., "Frieren"). Verify the bot displays a loading indicator, then returns the top 3 matches as inline keyboard buttons.
-  3. Click one matching button. Verify the bot updates the message to display the selected title and lists score buttons (1-10).
-  4. Click a score button (e.g., 9). Verify the bot saves the rating, sends a confirmation, and clears the session.
-  5. Go to the website portal and verify the rating appears instantly under **My Ratings**.
-* [ ] **Test `/myratings`**: Send `/myratings`.
-  * *Expected Result*: The bot displays your 5 most recent ratings formatted as text with type icons (📺 / 📖).
+* [ ] **Test `/nominate` (Anime of the Season)**:
+  1. Send `/nominate` (or `/nominate Frieren` to skip the prompt).
+  2. Enter a search query. Verify the bot shows a loading indicator, then up to 5 anime (no manga) as inline buttons labelled with their airing season.
+  3. Tap one. Verify the bot confirms the nomination and says your vote is on it.
+  4. Nominate the same title from a second linked account. Verify no duplicate nominee is created; the second account's vote just moves to it.
+  5. Reload the homepage. Verify the hero's seasonal card shows the leader with its vote count (unless a pick is pinned in Admin → Settings).
+* [ ] **Test `/vote`**: Send `/vote`.
+  * *Expected Result*: One button per nominee with vote counts, your current vote marked ✅. Tapping another title moves your vote and refreshes the counts in place.
+* [ ] **Test `/season`** in both a DM and a group chat.
+  * *Expected Result*: The top 5 nominees for the current season with vote counts.
 * [ ] **Test `/unlink`**: Send `/unlink`.
   * *Expected Result*: The bot confirms the unlinking. Verify that the settings page on the website updates to show "Not Connected" and the `telegram_id` column in the database is set to `NULL`.
 

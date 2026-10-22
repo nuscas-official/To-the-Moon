@@ -11,6 +11,8 @@ interface SeasonalPickInput {
   title: string
   accent_hex: string
   image_url: string
+  /** When true, overrides the Telegram Anime of the Season vote on the homepage. */
+  pinned?: boolean
 }
 
 /**
@@ -61,7 +63,8 @@ export async function updateSeasonalPickAction(data: SeasonalPickInput) {
         value: {
           title: data.title.trim(),
           accent_hex: data.accent_hex.trim(),
-          image_url: data.image_url.trim()
+          image_url: data.image_url.trim(),
+          pinned: data.pinned === true
         },
         updated_by: user.id,
         updated_at: new Date().toISOString()
@@ -97,7 +100,8 @@ export async function updateSeasonalPickAction(data: SeasonalPickInput) {
         metadata: {
           title: data.title,
           accent_hex: data.accent_hex,
-          image_url: data.image_url
+          image_url: data.image_url,
+          pinned: data.pinned === true
         }
       })
 
