@@ -91,35 +91,37 @@ function Hero() {
       initial={reduce ? 'visible' : 'hidden'}
       animate="visible"
       variants={{ visible: { transition: { staggerChildren: 0.15 } } }}
-      className="relative isolate flex min-h-[calc(100svh-4rem)] flex-col items-center py-10 text-center"
+      className="relative isolate flex min-h-[calc(100svh-4rem)] flex-col items-center pb-10 pt-6 text-center lg:pt-10"
     >
       <HeroBackdrop />
-      {/* Balances the scroll cue below (mt-6 + h-10), so the text centres on the screen. */}
-      <div aria-hidden="true" className="h-16 shrink-0" />
-      <div className="my-auto flex flex-col items-center">
+      {/* Balances the scroll cue below (mt-6 + h-10), so the text centres on the screen.
+          Desktop only — on phones the text usually fills the screen, so it would just add top gap. */}
+      <div aria-hidden="true" className="hidden h-16 shrink-0 lg:block" />
+      {/* Pinned to the top on phones; centred in the spare height on desktop. */}
+      <div className="mb-auto flex flex-col items-center lg:my-auto">
       <motion.p variants={fadeUp} className="relative text-xs font-bold uppercase tracking-[0.4em] text-text-muted">
         NUSCAS Halloween 2026
       </motion.p>
-      <p className="relative mt-6 font-display text-7xl leading-none sm:text-8xl md:text-[10rem]">
+      <p className="relative my-6 font-display text-6xl leading-none sm:text-4xl md:text-[4rem]">
         <RisingWords text="The Grand Finale" />
       </p>
 
-      <motion.p variants={fadeUp} className="text-xs font-bold tracking-[0.1em] text-text-muted">
+      <motion.p variants={fadeUp} className="text-xs font-bold tracking-[0.1em]">
         30 Oct 2026 (Fri), 7PM to 10PM 
       </motion.p>
-      <motion.p variants={fadeUp} className="text-xs mt-4 font-bold tracking-[0.1em] text-text-muted">
+      <motion.p variants={fadeUp} className="text-xs mt-4 font-bold tracking-[0.1em]">
         Doors Open at 6:30PM for corridor booths
       </motion.p>
-      <motion.p variants={fadeUp} className="relative mt-6 max-w-xl text-left text-base leading-relaxed text-text-muted sm:text-md">
+      <motion.p variants={fadeUp} className="relative mt-6 max-w-xl text-left text-base leading-relaxed sm:text-md">
         The Grand Finale is a once-in-a-generation stage performance held in the city of Monad. This year, you, our esteemed guest, are cordially invited to witness this seminal occasion.
       </motion.p>
-        <motion.p variants={fadeUp} className="relative mt-2 max-w-xl text-left text-base leading-relaxed text-text-muted sm:text-md">
+      <motion.p variants={fadeUp} className="relative mt-2 max-w-xl text-left text-base leading-relaxed sm:text-md">
         Experience immersive room activities, a stamp rally with prizes, a merch shrine for photo-taking, and lots of sweets and chocolates from trick-or-treating!
       </motion.p>
-        <motion.p variants={fadeUp} className="relative mt-2 max-w-xl text-left text-base leading-relaxed text-text-muted sm:text-md">
+      <motion.p variants={fadeUp} className="relative mt-2 max-w-xl text-left text-base leading-relaxed sm:text-md">
           This event is free but sign-up only. Sign up by 28 Oct (Wed) 23:59 to secure your spot!
       </motion.p>
-      <SignUpButton className="mt-8" />
+      <SignUpButton variant="cut" className="mt-8" />
       </div>
       <motion.div variants={fadeUp} className="mt-6 flex h-10 shrink-0 flex-col items-center gap-2 text-text-muted">
         <span className="text-[10px] font-bold uppercase tracking-[0.3em]">Scroll</span>
@@ -421,8 +423,36 @@ function Outro() {
   )
 }
 
-/** Opens the Halloween sign-up Google Form in a new tab. */
-function SignUpButton({ className = '' }: { className?: string }) {
+/**
+ * Opens the Halloween sign-up Google Form in a new tab. `cut` matches the
+ * angled call-to-action on the /forms cards; `pill` is the rounded version.
+ */
+function SignUpButton({ variant = 'pill', className = '' }: { variant?: 'cut' | 'pill'; className?: string }) {
+  if (variant === 'cut') {
+    return (
+      <motion.a
+        variants={fadeUp}
+        href={SIGN_UP_URL}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={`group clip-cut cut-sm relative inline-flex items-center gap-2 bg-accent px-5 py-2.5 text-xs font-extrabold uppercase tracking-wider text-white transition-colors hover:bg-accent-hover ${className}`}
+      >
+        Sign up for Halloween!
+        <svg
+          className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth={3}
+          aria-hidden="true"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" d="M5 12h14M13 6l6 6-6 6" />
+        </svg>
+        <span className="sr-only">(opens Google Form in a new tab)</span>
+      </motion.a>
+    )
+  }
+
   return (
     <motion.a
       variants={fadeUp}
