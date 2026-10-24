@@ -59,4 +59,21 @@ export const HALLOWEEN_INFOGRAPHICS: HalloweenInfographic[] = [
         },
     ],
   },
+  {
+    id: 'dress-code',
+    kicker: 'Dress Code',
+    title: 'Cosplay',
+    body: [    
+      'Halloween is the prime time for you to cosplay, with it having the most number of cosplayers out of all eventts.',
+      'This year\'s theme is formal wear that fits an opulent, early 20th-century European high society look.'
+    ],
+    images: [
+        {
+          src: '/images/halloween/dress-code.webp',
+          alt: 'dress-code',
+          width: 810,
+          height: 1080,
+        },
+    ],
+  },
 ]

@@ -418,7 +418,7 @@ function Outro() {
       <motion.p variants={fadeUp} className="mt-6 max-w-md text-base leading-relaxed text-text-muted">
         Charon — Director, The Grand Finale
       </motion.p>
-      <SignUpButton className="mt-10" />
+      <SignUpButton variant="cut" className="mt-8" />
     </motion.section>
   )
 }
