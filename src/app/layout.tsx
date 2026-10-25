@@ -9,7 +9,6 @@ import RoleSyncListener from '@/components/features/auth/RoleSyncListener'
 import Footer from '@/components/layout/Footer'
 import EventDetailModal from '@/components/features/events/EventDetailModal'
 import JsonLd from '@/components/JsonLd'
-import HalloweenDecor from '@/components/seasonal/HalloweenDecor'
 import { getSiteTheme } from '@/lib/siteTheme'
 import {
   SITE_URL,
@@ -161,7 +160,6 @@ export default async function RootLayout({
         <JsonLd data={siteJsonLd} />
         <ThemeProvider>
           <RoleSyncListener user={user} currentRole={role} />
-          {siteTheme === 'halloween' && <HalloweenDecor />}
           {/* Skip to content link for a11y */}
           <a
             href="#main-content"

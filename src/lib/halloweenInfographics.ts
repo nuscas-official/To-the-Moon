@@ -36,6 +36,23 @@ export interface HalloweenInfographic {
 }
 
 export const HALLOWEEN_INFOGRAPHICS: HalloweenInfographic[] = [
+    {
+    id: 'merch-shrine',
+    kicker: 'Bring your merch!',
+    title: 'Merch Shrine',
+    body: [    
+      'We are building our first ever merch shrine at this year\'s Halloween Event! Bring your merch! Plushies, figurines, keychains and other merch are welcome at our merch shrine. They will be returned to you at the end of the event.',
+      'Attached is the photo of the mini merch shrine we built at our EXCO AGM this year.'
+    ],
+    images: [
+        {
+          src: '/images/halloween/merch-shrine.webp',
+          alt: 'dress-code',
+          width: 810,
+          height: 1080,
+        },
+    ],
+  },
   {
     id: 'stamp-rally-prizes',
     kicker: 'Proof of your visit',
@@ -64,7 +81,7 @@ export const HALLOWEEN_INFOGRAPHICS: HalloweenInfographic[] = [
     kicker: 'Dress Code',
     title: 'Cosplay',
     body: [    
-      'Halloween is the prime time for you to cosplay, with it having the most number of cosplayers out of all eventts.',
+      'Halloween is the prime time for you to cosplay, with it having the most number of cosplayers out of all events.',
       'This year\'s theme is formal wear that fits an opulent, early 20th-century European high society look.'
     ],
     images: [

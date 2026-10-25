@@ -207,19 +207,3 @@
   animation: marquee var(--marquee-duration, 35s) linear infinite reverse;
 }
 
-
-/* Halloween decor (see components/seasonal/HalloweenDecor) */
-@keyframes halloween-dangle {
-  0%, 100% { transform: translateY(-1.5rem) rotate(-2deg); }
-  50%      { transform: translateY(1rem) rotate(2deg); }
-}
-
-.halloween-spider {
-  filter: drop-shadow(0 0 3px var(--halloween-glow, transparent));
-  transform-origin: top center;
-  animation: halloween-dangle 7s ease-in-out infinite;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .halloween-spider { animation: none; }
-}

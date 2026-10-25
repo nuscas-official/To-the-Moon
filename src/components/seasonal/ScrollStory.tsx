@@ -23,7 +23,14 @@ const SIGN_UP_URL = 'https://forms.gle/aQKoRczbDwUUXwnAA'
  * infographic stays pinned beside it and crossfades when the chapter changes.
  * On small screens each infographic sits inline under its text instead.
  */
-export default function ScrollStory({ items }: { items: HalloweenInfographic[] }) {
+export default function ScrollStory({
+  items,
+  children,
+}: {
+  items: HalloweenInfographic[]
+  /** Extra sections shown between the chapters and the outro. */
+  children?: React.ReactNode
+}) {
   const [active, setActive] = useState(0)
 
   return (
@@ -44,6 +51,8 @@ export default function ScrollStory({ items }: { items: HalloweenInfographic[] }
           </div>
         </div>
       </section>
+
+      {children}
 
       <Outro />
     </div>
