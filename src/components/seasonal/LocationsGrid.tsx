@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
-import { ChevronLeft, ChevronRight, X } from 'lucide-react'
+import { X } from 'lucide-react'
 import type { HalloweenLocation } from '@/lib/halloweenLocations'
 
 // Same rise-in as the scroll story chapters.
@@ -15,8 +15,8 @@ const fadeUp = {
 
 /**
  * Location cards for the /halloween page. Each card opens a lightbox with the
- * large image and description; the buttons or arrow keys move between
- * locations, and Escape closes.
+ * large image and description; Escape, the close button or a click outside
+ * closes it.
  */
 export default function LocationsGrid({ locations }: { locations: HalloweenLocation[] }) {
   const [open, setOpen] = useState<number | null>(null)
@@ -79,7 +79,7 @@ export default function LocationsGrid({ locations }: { locations: HalloweenLocat
 
       <AnimatePresence>
         {open !== null && (
-          <Lightbox locations={locations} index={open} onIndex={setOpen} onClose={close} />
+          <Lightbox location={locations[open]} index={open} onClose={close} />
         )}
       </AnimatePresence>
     </section>
@@ -87,21 +87,17 @@ export default function LocationsGrid({ locations }: { locations: HalloweenLocat
 }
 
 function Lightbox({
-  locations,
+  location: loc,
   index,
-  onIndex,
   onClose,
 }: {
-  locations: HalloweenLocation[]
+  location: HalloweenLocation
+  /** Position in the list; only picks the placeholder colour. */
   index: number
-  onIndex: (index: number) => void
   onClose: () => void
 }) {
   const reduce = useReducedMotion()
   const closeRef = useRef<HTMLButtonElement>(null)
-  const loc = locations[index]
-  const hasPrev = index > 0
-  const hasNext = index < locations.length - 1
 
   // Lock page scroll, and move focus into the dialog.
   useEffect(() => {
@@ -116,12 +112,10 @@ function Lightbox({
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose()
-      else if (e.key === 'ArrowLeft' && hasPrev) onIndex(index - 1)
-      else if (e.key === 'ArrowRight' && hasNext) onIndex(index + 1)
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [index, hasPrev, hasNext, onIndex, onClose])
+  }, [onClose])
 
   return (
     <motion.div
@@ -169,16 +163,6 @@ function Lightbox({
           {loc.description && (
             <p className="mt-5 text-sm leading-relaxed text-white/80 sm:text-base">{loc.description}</p>
           )}
-
-          <div className="mt-auto flex items-center justify-between pt-8">
-            <span className="text-xs font-bold tracking-[0.2em] text-white/50">
-              {String(index + 1).padStart(2, '0')} / {String(locations.length).padStart(2, '0')}
-            </span>
-            <div className="flex gap-2">
-              <NavButton direction="prev" disabled={!hasPrev} onClick={() => onIndex(index - 1)} />
-              <NavButton direction="next" disabled={!hasNext} onClick={() => onIndex(index + 1)} />
-            </div>
-          </div>
         </div>
 
         <button
@@ -192,29 +176,6 @@ function Lightbox({
         </button>
       </motion.div>
     </motion.div>
-  )
-}
-
-function NavButton({
-  direction,
-  disabled,
-  onClick,
-}: {
-  direction: 'prev' | 'next'
-  disabled: boolean
-  onClick: () => void
-}) {
-  const Icon = direction === 'prev' ? ChevronLeft : ChevronRight
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      disabled={disabled}
-      aria-label={direction === 'prev' ? 'Previous location' : 'Next location'}
-      className="flex h-10 w-10 items-center justify-center rounded-full border border-white/30 text-white transition-colors hover:border-accent hover:bg-accent disabled:pointer-events-none disabled:opacity-30"
-    >
-      <Icon className="h-5 w-5" aria-hidden="true" />
-    </button>
   )
 }
 
