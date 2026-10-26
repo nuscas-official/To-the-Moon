@@ -40,7 +40,7 @@ export default function LocationsGrid({ locations }: { locations: HalloweenLocat
           The City of Monad
         </motion.p>
         <motion.p variants={fadeUp} className="mt-4 text-center font-display text-5xl leading-none sm:text-6xl">
-          Locations
+          Points of interest
         </motion.p>
       </motion.div>
 

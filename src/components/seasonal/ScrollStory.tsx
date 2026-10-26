@@ -11,7 +11,7 @@ import {
   useTransform,
   type Variants,
 } from 'framer-motion'
-import { ArrowUpRight, ChevronDown } from 'lucide-react'
+import { ArrowUpRight, CalendarDays, ChevronDown, Clock, MapPin, type LucideIcon } from 'lucide-react'
 import type { HalloweenInfographic, InfographicImage } from '@/lib/halloweenInfographics'
 
 const INSTAGRAM_PROFILE_URL = 'https://www.instagram.com/nuscomicsoc/'
@@ -36,6 +36,8 @@ export default function ScrollStory({
   return (
     <div className="relative">
       <Hero />
+
+      <Venue />
 
       <section aria-label="Halloween infographics" className="relative lg:grid lg:grid-cols-2 lg:gap-16">
         <div>
@@ -100,37 +102,40 @@ function Hero() {
       initial={reduce ? 'visible' : 'hidden'}
       animate="visible"
       variants={{ visible: { transition: { staggerChildren: 0.15 } } }}
-      className="relative isolate flex min-h-[calc(100svh-4rem)] flex-col items-center pb-10 pt-6 text-center lg:pt-10"
+      className="relative isolate flex flex-col items-center pb-10 pt-6 text-center lg:min-h-[calc(100svh-4rem)] lg:pt-10"
     >
       <HeroBackdrop />
-      {/* Balances the scroll cue below (mt-6 + h-10), so the text centres on the screen.
-          Desktop only — on phones the text usually fills the screen, so it would just add top gap. */}
-      <div aria-hidden="true" className="hidden h-16 shrink-0 lg:block" />
-      {/* Pinned to the top on phones; centred in the spare height on desktop. */}
-      <div className="mb-auto flex flex-col items-center lg:my-auto">
+      {/* Pinned to the top. On desktop the hero fills the screen and the spare height sits
+          above the scroll cue; on phones the cue follows the button directly. */}
+      <div className="mb-auto flex flex-col items-center">
       <motion.p variants={fadeUp} className="relative text-xs font-bold uppercase tracking-[0.4em] text-text-muted">
         NUSCAS Halloween 2026
       </motion.p>
-      <p className="relative my-6 font-display text-6xl leading-none sm:text-4xl md:text-[4rem]">
+      <p className="relative my-4 font-display text-6xl leading-none sm:my-6 sm:text-4xl md:text-[4rem] text-accent">
         <RisingWords text="The Grand Finale" />
       </p>
 
-      <motion.p variants={fadeUp} className="text-xs font-bold tracking-[0.1em]">
-        30 Oct 2026 (Fri), 7PM to 10PM 
-      </motion.p>
-      <motion.p variants={fadeUp} className="text-xs mt-4 font-bold tracking-[0.1em]">
-        Doors Open at 6:30PM for corridor booths
-      </motion.p>
-      <motion.p variants={fadeUp} className="relative mt-6 max-w-xl text-left text-base leading-relaxed sm:text-md">
+      <motion.dl variants={fadeUp} className="relative w-full max-w-xl text-left">
+        <EventDetail icon={CalendarDays} label="Date">
+          30 October 2026 <span className="ml-1.5 text-xs uppercase text-text-muted">Fri</span>
+        </EventDetail>
+        <EventDetail icon={Clock} label="Time" note="Doors open at 6:30PM for booth activities">
+          7:00PM – 10:00PM
+        </EventDetail>
+        <EventDetail icon={MapPin} label="Venue">
+          UTown Town Plaza, Seminar Rooms 5–9
+        </EventDetail>
+      </motion.dl>
+      <motion.p variants={fadeUp} className="relative mt-4 w-full max-w-xl text-left text-[13px] leading-snug sm:mt-6 sm:text-base sm:leading-relaxed">
         The Grand Finale is a once-in-a-generation stage performance held in the city of Monad. This year, you, our esteemed guest, are cordially invited to witness this seminal occasion.
       </motion.p>
-      <motion.p variants={fadeUp} className="relative mt-2 max-w-xl text-left text-base leading-relaxed sm:text-md">
+      <motion.p variants={fadeUp} className="relative mt-2 w-full max-w-xl text-left text-[13px] leading-snug sm:text-base sm:leading-relaxed">
         Experience immersive room activities, a stamp rally with prizes, a merch shrine for photo-taking, and lots of sweets and chocolates from trick-or-treating!
       </motion.p>
-      <motion.p variants={fadeUp} className="relative mt-2 max-w-xl text-left text-base leading-relaxed sm:text-md">
-          This event is free but sign-up only. Sign up by 28 Oct (Wed) 23:59 to secure your spot!
+      <motion.p variants={fadeUp} className="relative mt-2 w-full max-w-xl text-left text-[13px] leading-snug sm:text-base sm:leading-relaxed">
+        This event is free but sign-up only. Sign up by 28 Oct (Wed) 23:59 to secure your spot!
       </motion.p>
-      <SignUpButton variant="cut" className="mt-8" />
+      <SignUpButton variant="cut" className="mt-5 sm:mt-8" />
       </div>
       <motion.div variants={fadeUp} className="mt-6 flex h-10 shrink-0 flex-col items-center gap-2 text-text-muted">
         <span className="text-[10px] font-bold uppercase tracking-[0.3em]">Scroll</span>
@@ -140,7 +145,31 @@ function Hero() {
   )
 }
 
-const HERO_POSTER = '/images/halloween/the-grand-finale.webp'
+/** One row of the hero's event details: icon, small accent label, then the value. */
+function EventDetail({
+  icon: Icon,
+  label,
+  note,
+  children,
+}: {
+  icon: LucideIcon
+  label: string
+  note?: string
+  children: React.ReactNode
+}) {
+  return (
+    <div className="flex items-center gap-3 border-b border-border py-3 first:pt-0">
+      <Icon aria-hidden="true" className="h-6 w-6 shrink-0 text-text-muted sm:h-7 sm:w-7" strokeWidth={1.75} />
+      <div>
+        <dt className="text-[10px] font-bold uppercase tracking-[0.2em] text-accent">{label}</dt>
+        <dd className="text-sm leading-tight sm:text-base">{children}</dd>
+        {note && <dd className="mt-0.5 text-xs text-text-muted">{note}</dd>}
+      </div>
+    </div>
+  )
+}
+
+const HERO_POSTER ='/images/halloween/the-grand-finale.webp'
 
 /**
  * Sits behind the hero text: the poster as a framed card tilted in 3D — right
@@ -170,6 +199,63 @@ function HeroBackdrop() {
         </motion.div>
       </div>
     </div>
+  )
+}
+
+const FLOOR_PLAN = '/images/halloween/halloween-floor-plan.webp'
+
+/** Descriptive text for the venue section — one string per paragraph. */
+const VENUE_BODY: string[] = [
+  'Town Plaza Seminar Rooms 5 to 9 are located at level 2 of the town plaza building, above Fine Food canteen. See the boxed out area of attached floor plan.',
+  'Follow the spirals staircase up to meet with your assigned group leaders!'
+]
+
+/**
+ * Venue section between the hero and the chapters: heading and description beside the
+ * floor plan on large screens, stacked above it on small ones.
+ */
+function Venue() {
+  const reduce = useReducedMotion()
+
+  return (
+    <motion.section
+      aria-labelledby="venue-heading"
+      initial={reduce ? 'visible' : 'hidden'}
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.2 }}
+      variants={{ visible: { transition: { staggerChildren: 0.12 } } }}
+      className="relative py-20 lg:grid lg:grid-cols-2 lg:items-center lg:gap-16"
+    >
+      <div>
+        <motion.p variants={fadeUp} className="text-xs font-bold uppercase tracking-[0.35em] text-accent-gold">
+          Venue
+        </motion.p>
+        <p id="venue-heading" className="mt-4 font-display text-5xl leading-[0.95] text-foreground sm:text-6xl">
+          <RisingWords text="Town Plaza Level 2" />
+        </p>
+        <div className="mt-4 max-w-md space-y-2">
+          {VENUE_BODY.map((paragraph, i) => (
+            <motion.p key={i} variants={fadeUp} className="text-base leading-relaxed text-text-muted sm:text-lg">
+              {paragraph}
+            </motion.p>
+          ))}
+        </div>
+      </div>
+
+      <motion.div
+        variants={fadeUp}
+        className="mt-10 overflow-hidden rounded-2xl shadow-2xl shadow-black/60 lg:mt-0"
+      >
+        <Image
+          src={FLOOR_PLAN}
+          alt="Floor plan of UTown Town Plaza Level 2, with Seminar Rooms 5 to 9 outlined in red"
+          width={1572}
+          height={1080}
+          sizes="(min-width: 1280px) 600px, (min-width: 1024px) 50vw, 100vw"
+          className="h-auto w-full"
+        />
+      </motion.div>
+    </motion.section>
   )
 }
 
