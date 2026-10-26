@@ -207,7 +207,7 @@ const FLOOR_PLAN = '/images/halloween/halloween-floor-plan.webp'
 /** Descriptive text for the venue section — one string per paragraph. */
 const VENUE_BODY: string[] = [
   'Town Plaza Seminar Rooms 5 to 9 are located at level 2 of the town plaza building, above Fine Food canteen. See the boxed out area of attached floor plan.',
-  'Follow the spirals staircase up to meet with your assigned group leaders!'
+  'Follow the spiral staircase up to meet with your assigned group leaders!'
 ]
 
 /**
